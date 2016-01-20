@@ -6,11 +6,13 @@ import bodyParser from 'body-parser';
 const TEST_DB = 'mongodb://db.siriolabs.com/cse112-dev-test';
 
 //Models
-// import rateModel from './model/rate.model';
+import userModel from './model/user.model';
+import clientModel from './model/client.model';
 
 
 //Routes
-// import hotelsRoute from './routes/hotels.routes';
+import userRoute from './route/user.route';
+import clientRoute from './route/client.route';
 
 
 const app = module.exports = express();
@@ -21,7 +23,11 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
 
-// rateModel(app);
+userModel(app);
+clientModel(app);
+
+userRoute(app);
+clientRoute(app);
 
 mongoose.connect(TEST_DB, (err) => {
   if (err) {
