@@ -8,7 +8,7 @@ const Schema = mongoose.Schema;
 const ClientSchema = new Schema({
   created: {
     type: Date,
-    default: Date.now
+    default: Date.now,
   },
   name : {
     type : String,
