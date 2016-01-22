@@ -2,7 +2,7 @@
  * Schema for User
  *
  * Notes
- * For role : 0 => Unassigned
+ * For role: 0 => Unassigned
  * 						1 => Admin (Who is in charge of one or more clients)
  * 						2 => Manager (Who is in charge of one client)
  * 						3 => Employee (Just a normal employee)
@@ -14,49 +14,49 @@ const Schema = mongoose.Schema;
 const UserSchema = new Schema({
   created: {
     type: Date,
-    default: Date.now
+    default: Date.now,
   },
-  role : {
-    type : Number,
-    default : 0
+  role: {
+    type: Number,
+    default: 0,
   },
-  approved : {
-    type : Boolean,
-    default : false,
+  approved: {
+    type: Boolean,
+    default: false,
   },
-  firstName : {
-    type : String,
-    required : true,
+  firstName: {
+    type: String,
+    required: true,
   },
-  lastName : {
-    type : String,
-    required : true,
+  lastName: {
+    type: String,
+    required: true,
   },
-  avatar : {
-    type : String,
-    default : null,
+  avatar: {
+    type: String,
+    default: null,
   },
-  email : {
-    type : String,
-    required : true,
-    unique : true
+  email: {
+    type: String,
+    required: true,
+    unique: true,
   },
-  password : {
-    type : String,
-    required : true,
+  password: {
+    type: String,
+    required: true,
   },
-  client : {
+  client: {
     type: Schema.ObjectId,
     required: true,
-    ref: 'Client'
+    ref: 'Client',
   },
-  department : {
-    type : String,
-    default : null,
+  department: {
+    type: String,
+    default: null,
   },
-  position : {
-    type : String,
-    default : null,
+  position: {
+    type: String,
+    default: null,
   },
 
 });

@@ -8,32 +8,32 @@ const Schema = mongoose.Schema;
 const QueueSchema = new Schema({
   created: {
     type: Date,
-    default: Date.now
+    default: Date.now,
   },
-  checked : {
+  checked: {
     type: Date,
-    default : null,
+    default: null,
   },
-  name : {
-    type : String,
+  name: {
+    type: String,
     required: true,
   },
-  email : {
-    type : String,
+  email: {
+    type: String,
     required: true,
   },
-  reason : {
-    type : String,
+  reason: {
+    type: String,
     required: true,
   },
-  user : {
+  user: {
     type: Schema.ObjectId,
     required: true,
-    ref: 'User'
-  }
-  avatar : {
+    ref: 'User',
+  },
+  avatar: {
     type: String,
-    default : null,
+    default: null,
   },
 });
 

@@ -4,12 +4,14 @@ import * as ClientController from './client.controller';
 const User = mongoose.model('User');
 
 export function create(req, res) {
-  if (req.body.role === 1) {
+
+  if (req.body.role === '1') {
     _createAdminUser(req, res);
   }
 }
 
-function _createAdminUser(req, _res) {
+function _createAdminUser(req, res) {
+  console.log(req.body);
   ClientController.createOne(req, (err, newClient) => {
     if (err) {
       console.log('client createOne error!');
@@ -32,6 +34,7 @@ function _createAdminUser(req, _res) {
           console.log(err);
         } else {
           console.log(newUser);
+          res.send(newUser);
         }
       });
     }

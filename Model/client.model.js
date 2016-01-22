@@ -10,23 +10,23 @@ const ClientSchema = new Schema({
     type: Date,
     default: Date.now,
   },
-  name : {
-    type : String,
-    required : true,
+  name: {
+    type: String,
+    required: true,
   },
-  logo : {
-    type : String,
-    default : null,
+  logo: {
+    type: String,
+    default: null,
   },
-  description : {
-    type : String,
-    default : null,
+  description: {
+    type: String,
+    default: null,
   },
-  owner : {
+  owner: {
     type: Schema.ObjectId,
     ref: 'User',
-    default : null,
-  }
+    default: null,
+  },
 });
 
 export default mongoose.model('Client', ClientSchema);

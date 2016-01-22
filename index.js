@@ -5,12 +5,12 @@ import bodyParser from 'body-parser';
 
 const TEST_DB = 'mongodb://db.siriolabs.com/cse112-dev-test';
 
-//Models
+//  Models
 import userModel from './model/user.model';
 import clientModel from './model/client.model';
 
 
-//Routes
+//  Routes
 import userRoute from './route/user.route';
 import clientRoute from './route/client.route';
 
@@ -18,9 +18,9 @@ import clientRoute from './route/client.route';
 const app = module.exports = express();
 
 // parse application/x-www-form-urlencoded
-app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.urlencoded({ extended: false }));
 // parse application/json
-app.use(bodyParser.json())
+app.use(bodyParser.json());
 
 
 userModel(app);
@@ -35,8 +35,8 @@ mongoose.connect(TEST_DB, (err) => {
     console.log(chalk.red(err));
   } else {
     console.log(chalk.green('Successfully connect to MongoDB!'));
-    let PORT = 3003;
-    var server = app.listen(PORT, function() {
+    const PORT = 3080;
+    var server = app.listen(PORT, function () {
       console.log('Express server listening on port ' + PORT);
     });
   }
