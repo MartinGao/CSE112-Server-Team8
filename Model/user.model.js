@@ -45,6 +45,10 @@ const UserSchema = new Schema({
     type: String,
     required: true,
   },
+  salt: {
+    type: String,
+    required: true,
+  },
   client: {
     type: Schema.ObjectId,
     required: true,
@@ -57,6 +61,14 @@ const UserSchema = new Schema({
   position: {
     type: String,
     default: null,
+  },
+  token: {
+    type: String,
+    required: true,
+  },
+  tokenExpiredAt: {
+    type: Date,
+    required: true,
   },
 
 });
