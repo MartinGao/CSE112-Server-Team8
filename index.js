@@ -6,13 +6,13 @@ import bodyParser from 'body-parser';
 const TEST_DB = 'mongodb://db.siriolabs.com/cse112-dev-test';
 
 //  Models
-import userModel from './model/user.model';
-import clientModel from './model/client.model';
+import userModel from './Model/user.model';
+import clientModel from './Model/client.model';
 
 
 //  Routes
-import userRoute from './route/user.route';
-import clientRoute from './route/client.route';
+import userRoute from './Route/user.route';
+import clientRoute from './Route/client.route';
 
 
 const app = module.exports = express();
