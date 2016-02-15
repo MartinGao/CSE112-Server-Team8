@@ -1,5 +1,6 @@
 {
   "extends": "airbnb",
+  "esversion": 6,
     "rules": {
       "no-unused-vars": [2, {"varsIgnorePattern": "^_", "argsIgnorePattern": "^_"}],
       "no-use-before-define": [2, "nofunc"],

@@ -32,7 +32,7 @@ export function employees(req, res) {
           }
         });
       } else {
-        res.status(403).send({ errorMsg: 'Unauthoried User!' });
+        res.status(403).send({ errorMsg: 'Unauthorized User!' });
       }
     }
   });

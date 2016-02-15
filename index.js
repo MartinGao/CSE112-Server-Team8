@@ -35,7 +35,7 @@ mongoose.connect(TEST_DB, (err) => {
     console.log(chalk.red(err));
   } else {
     console.log(chalk.green('Successfully connect to MongoDB!'));
-    const PORT = 3080;
+    const PORT = 3000;
     var server = app.listen(PORT, function () {
       console.log('Express server listening on port ' + PORT);
     });
