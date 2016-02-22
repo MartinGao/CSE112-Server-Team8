@@ -8,11 +8,17 @@ Node.js server for CSE112 Team 8
 ` curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.31.0/install.sh | bash `
 Then close current terminal and open a new terminal 
 ` nvm install 5 `
+
 ` nvm use 5 `
+
 ` git clone https://github.com/MartinGao/CSE112-Server-Team8.git `
+
 ` cd CSE112-Server-Team8`
+
 ` npm i`
+
 ` npm run start`
+
 
 ### MongoDB GUI
 > http://52.27.142.66:1234/local
@@ -24,6 +30,9 @@ if there is error, try to type `chmod 600 CSE112.pem` and try again
 
 ### How to pull the latest commit from github and run it on the server
 ` git pull`
+
 ` nvm use 5 `
+
 ` pm2 restart 0`
+
 
