@@ -6,12 +6,14 @@ Node.js server for CSE112 Team 8
 
 #### if you do not have Node.js installed locally
 ` curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.31.0/install.sh | bash `
+
 Then close current terminal and open a new terminal 
+
 ` nvm install 5 `
 
 ` nvm use 5 `
 
-#### if you have Node.js locally start from here.
+#### if you have Node.js locally start from here
 
 ` git clone https://github.com/MartinGao/CSE112-Server-Team8.git `
 
