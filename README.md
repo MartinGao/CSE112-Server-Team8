@@ -4,12 +4,14 @@ Node.js server for CSE112 Team 8
 
 ### How to run this server locally
 
-## if you do not have Node.js installed locally
+#### if you do not have Node.js installed locally
 ` curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.31.0/install.sh | bash `
 Then close current terminal and open a new terminal 
 ` nvm install 5 `
 
 ` nvm use 5 `
+
+#### if you have Node.js locally start from here.
 
 ` git clone https://github.com/MartinGao/CSE112-Server-Team8.git `
 
@@ -26,6 +28,7 @@ Then close current terminal and open a new terminal
 
 ### How to connect to the server
 ` ssh -i CSE112.pem ubuntu@52.27.142.66 `
+
 if there is error, try to type `chmod 600 CSE112.pem` and try again
 
 ### How to pull the latest commit from github and run it on the server
