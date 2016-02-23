@@ -41,3 +41,8 @@ if there is error, try to type `chmod 600 CSE112.pem` and try again
 ` pm2 restart 0`
 
 
+
+Access Key ID:
+AKIAI4NUDRT7BVSIRHLA
+Secret Access Key:
+ub1ye+3PFl83gMbpzNzG8bkSw8Aw5k0YMyl7ZePz
