@@ -12,7 +12,7 @@ const FormSchema = new Schema({
   },
   businessId: {
     type: Schema.ObjectId,
-    required: null,
+    default: null,
   },
   name: {
     type: String,
@@ -22,9 +22,8 @@ const FormSchema = new Schema({
     type: String,
     default: null,
   },
-  owner: {
-    type: Schema.ObjectId,
-    ref: 'User',
+  timestamp: {
+    type: Date,
     default: null,
   },
 });
