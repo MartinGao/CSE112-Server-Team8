@@ -8,11 +8,13 @@ const TEST_DB = 'mongodb://db.siriolabs.com/cse112-dev-test';
 //  Models
 import userModel from './model/user.model';
 import clientModel from './model/client.model';
+import visitorModel from './model/visitor.model';
 
 //  Routes
 import userRoute from './route/user.route';
 import clientRoute from './route/client.route';
 import testRoute from './route/test.route';
+import visitorRoute from './route/visitor.route';
 
 const app = module.exports = express();
 
@@ -23,10 +25,12 @@ app.use(bodyParser.json());
 
 userModel(app);
 clientModel(app);
+visitorModel(app);
 
 userRoute(app);
 clientRoute(app);
 testRoute(app);
+visitorRoute(app);
 
 mongoose.connect(TEST_DB, (err) => {
   if (err) {
