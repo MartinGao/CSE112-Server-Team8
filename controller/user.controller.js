@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import bcrypt from 'bcrypt';
 import moment from 'moment';
-import * as ClientController from './client.controller';
+import * as BusinessController from './business.controller';
 const User = mongoose.model('User');
 
 export function signUp(req, res) {
@@ -39,9 +39,9 @@ export function signIn(req, res) {
 
 function _createAdminUser(req, res) {
   console.log(req.body);
-  ClientController.createOne(req, (err, newClient) => {
+  BusinessController.createOne(req, (err, newBusiness) => {
     if (err) {
-      console.log('client createOne error!');
+      console.log('admin user createOne error!');
       console.log(err);
     } else {
       const salt = bcrypt.genSaltSync(10);
@@ -55,7 +55,7 @@ function _createAdminUser(req, res) {
         email: req.body.email,
         password: hash,
         salt: salt,
-        client: newClient._id,
+        business: newBusiness._id,
         department: req.body.department,
         position: req.body.position,
         token: bcrypt.genSaltSync(32),
@@ -91,7 +91,7 @@ function _createEmployeeUser(req, res) {
           email: req.body.email,
           password: hash,
           salt: saltsalt,
-          client: user.client,
+          business: user.business,
           department: req.body.department,
           position: req.body.position,
           token: bcrypt.genSaltSync(32),
