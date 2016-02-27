@@ -2,6 +2,7 @@
  * Schema for Client
  */
 
+
 import mongoose from 'mongoose';
 const Schema = mongoose.Schema;
 
@@ -30,3 +31,4 @@ const ClientSchema = new Schema({
 });
 
 export default mongoose.model('Client', ClientSchema);
+

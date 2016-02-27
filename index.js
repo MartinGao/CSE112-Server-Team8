@@ -7,11 +7,13 @@ const TEST_DB = 'mongodb://db.siriolabs.com/cse112-dev-test';
 
 //  Models
 import userModel from './model/user.model';
+import businessModel from './model/business.model';
 import clientModel from './model/client.model';
 import visitorModel from './model/visitor.model';
 
 //  Routes
 import userRoute from './route/user.route';
+import businessRoute from './route/business.route';
 import clientRoute from './route/client.route';
 import testRoute from './route/test.route';
 import visitorRoute from './route/visitor.route';
@@ -24,10 +26,12 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 
 userModel(app);
+businessModel(app);
 clientModel(app);
 visitorModel(app);
 
 userRoute(app);
+businessRoute(app);
 clientRoute(app);
 testRoute(app);
 visitorRoute(app);

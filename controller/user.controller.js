@@ -17,7 +17,7 @@ export function signIn(req, res) {
   console.log('user signIn!');
   console.log(req.query);
   User.findOne({
-    email: req.query.email,
+    email: req.query.email
   }, (err, user) => {
     if (err) {
       console.log(err);
@@ -28,10 +28,10 @@ export function signIn(req, res) {
         if (bcrypt.compareSync(req.query.password, user.password)) {
           res.status(200).send(user);
         } else {
-          res.status(401).send({ errorMsg: 'Invaild Password!' });
+          res.status(401).send({ errorMsg: 'Invalid Password!' });
         }
       } else {
-        res.status(401).send({ errorMsg: 'Invaild Email!' });
+        res.status(401).send({ errorMsg: 'Invalid Email!' });
       }
     }
   });
@@ -106,7 +106,7 @@ function _createEmployeeUser(req, res) {
           }
         });
       } else {
-        res.status(403).send({ errorMsg: 'Unauthoried User!' });
+        res.status(403).send({ errorMsg: 'Unauthorized User!' });
       }
     }
   });
