@@ -10,8 +10,8 @@ var FormSchema = new Schema({
     type: Schema.ObjectId,
     ref: 'Business',
   },
-  formId: Schema.ObjectId,
   description: String,
+  form: Object,
   timestamp: {
     created: { type: Date, default: Date.now },
     updated: { type: Date, default: Date.now }

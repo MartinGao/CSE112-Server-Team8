@@ -6,7 +6,7 @@ var Business = mongoose.model('Business');
 
 export function newBusiness(req, res, next) {
     var missing = [];
-    console.log(req);
+
     if (!req.body.name)
         missing.push("missing name");
     if (!req.body.url)

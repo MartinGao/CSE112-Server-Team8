@@ -12,10 +12,6 @@ import mongoose from 'mongoose';
 const Schema = mongoose.Schema;
 
 const UserSchema = new Schema({
-  created: {
-    type: Date,
-    default: Date.now,
-  },
   role: {
     type: Number,
     default: 0,
@@ -54,14 +50,6 @@ const UserSchema = new Schema({
     required: true,
     ref: 'Business',
   },
-  department: {
-    type: String,
-    default: null,
-  },
-  position: {
-    type: String,
-    default: null,
-  },
   token: {
     type: String,
     required: true,
@@ -70,6 +58,15 @@ const UserSchema = new Schema({
     type: Date,
     required: true,
   },
+  timeStamp: {
+    created: {type: Date, default: Date.now},
+    updated: {type: Date, default: Date.now}
+  },
+});
+
+UserSchema.pre('save', function (next) {
+    this.timeStamp.updated = new Date();
+    next();
 });
 
 export default mongoose.model('User', UserSchema);

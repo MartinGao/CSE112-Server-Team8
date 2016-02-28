@@ -8,10 +8,11 @@ var form = mongoose.model('Form');
 
 export function createForm(req, res, next) {
 	var missing = [];
-	console.log(req);
-	if(!req.body.businessId){
+
+	if(!req.body.businessId)
 		missing.push("businessID is required.");
-	}
+	if(!req.body.form)
+		missing.push("form is required");
 	if(missing.length){
 		return res.status(400).send({
 			"Error: " missing.join(', ');
@@ -20,6 +21,7 @@ export function createForm(req, res, next) {
 
 	var newForm = new form();
 	newForm.description = req.body.description || null;
+	newForm.form = req.body.form;
 	newForm.save(function (err, updatedForm) {
 		if(err){
 			return res.status(400).send(err);
@@ -28,4 +30,8 @@ export function createForm(req, res, next) {
 			return res.status(200).send(updatedForm);
 		}
 	});
+}
+
+export function deleteForm(req, res, next) {
+	
 }
