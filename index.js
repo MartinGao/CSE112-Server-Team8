@@ -37,6 +37,11 @@ app.get('/doc', (req, res) => {
   res.sendFile('index.html', { root: './doc/' });
 });
 
+app.get('/vendor/:path', (req, res) => {
+  const path = req.params.path;
+  res.sendFile(path, { root: './doc/vendor/' });
+});
+
 
 mongoose.connect(TEST_DB, (err) => {
   if (err) {
