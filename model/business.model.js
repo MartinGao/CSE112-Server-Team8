@@ -10,6 +10,7 @@ import mongoose from 'mongoose';
 const Schema = mongoose.Schema;
 
 const BusinessSchema = new Schema({
+    //change to match schema
     created: {
         type: Date,
         default: Date.now
@@ -18,6 +19,8 @@ const BusinessSchema = new Schema({
         type: String,
         required: true
     },
+    
+    //what url
     url: {
         type: String,
         required: true
