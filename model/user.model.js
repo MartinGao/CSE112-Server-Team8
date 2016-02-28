@@ -14,54 +14,54 @@ const Schema = mongoose.Schema;
 const UserSchema = new Schema({
   role: {
     type: Number,
-    default: 0
+    default: 0,
   },
   approved: {
     type: Boolean,
-    default: false
+    default: false,
   },
   firstName: {
     type: String,
-    required: true
+    required: true,
   },
   lastName: {
     type: String,
-    required: true
+    required: true,
   },
   avatar: {
     type: String,
-    default: null
+    default: null,
   },
   email: {
     type: String,
     required: true,
-    unique: true
+    unique: true,
   },
   password: {
     type: String,
-    required: true
+    required: true,
   },
   salt: {
     type: String,
-    required: true
+    required: true,
   },
   business: {
     type: Schema.ObjectId,
     required: true,
-    ref: 'Business'
+    ref: 'Business',
   },
   token: {
     type: String,
-    required: true
+    required: true,
   },
   tokenExpiredAt: {
     type: Date,
-    required: true
+    required: true,
   },
   timeStamp: {
     created: {type: Date, default: Date.now},
     updated: {type: Date, default: Date.now}
-  }
+  },
 });
 
 UserSchema.pre('save', function (next) {
