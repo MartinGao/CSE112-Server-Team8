@@ -14,10 +14,22 @@ export function newVisitor(req, res, next) {
     });
   }
 
-  Visitor.findOne({name: req.body.name}).exec(function(err, visitor) {
+  //need to implement security
+
+  Visitor.find({name: req.body.name})
+  .and(
+    [
+      {$or:
+        [
+          {phone: req.body.phone},
+          {email: req.body.email}
+        ]
+      }
+    ]).exec(function(err, visitor) {
     if (err)
       return res.status(400).send(err);
     if (visitor) {
+      //will be replaced with either pushing ot not pushing to queue 
       visitor.checkIns.push(new Date());
       if (!req.body.requireCheckOff)
         visitor.checkOffs.push(new Date());
@@ -37,6 +49,7 @@ export function newVisitor(req, res, next) {
   newVisitor.phone = req.body.phone || null;
   if (req.body.form)
     newVisitor.push(req.body.form);
+  //will change when we figure out how to do queue
   newVisitor.checkIns.push(new Date());
   if (!req.body.requireCheckOff)
    newVisitor.checkOffs.push(new Date());
@@ -47,10 +60,28 @@ export function newVisitor(req, res, next) {
   });
 }
 
-export function _checkOffVisitor(req, res, next) {
-
+export function checkOffVisitor(req, res, next) {
+  //will happen when we get queue
 }
 
-export function _search(req, res, next) {
+export function search(req, res, next) {
+  //next week
+}
+
+export function deleteVisitor(req, res, next) {
+  //need to implement security
+
+  var visitorId = req.query.id;
+
+  Visitor.findById(visitorId, function(err, visitor) {
+    if (err)
+      return res.status(500).send(err);
+    if (visitor)
+      visitor.remove(function(err) {
+        if (err)
+          return res.status(500).send(err);
+        return res.status(200).end();
+      });
+  });
 
 }

@@ -3,7 +3,7 @@ var Schema = mongoose.Schema;
 
 var VisitorSchema = new Schema({
 
-  bussinessID: {
+  businessID: {
     type: Schema.ObjectId, 
     ref: "Business"
   },
