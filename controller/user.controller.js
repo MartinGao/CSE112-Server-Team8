@@ -7,8 +7,7 @@ const User = mongoose.model('User');
 export function signUp(req, res) {
   if (req.body.role === '1') {
     _createAdminUser(req, res);
-  }
-  else if (req.body.role === '3') {
+  } else if (req.body.role === '3') {
     _createEmployeeUser(req, res);
   }
 }
@@ -17,7 +16,7 @@ export function signIn(req, res) {
   console.log('user signIn!');
   console.log(req.query);
   User.findOne({
-    email: req.query.email
+    email: req.query.email,
   }, (err, user) => {
     if (err) {
       console.log(err);

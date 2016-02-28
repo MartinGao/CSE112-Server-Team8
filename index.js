@@ -36,6 +36,12 @@ clientRoute(app);
 testRoute(app);
 visitorRoute(app);
 
+
+app.get('/doc', (req, res) => {
+  res.sendFile('index.html', { root: './doc/' });
+});
+
+
 mongoose.connect(TEST_DB, (err) => {
   if (err) {
     console.error(chalk.red('Could not connect to MongoDB!'));
