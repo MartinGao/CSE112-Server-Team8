@@ -1,5 +1,26 @@
 import * as form from '../controller/form.controller';
 
+/**
+ * @api {post} /form Create new form
+ * @apiName CreateForm
+ * @apiGroup Form
+ *
+ * @apiParam {Object} req Information stored in body: businessId, form, description
+ *
+ * @apiSuccess {Object} Returns the new form that was created
+ * @apiSuccessExample Example JSON on success:
+ * {
+ *   description: 'Cool form',
+ *   form: {
+ *     formId: 12345,
+ *	   businessId: 678,
+ *     field: { String: 'something' },
+ *     timestamp: date
+ *   }	
+ * }
+ *
+ * @apiError MissingBody Missing businessID or form
+ */
 module.exports = function(app) {
 	app.route('/form/').post(form.createForm);
 };
