@@ -33,9 +33,16 @@ testRoute(app);
 visitorRoute(app);
 
 
-app.get('/doc', (req, res) => {
-  res.sendFile('index.html', { root: './doc/' });
-});
+app.use('/doc', express.static(__dirname + '/doc'));
+
+
+// app.get('/doc', (req, res) => {
+//   res.sendFile('index.html', { root: './doc/' });
+// });
+//
+// app.get('/main.js', (req, res) => {
+//   res.sendFile('main.js', { root: './doc/' });
+// });
 
 app.get('/vendor/:path', (req, res) => {
   const path = req.params.path;
