@@ -17,15 +17,16 @@ import * as visitor from '../controller/visitor.controller';
  *   email: 'hiimsick1954@gmail.org',
  *   form: {
  *     formId: 12345,
- *	   businessId: 1,
+ *     businessId: 1,
  *     field: { String: 'something' },
  *     timestamp: date
- *   }	
+ *   }  
  * }
  *
  * @apiError MissingName Missing name
  */
 module.exports = function(app) {
+  console.log("here");
   app.route('/visitor').post(visitor.newVisitor);
 };
 
@@ -46,10 +47,10 @@ module.exports = function(app) {
  *   email: 'hiimsick1954@gmail.org',
  *   form: {
  *     formId: 12345,
- *	   businessId: 1,
+ *     businessId: 1,
  *     field: { String: 'something' },
  *     timestamp: date
- *   }	
+ *   }  
  * }
  *
  * @apiError IncorrectBusinessId Incorrect businessId
@@ -75,10 +76,10 @@ module.exports = function(app) {
  *   email: 'hiimsick1954@gmail.org',
  *   form: {
  *     formId: 12345,
- *	   businessId: 1,
+ *     businessId: 1,
  *     field: { String: 'something' },
  *     timestamp: date
- *   }	
+ *   }  
  * }
  *
  * @apiError IncorrectBusinessId Incorrect businessId
@@ -99,7 +100,7 @@ module.exports = function(app) {
  * {
  *   name:'Cool Queue',
  *   email:'cool@coolhospital.org',
- *   reason:'Patient queue',  	
+ *   reason:'Patient queue',    
  *   user:'Cool Employee'
  * }
  *

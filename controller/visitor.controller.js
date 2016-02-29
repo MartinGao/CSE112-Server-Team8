@@ -4,9 +4,15 @@ var Visitor = mongoose.model('Visitor');
 
 export function newVisitor(req, res, next) {
 
+  var businessId = 1000;
+
+  //query for user to get businessId
+
   var missing = [];
   if (!req.body.name)
     missing.push("missing name");
+  if (!businessId)
+    missing.push("missing businessId");
   if (missing.length) {
     return res.status(400).send({
       "Error": missing.join(', ')
@@ -22,8 +28,6 @@ export function newVisitor(req, res, next) {
   newVisitor.email = req.body.email || null;
   newVisitor.phone = req.body.phone || null;
   newVisitor.form = req.body.form || null;
-
-  newVisitor.checkIns.push(new Date());
 
   if (!req.body.requireCheckOff)
    newVisitor.checkOff = new Date();
