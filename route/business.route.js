@@ -10,7 +10,7 @@ import * as business from '../controller/business.controller';
  *
  * @apiParam {Object} req Information stored in body: name, url, logo, description, owner
  *
- * @apiSuccess {Object} Returns the new business that was created
+ * @apiSuccess {Object} business Returns the new business that was created
  * @apiSuccessExample Example JSON on success:
  * {
  *   name:'Cool Hospital',

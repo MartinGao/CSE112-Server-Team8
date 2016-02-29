@@ -7,7 +7,7 @@ import * as visitor from '../controller/visitor.controller';
  *
  * @apiParam {Object} req Information stored in body: name
  *
- * @apiSuccess {Object} Returns the new visitor that was created
+ * @apiSuccess {Object} visitor Returns the new visitor that was created
  * @apiSuccessExample Example JSON on success:
  * {
  *   visitorId: 1337,
@@ -36,7 +36,7 @@ module.exports = function(app) {
  *
  * @apiParam {Object} req Information stored in params: visitorId
  *
- * @apiSuccess {Object} Checks off the visitor
+ * @apiSuccess {Object} visitor Checks off the visitor
  * @apiSuccessExample Example JSON on success:
  * {
  *   visitorId: 1337,
@@ -65,7 +65,7 @@ module.exports = function(app) {
  *
  * @apiParam {Object} req Information stored in params: visitorId
  *
- * @apiSuccess {Object} Checks off the visitor
+ * @apiSuccess {Object} visitor Deletes the visitor
  * @apiSuccessExample Example JSON on success:
  * {
  *   visitorId: 1337,
@@ -94,7 +94,7 @@ module.exports = function(app) {
  *
  * @apiParam {Object} req Information stored in params: page, per_page
  *
- * @apiSuccess {Object} Returns queue
+ * @apiSuccess {Object} queue Returns queue
  * @apiSuccessExample Example JSON on success:
  * {
  *   name:'Cool Queue',

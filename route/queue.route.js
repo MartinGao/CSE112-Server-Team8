@@ -7,7 +7,7 @@ import * as queue from '../controller/queue.controller';
  *
  * @apiParam {Object} req Information stored in body: name, email, reason, user, avatar
  *
- * @apiSuccess {Object} Returns the new queue that was created
+ * @apiSuccess {Object} queue Returns the new queue that was created
  * @apiSuccessExample Example JSON on success:
  * {
  *   name:'Cool Queue',

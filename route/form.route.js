@@ -7,7 +7,7 @@ import * as form from '../controller/form.controller';
  *
  * @apiParam {Object} req Information stored in body: businessId, form, description
  *
- * @apiSuccess {Object} Returns the new form that was created
+ * @apiSuccess {Object} form Returns the new form that was created
  * @apiSuccessExample Example JSON on success:
  * {
  *   description: 'Cool form',

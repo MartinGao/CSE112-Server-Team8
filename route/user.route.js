@@ -7,7 +7,7 @@ import * as user from '../controller/user.controller';
  *
  * @apiParam {Object} req Information stored in query: email, password
  *
- * @apiSuccess {Object} Returns the user found
+ * @apiSuccess {Object} user Returns the user found
  * @apiSuccessExample Example JSON on success:
  * {
  *   userId: 12345,
@@ -27,7 +27,7 @@ import * as user from '../controller/user.controller';
  *
  * @apiParam {Object} req Information stored in body: firstName, lastName, avatar, email, password, department, position
  *
- * @apiSuccess {Object} Returns the new admin user that was created
+ * @apiSuccess {Object} user Returns the new admin user that was created
  * @apiSuccessExample Example JSON on success:
  * {
  *   role: 1,
@@ -48,7 +48,7 @@ import * as user from '../controller/user.controller';
  *
  * @apiParam {Object} req Information stored in body: firstName, lastName, avatar, email, password, department, position
  *
- * @apiSuccess {Object} Returns the new employee user that was created
+ * @apiSuccess {Object} user Returns the new employee user that was created
  * @apiSuccessExample Example JSON on success:
  * {
  *   role: 3,
