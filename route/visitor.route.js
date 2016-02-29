@@ -15,3 +15,7 @@ module.exports = function(app) {
 module.exports = function(app) {
     app.route('/visitor/queue').get(visitor.getQueue);
 }
+
+module.exports = function(app) {
+  app.route('/visitor/visited').get(visitor.deleteVisitor);
+}
