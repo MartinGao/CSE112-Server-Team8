@@ -15,7 +15,7 @@ export function createForm(req, res, next) {
 		missing.push("form is required");
 	if(missing.length){
 		return res.status(400).send({
-			"Error: " missing.join(', ');
+			"Error": missing.join(', '),
 		});
 	}
 
