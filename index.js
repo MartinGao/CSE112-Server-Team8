@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 import chalk from 'chalk';
 import bodyParser from 'body-parser';
 
-const TEST_DB = 'mongodb://db.siriolabs.com/cse112-dev-test';
+const TEST_DB = 'mongodb://admin:Qgj4zFWLnig2YW@ds019038.mlab.com:19038/cse112';
 
 //  Models
 import userModel from './model/user.model';

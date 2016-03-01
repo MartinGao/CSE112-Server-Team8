@@ -20,11 +20,7 @@ const UserSchema = new Schema({
     type: Boolean,
     default: false,
   },
-  firstName: {
-    type: String,
-    required: true,
-  },
-  lastName: {
+  name: {
     type: String,
     required: true,
   },
