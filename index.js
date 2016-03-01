@@ -9,12 +9,14 @@ const TEST_DB = 'mongodb://admin:Qgj4zFWLnig2YW@ds019038.mlab.com:19038/cse112';
 import userModel from './model/user.model';
 import businessModel from './model/business.model';
 import visitorModel from './model/visitor.model';
+import formModel from './model/form.model';
 
 //  Routes
 import userRoute from './route/user.route';
 import businessRoute from './route/business.route';
 import testRoute from './route/test.route';
 import visitorRoute from './route/visitor.route';
+import formRoute from './route/form.route';
 
 const app = module.exports = express();
 
@@ -26,11 +28,13 @@ app.use(bodyParser.json());
 userModel(app);
 businessModel(app);
 visitorModel(app);
+formModel(app);
 
 userRoute(app);
 businessRoute(app);
 testRoute(app);
 visitorRoute(app);
+formRoute(app);
 
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');

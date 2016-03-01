@@ -27,7 +27,7 @@ var VisitorSchema = new Schema({
     type: Date,
     default: null
   },
-  forms: {
+  form: {
     type: Object,
     default: null
   },
