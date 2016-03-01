@@ -25,7 +25,9 @@ Then close current terminal and open a new terminal
 
 ### MongoLab
 > https://mlab.com/login/
-> Username: `admin`
+
+> Username: `CSE112` >UPPER CASE< This field is Case-sensitive
+
 > Password: `Qgj4zFWLnig2YW`
 
 ### MongoDB GUI
