@@ -10,6 +10,10 @@ const User = mongoose.model('User');
 const JWT_SECRET = '#rub_a_dubDub_thanks_forthe_grub!';
 
 
+export function currentUser(req, res) {
+  res.send('123');
+}
+
 
 export function signUp(req, res) {
   if (req.body.role === '1') {
