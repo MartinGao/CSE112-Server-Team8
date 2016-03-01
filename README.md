@@ -7,7 +7,7 @@ Node.js server for CSE112 Team 8
 #### if you do not have Node.js installed locally
 ` curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.31.0/install.sh | bash `
 
-Then close current terminal and open a new terminal 
+Then close current terminal and open a new terminal
 
 ` nvm install 5 `
 
@@ -23,6 +23,10 @@ Then close current terminal and open a new terminal
 
 ` npm run start`
 
+### MongoLab
+> https://mlab.com/login/
+> Username: `admin`
+> Password: `Qgj4zFWLnig2YW`
 
 ### MongoDB GUI
 > http://52.27.142.66:1234/local
