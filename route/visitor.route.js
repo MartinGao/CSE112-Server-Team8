@@ -1,5 +1,14 @@
 import * as visitor from '../controller/visitor.controller';
 
+module.exports = function(app) {
+  app.route('/visitor/new').post(visitor.newVisitor);
+  app.route('/visitor/:visitorId')
+    .put(visitor.checkOffVisitor)
+    .delete(visitor.deleteVisitor);
+  app.route('/visitor/queue').get(visitor.getQueue);
+  app.route('/visitor/visited').get(visitor.getVisitors);
+};
+
 /**
  * @api {post} /visitor Create new visitor
  * @apiName CreateVisitor
@@ -17,18 +26,14 @@ import * as visitor from '../controller/visitor.controller';
  *   email: 'hiimsick1954@gmail.org',
  *   form: {
  *     formId: 12345,
- *     businessId: 1,
+ *	   businessId: 1,
  *     field: { String: 'something' },
  *     timestamp: date
- *   }  
+ *   }	
  * }
  *
  * @apiError MissingName Missing name
  */
-module.exports = function(app) {
-  console.log("here");
-  app.route('/visitor').post(visitor.newVisitor);
-};
 
 /**
  * @api {put} /visitor Check off visitor
@@ -47,17 +52,14 @@ module.exports = function(app) {
  *   email: 'hiimsick1954@gmail.org',
  *   form: {
  *     formId: 12345,
- *     businessId: 1,
+ *	   businessId: 1,
  *     field: { String: 'something' },
  *     timestamp: date
- *   }  
+ *   }	
  * }
  *
  * @apiError IncorrectBusinessId Incorrect businessId
  */
-module.exports = function(app) {
-    app.route('/visitor/:visitorId').put(visitor.checkOffVisitor);
-}
 
 /**
  * @api {delete} /visitor Delete visitor
@@ -76,17 +78,14 @@ module.exports = function(app) {
  *   email: 'hiimsick1954@gmail.org',
  *   form: {
  *     formId: 12345,
- *     businessId: 1,
+ *	   businessId: 1,
  *     field: { String: 'something' },
  *     timestamp: date
- *   }  
+ *   }	
  * }
  *
  * @apiError IncorrectBusinessId Incorrect businessId
  */
-module.exports = function(app) {
-    app.route('/visitor/:visitorId').delete(visitor.deleteVisitor);
-}
 
 /**
  * @api {get} /visitor Get queue
@@ -100,16 +99,9 @@ module.exports = function(app) {
  * {
  *   name:'Cool Queue',
  *   email:'cool@coolhospital.org',
- *   reason:'Patient queue',    
+ *   reason:'Patient queue',  	
  *   user:'Cool Employee'
  * }
  *
  * @apiError MissingPage Missing page or page is 0, missing per_page or per_page is 0
  */
-module.exports = function(app) {
-    app.route('/visitor/queue').get(visitor.getQueue);
-}
-
-module.exports = function(app) {
-  app.route('/visitor/visited').get(visitor.deleteVisitor);
-}

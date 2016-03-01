@@ -4,7 +4,7 @@ var Visitor = mongoose.model('Visitor');
 
 export function newVisitor(req, res, next) {
 
-  var businessId = 1000;
+  var businessId = "56a2089878a6daf9919a919f";
 
   //query for user to get businessId
 
@@ -19,9 +19,6 @@ export function newVisitor(req, res, next) {
     });
   }
 
-  //change when we can get the business id from the user object
-  var businessId = 1;
-
   var newVisitor = new Visitor();
   newVisitor.name = req.body.name;
   newVisitor.businessId = businessId;
@@ -29,8 +26,9 @@ export function newVisitor(req, res, next) {
   newVisitor.phone = req.body.phone || null;
   newVisitor.form = req.body.form || null;
 
-  if (!req.body.requireCheckOff)
-   newVisitor.checkOff = new Date();
+  if (req.body.requireCheckOff === '0'){
+    newVisitor.checkOff = new Date();
+ }
   newVisitor.save(function(err, updatedVisitor) {
     if (err)
       return res.status(400).send(err);
@@ -60,7 +58,7 @@ export function checkOffVisitor(req, res, next) {
 }
 
 export function getQueue(req, res, next) {
-  var businessId = 1;
+  var businessId = "56a2089878a6daf9919a919f";
 
   var missing = [];
   if (!req.query.page)
@@ -85,8 +83,7 @@ export function getQueue(req, res, next) {
 }
 
 export function getVisitors(req, res, next) {
-  
-  var businessId = 1;
+  var businessId = "56a2089878a6daf9919a919f";
 
   var missing = [];
   if (!req.query.page)
@@ -101,8 +98,8 @@ export function getVisitors(req, res, next) {
     });
   }
 
-  var startDate = moment(req.query.date).toDate();
-  var endDate = moment(req.query.date).add(1, 'days').toDate();
+  var startDate = moment(req.query.date, 'MM-DD-YYYY').toDate();
+  var endDate = moment(req.query.date, 'MM-DD-YYYY').add(1, 'days').toDate();
 
   Visitor.find({
     businessId: businessId, 
@@ -123,21 +120,14 @@ export function getVisitors(req, res, next) {
 }
 
 export function deleteVisitor(req, res, next) {
-  var businessId = 1;
+  var businessId = "56a2089878a6daf9919a919f";
   var visitorId = req.params.visitorId;
+  console.log(visitorId);
 
-  Visitor.findById(visitorId, function(err, visitor) {
+  Visitor.findOneAndRemove({_id:visitorId, businessId:businessId}).exec(function(err, visitor) {
     if (err)
       return res.status(400).send(err);
-    if (visitor) {
-      if (visitor.businessId != businessId)
-        return res.status(400).send({"Error":"incorrect businessId"});
-      visitor.remove(function(err) {
-        if (err)
-          return res.status(400).send(err);
-        return res.status(200).end();
-      });
-    }
+    return res.status(404).send({"Success":"visitor removed"});
   });
 }
 
