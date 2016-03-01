@@ -12,15 +12,18 @@ module.exports = function(app) {
     .delete(expressJwt({ secret: JWT_SECRET }), visitor.deleteVisitor);
   app.route('/visitor/queue').get(expressJwt({ secret: JWT_SECRET }), visitor.getQueue);
   app.route('/visitor/visited').get(expressJwt({ secret: JWT_SECRET }), visitor.getVisitors);
+
+  app.route('/visitor/testPusher').get(visitor.testPusher);
+
 };
 
 /**
  * @api {post} /visitor/new Create new visitor
  * @apiName CreateVisitor
  * @apiGroup Visitor
- * 
+ *
  * @apiDescription the parameters passed in BODY
- * 
+ *
  * @apiHeader {String} JWT token required (required)
  * @apiParam {String} name visitors name (required)
  * @apiParam {String} email visitor's email
@@ -60,9 +63,9 @@ module.exports = function(app) {
  * @apiGroup Visitor
  *
  * @apiDescription the parameters are passed in the URL (replace ':visitorId' with the id of the visitor)
- * 
+ *
  * @apiHeader {String} JWT token required (required)
- * @apiParam {String} id of visitor you want to check off (required) 
+ * @apiParam {String} id of visitor you want to check off (required)
  *
  * @apiSuccessExample Example JSON on success:
  * {
@@ -102,7 +105,7 @@ module.exports = function(app) {
  * @api {get} /visitor/queue Get queue
  * @apiName GetQueue
  * @apiGroup Visitor
- * 
+ *
  * @apiDescription returns the current visitors that have not been checked off sorted by time, parameters passed in the query string
  * example query localhost:3000/visitor/queue?page=2&per_page=1
  *
@@ -167,7 +170,7 @@ module.exports = function(app) {
  * ]
  *
  * @apiError MissingPage Missing page or page is 0, missing per_page or per_page is 0
- * @apiErrorExample 
+ * @apiErrorExample
  * {
  *  "Error": "missing per_page or per_page is 0"
  * }
@@ -177,7 +180,7 @@ module.exports = function(app) {
  * @api {get} /visitor/visited Get checked off visitors on a certain date
  * @apiName GetQueue
  * @apiGroup Visitor
- * 
+ *
  * @apiDescription returns the visitors that have been checked off sorted by time, parameters passed in the query string
  * example query localhost:3000/visitor/visited?page=1&per_page=5&date=02-29-2016
  *
@@ -243,16 +246,8 @@ module.exports = function(app) {
  * ]
  *
  * @apiError MissingPage Missing page or page is 0, missing per_page or per_page is 0
- * @apiErrorExample 
+ * @apiErrorExample
  * {
  *  "Error": "missing per_page or per_page is 0"
  * }
  */
-
-
-
-
-
-
-
-

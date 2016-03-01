@@ -60,6 +60,14 @@ app.get('/vendor/:path', (req, res) => {
   res.sendFile(path, { root: './doc/vendor/' });
 });
 
+app.get('/testPusherClient', (req, res) => {
+  res.sendFile('tempClient.html', { root: './public/' });
+});
+
+app.get('/testPusherServer', (req, res) => {
+  res.sendFile('tempServer.html', { root: './public/' });
+});
+
 
 mongoose.connect(TEST_DB, (err) => {
   if (err) {

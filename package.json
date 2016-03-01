@@ -33,6 +33,7 @@
     "mongoose": "^4.2.10",
     "node-schedule": "^0.6.0",
     "nodemon": "^1.8.1",
+    "pusher": "^1.2.0",
     "qs": "^6.0.1",
     "request": "^2.67.0"
   },

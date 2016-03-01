@@ -1,7 +1,31 @@
 import mongoose from 'mongoose';
 import moment from 'moment';
-var Visitor = mongoose.model('Visitor');
-var User = mongoose.model('User');
+import Chance from 'chance';
+import Pusher from 'pusher';
+
+const Visitor = mongoose.model('Visitor');
+const User = mongoose.model('User');
+const chance = new Chance();
+const pusher = new Pusher({
+  appId: '173148',
+  key: '7c84af4dd6941414d752',
+  secret: '3bd44e5f7d1d9724385d',
+  encrypted: true,
+});
+pusher.port = 443;
+
+
+export function testPusher(req, res) {
+  let randomName = chance.name();
+  if (req.query.name) {
+    randomName = req.query.name;
+  }
+  pusher.trigger('test_channel', 'newVisitor', {
+    visitorName: randomName,
+  });
+  res.status(200).send({ visitorName: randomName });
+}
+
 
 export function newVisitor(req, res, next) {
 
@@ -78,7 +102,7 @@ export function getQueue(req, res, next) {
       Visitor.find({businessId: user.business, checkOff: null})
       .sort('-timeStamp.created')
       .skip((req.query.page - 1) * req.query.per_page)
-      .limit(req.query.per_page) 
+      .limit(req.query.per_page)
       .exec(function (err, visitors) {
         if (err)
           return res.status(400).send(err);
@@ -110,8 +134,8 @@ export function getVisitors(req, res, next) {
       return res.status(400).send(err);
     if (user) {
       Visitor.find({
-        business: user.businessId, 
-        checkOff: {$ne: null}, 
+        business: user.businessId,
+        checkOff: {$ne: null},
         checkIn: {
           $gte: startDate,
           $lte: endDate
@@ -119,7 +143,7 @@ export function getVisitors(req, res, next) {
       })
       .sort('-timeStamp.created')
       .skip((req.query.page - 1) * req.query.per_page)
-      .limit(req.query.per_page) 
+      .limit(req.query.per_page)
       .exec(function (err, visitors) {
         if (err)
           return res.status(400).send(err);
@@ -167,7 +191,7 @@ export function search(req, res, next) {
   //   if (err)
   //     return res.status(400).send(err);
   //   if (visitor) {
-  //     //will be replaced with either pushing ot not pushing to queue 
+  //     //will be replaced with either pushing ot not pushing to queue
   //     visitor.checkIns.push(new Date());
   //     if (!req.body.requireCheckOff)
   //       visitor.checkOffs.push(new Date());
