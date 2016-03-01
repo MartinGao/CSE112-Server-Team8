@@ -1,7 +1,12 @@
 import * as visitor from '../controller/visitor.controller';
 
+import expressJwt from 'express-jwt';
+import jwt from 'jsonwebtoken';
+
+const JWT_SECRET = '#rub_a_dubDub_thanks_forthe_grub!';
+
 module.exports = function(app) {
-  app.route('/visitor/new').post(visitor.newVisitor);
+  app.route('/visitor/new').post( expressJwt({ secret: JWT_SECRET }), visitor.newVisitor);
   app.route('/visitor/:visitorId')
     .put(visitor.checkOffVisitor)
     .delete(visitor.deleteVisitor);

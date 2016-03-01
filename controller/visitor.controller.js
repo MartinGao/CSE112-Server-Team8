@@ -4,6 +4,8 @@ var Visitor = mongoose.model('Visitor');
 
 export function newVisitor(req, res, next) {
 
+  console.log(req.user._id);
+
   var businessId = "56a2089878a6daf9919a919f";
 
   //query for user to get businessId
