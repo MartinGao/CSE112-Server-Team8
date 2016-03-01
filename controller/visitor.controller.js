@@ -1,56 +1,33 @@
 import mongoose from 'mongoose';
 import moment from 'moment';
 var Visitor = mongoose.model('Visitor');
+var User = mongoose.model('User');
 
 export function newVisitor(req, res, next) {
-
-  console.log(req.user._id);
-
-  var businessId = "56a2089878a6daf9919a919f";
-
-  //query for user to get businessId
 
   var missing = [];
   if (!req.body.name)
     missing.push("missing name");
-  if (!businessId)
-    missing.push("missing businessId");
   if (missing.length) {
     return res.status(400).send({
       "Error": missing.join(', ')
     });
   }
 
-  var newVisitor = new Visitor();
-  newVisitor.name = req.body.name;
-  newVisitor.businessId = businessId;
-  newVisitor.email = req.body.email || null;
-  newVisitor.phone = req.body.phone || null;
-  newVisitor.form = req.body.form || null;
-
-  if (req.body.requireCheckOff === '0'){
-    newVisitor.checkOff = new Date();
- }
-  newVisitor.save(function(err, updatedVisitor) {
+  User.findById(req.user, function(err, user) {
     if (err)
       return res.status(400).send(err);
-    return res.status(200).send(updatedVisitor);
-  });
-}
+    if (user) {
+      var newVisitor = new Visitor();
+      newVisitor.name = req.body.name;
+      newVisitor.businessId = user.business;
+      newVisitor.email = req.body.email || null;
+      newVisitor.phone = req.body.phone || null;
+      newVisitor.form = req.body.form || null;
 
-export function checkOffVisitor(req, res, next) {
-
-  var businessId = 1;
-  var visitorId = req.params.visitorId;
-
-  Visitor.findById(visitorId, function(err, visitor) {
-    if (err)
-      return res.status(400).send(err);
-    if (visitor) {
-      if (visitor.businessId != businessId)
-        return res.status(400).send({"Error":"incorrect businessId"});
-      visitor.checkOff = new Date();
-      visitor.save(function(err, updatedVisitor) {
+      if (req.body.requireCheckOff === '0')
+        newVisitor.checkOff = new Date();
+      newVisitor.save(function(err, updatedVisitor) {
         if (err)
           return res.status(400).send(err);
         return res.status(200).send(updatedVisitor);
@@ -59,9 +36,30 @@ export function checkOffVisitor(req, res, next) {
   });
 }
 
-export function getQueue(req, res, next) {
-  var businessId = "56a2089878a6daf9919a919f";
+export function checkOffVisitor(req, res, next) {
+  User.findById(req.user._id, function(err, user) {
+    if (err)
+      return res.status(400).send(err);
+    if (user) {
+      Visitor.findOne({_id:req.params.visitorId, businessId: user.business}).exec(function(err, visitor) {
+        console.log(visitor);
+        if (err)
+          return res.status(400).send(err);
+        if (visitor) {
+          visitor.checkOff = new Date();
+          console.log(visitor);
+          visitor.save(function(err, updatedVisitor) {
+            if (err)
+              return res.status(400).send(err);
+            return res.status(200).send(updatedVisitor);
+          });
+        }
+      });
+    }
+  });
+}
 
+export function getQueue(req, res, next) {
   var missing = [];
   if (!req.query.page)
     missing.push("missing page or page is 0");
@@ -73,20 +71,24 @@ export function getQueue(req, res, next) {
     });
   }
 
-  Visitor.find({businessId: businessId, checkOff: null})
-  .sort('-timeStamp.created')
-  .skip((req.query.page - 1) * req.query.per_page)
-  .limit(req.query.per_page) 
-  .exec(function (err, visitors) {
+  User.findById(req.user._id, function(err, user) {
     if (err)
       return res.status(400).send(err);
-    return res.status(200).send(visitors);
+    if (user) {
+      Visitor.find({businessId: user.business, checkOff: null})
+      .sort('-timeStamp.created')
+      .skip((req.query.page - 1) * req.query.per_page)
+      .limit(req.query.per_page) 
+      .exec(function (err, visitors) {
+        if (err)
+          return res.status(400).send(err);
+        return res.status(200).send(visitors);
+      });
+    }
   });
 }
 
 export function getVisitors(req, res, next) {
-  var businessId = "56a2089878a6daf9919a919f";
-
   var missing = [];
   if (!req.query.page)
     missing.push("missing page or page is 0");
@@ -103,33 +105,44 @@ export function getVisitors(req, res, next) {
   var startDate = moment(req.query.date, 'MM-DD-YYYY').toDate();
   var endDate = moment(req.query.date, 'MM-DD-YYYY').add(1, 'days').toDate();
 
-  Visitor.find({
-    businessId: businessId, 
-    checkOff: {$ne: null}, 
-    checkIn: {
-      $gte: startDate,
-      $lte: endDate
-    }
-  })
-  .sort('-timeStamp.created')
-  .skip((req.query.page - 1) * req.query.per_page)
-  .limit(req.query.per_page) 
-  .exec(function (err, visitors) {
+  User.findById(req.user._id, function(err, user) {
     if (err)
       return res.status(400).send(err);
-    return res.status(200).send(visitors);
+    if (user) {
+      Visitor.find({
+        business: user.businessId, 
+        checkOff: {$ne: null}, 
+        checkIn: {
+          $gte: startDate,
+          $lte: endDate
+        }
+      })
+      .sort('-timeStamp.created')
+      .skip((req.query.page - 1) * req.query.per_page)
+      .limit(req.query.per_page) 
+      .exec(function (err, visitors) {
+        if (err)
+          return res.status(400).send(err);
+        return res.status(200).send(visitors);
+      });
+    }
   });
 }
 
 export function deleteVisitor(req, res, next) {
-  var businessId = "56a2089878a6daf9919a919f";
-  var visitorId = req.params.visitorId;
-  console.log(visitorId);
+  if (!req.params.visitorId)
+    res.status(400).send(err);
 
-  Visitor.findOneAndRemove({_id:visitorId, businessId:businessId}).exec(function(err, visitor) {
+  User.findById(req.user._id, function(err, user) {
     if (err)
       return res.status(400).send(err);
-    return res.status(404).send({"Success":"visitor removed"});
+    if (user) {
+      Visitor.findOneAndRemove({_id:req.params.visitorId, businessId:user.business}).exec(function(err, visitor) {
+        if (err)
+          return res.status(400).send(err);
+        return res.status(200).send({"Success":"visitor removed"});
+      });
+    }
   });
 }
 

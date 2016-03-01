@@ -42,7 +42,7 @@ export function signIn(req, res) {
         if (bcrypt.compareSync(req.body.password, existedUser.password)) {
           res.status(200).send({
             token: jwt.sign({ _id: existedUser._id }, JWT_SECRET),
-            user: existedUser,
+            user: existedUser
           });
         } else {
           res.status(401).send({ errorMsg: 'Invalid Password!' });
@@ -92,7 +92,7 @@ function _createManagerUser(req, res) {
           console.log('Hello New User! ' + newUser );
           res.status(200).send({
             token: jwt.sign({ _id: newUser._id }, JWT_SECRET),
-            user: newUser,
+            user: newUser
           });
         }
       });
