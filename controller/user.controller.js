@@ -11,7 +11,18 @@ const JWT_SECRET = '#rub_a_dubDub_thanks_forthe_grub!';
 
 
 export function currentUser(req, res) {
-  res.send('123');
+  User.findOne({ _id: mongoose.Types.ObjectId(req.user._id) }).exec((err, existedUser) => {
+    if (err) {
+      res.status(400).send(err);
+    } else {
+      if(existedUser){
+        res.status(200).send(existedUser);
+      }
+      else{
+        res.status(400).send({ errorMsg: 'Invalid Token (userId)' });
+      }
+    }
+  });
 }
 
 
@@ -41,7 +52,9 @@ export function signIn(req, res) {
       if (existedUser) {
         if (bcrypt.compareSync(req.body.password, existedUser.password)) {
           res.status(200).send({
-            token: jwt.sign({ _id: existedUser._id }, JWT_SECRET),
+            token: jwt.sign({
+              _id: existedUser._id,
+            }, JWT_SECRET),
             user: existedUser
           });
         } else {
@@ -91,7 +104,9 @@ function _createManagerUser(req, res) {
         } else {
           console.log('Hello New User! ' + newUser );
           res.status(200).send({
-            token: jwt.sign({ _id: newUser._id }, JWT_SECRET),
+            token: jwt.sign({
+              _id: existedUser._id,
+            }, JWT_SECRET),
             user: newUser
           });
         }

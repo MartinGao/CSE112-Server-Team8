@@ -77,6 +77,35 @@ const JWT_SECRET = '#rub_a_dubDub_thanks_forthe_grub!';
 * @apiError InvalidInfo Invalid password or email
 */
 
+/**
+* @api {get} /user Return User by token
+* @apiName ReturnUser
+* @apiGroup User
+*
+* @apiHeader {String} Authorization Bearer (token)
+
+* @apiSuccess {Object} user Returns the new employee user that was created
+* @apiSuccessExample Example JSON on success:
+{
+  "_id": "56d4e57bd3877b5615155b6b",
+  "name": "Martin Gao",
+  "email": "marting.gao@gmail.com",
+  "password": "$2a$10$ov56uucwGoi5tivr81djyu2wxXORbvHqLH3d1Q.u0n0szkMluenMy",
+  "salt": "$2a$10$ov56uucwGoi5tivr81djyu",
+  "business": "56d4e57ad3877b5615155b6a",
+  "token": "$2a$31$wTh1wYnF0VvhoIEOFnn76.",
+  "tokenExpiredAt": "2017-03-01T00:42:35.089Z",
+  "__v": 0,
+  "timeStamp": {
+    "updated": "2016-03-01T00:42:35.094Z",
+    "created": "2016-03-01T00:42:35.091Z"
+  },
+  "avatar": null,
+  "approved": true,
+  "role": 2
+}
+*
+**/
 
 /**
 * @api {post} /user [INCOMPLETE]Create new employee user

@@ -46,14 +46,6 @@ const UserSchema = new Schema({
     required: true,
     ref: 'Business',
   },
-  token: {
-    type: String,
-    required: true,
-  },
-  tokenExpiredAt: {
-    type: Date,
-    required: true,
-  },
   timeStamp: {
     created: {type: Date, default: Date.now},
     updated: {type: Date, default: Date.now}
