@@ -14,12 +14,13 @@ import * as business from '../controller/business.controller';
  * @apiSuccessExample Example JSON on success:
  * {
  *   name:'Cool Hospital',
- *   url:'coolhospital.org',
+ *   url:'coolhospital.org',  	
  *   owner:'Dr. Cool'
  * }
  *
  * @apiError MissingBody Missing name, url, or owner
  */
 module.exports = function(app) {
-  // app.route('/business/new').post(business.newBusiness);
+  app.route('/business/new').post(business.newBusiness);
+  app.route('/business').get(business.getBusiness);
 };
