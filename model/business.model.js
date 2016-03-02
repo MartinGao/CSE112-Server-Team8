@@ -14,25 +14,15 @@ const BusinessSchema = new Schema({
         type: Schema.ObjectId,
         required: true
     },
-    //change to match schema
     businessId: {
         type: Schema.ObjectId,
         required: true
     },
-    name: {
-    },
-    phone: {
-        type: String,
-        required: true
-    },
-    iconURL: {
-        type: String,
-        required: true
-    },
-    backgroundImageUrl: {
-        type: String,
-        required: true
-    },
+    name: String,
+    url: String,
+    phone: String,
+    iconURL: String,
+    backgroundImageUrl: String,
     userIds: [{
         type: Schema.ObjectId,
         ref: 'User'
