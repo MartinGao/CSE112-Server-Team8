@@ -86,9 +86,13 @@ export function checkOffVisitor(req, res, next) {
 export function getQueue(req, res, next) {
   var missing = [];
   if (!req.query.page)
-    missing.push("missing page or page is 0");
+    missing.push("missing page");
+  if (req.query.page < 1)
+    missing.push("page is less than 1");
   if (!req.query.per_page)
-    missing.push("missing per_page or per_page is 0");
+    missing.push("missing per_page");
+  if (req.query.per_page < 1)
+    missing.push("per_page is less than 1");
   if (missing.length) {
     return res.status(400).send({
       "Error": missing.join(', ')
@@ -115,9 +119,13 @@ export function getQueue(req, res, next) {
 export function getVisitors(req, res, next) {
   var missing = [];
   if (!req.query.page)
-    missing.push("missing page or page is 0");
+    missing.push("missing page");
+  if (req.query.page < 1)
+    missing.push("page is less than 1");
   if (!req.query.per_page)
-    missing.push("missing per_page or per_page is 0");
+    missing.push("missing per_page");
+  if (req.query.per_page < 1)
+    missing.push("per_page is less than 1");
   if (!req.query.date)
     missing.push("missing date");
   if (missing.length) {
