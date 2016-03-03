@@ -105,7 +105,7 @@ function _createManagerUser(req, res) {
           console.log('Hello New User! ' + newUser );
           res.status(200).send({
             token: jwt.sign({
-              _id: existedUser._id,
+              _id: newUser._id,
             }, JWT_SECRET),
             user: newUser
           });

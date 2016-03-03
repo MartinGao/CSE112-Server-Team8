@@ -89,6 +89,6 @@ import * as business from '../controller/business.controller';
  * @apiError Missing businessId
  */
 module.exports = function(app) {
-  app.route('/business').post(business.newBusiness);
-  app.route('/business').get(business.getBusiness);
+  // app.route('/business').post(business.newBusiness);
+  // app.route('/business').get(business.getBusiness);
 };
