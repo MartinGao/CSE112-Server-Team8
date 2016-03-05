@@ -6,7 +6,7 @@ import jwt from 'jsonwebtoken';
 const JWT_SECRET = '#rub_a_dubDub_thanks_forthe_grub!';
 
 module.exports = function(app) {
-  app.route('/visitor/new').post(expressJwt({ secret: JWT_SECRET }), visitor.newVisitor);
+  app.route('/visitor/new').post(expressJwt({ secret: JWT_SECRET }), visitor.createVisitor);
   app.route('/visitor/:visitorId')
     .put(expressJwt({ secret: JWT_SECRET }), visitor.checkOffVisitor)
     .delete(expressJwt({ secret: JWT_SECRET }), visitor.deleteVisitor);

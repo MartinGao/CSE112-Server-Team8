@@ -27,52 +27,65 @@ export function testPusher(req, res) {
 }
 
 
-export function newVisitor(req, res, next) {
-
-  var missing = [];
-  if (!req.body.name)
-    missing.push("missing name");
+export function createVisitor(req, res) {
+  console.log('createVisitor!');
+  const missing = [];
+  if (!req.body.name) {
+    missing.push('missing name');
+  }
   if (missing.length) {
     return res.status(400).send({
-      "Error": missing.join(', ')
+      Error: missing.join(', '),
     });
   }
+  console.log('findById! -> ' + req.user._id);
 
-  User.findById(req.user, function(err, user) {
-    if (err)
-      return res.status(400).send(err);
+  User.findById(req.user._id, (err, user) => {
+    if (err) {
+      res.status(400).send(err);
+    }
     if (user) {
-      var newVisitor = new Visitor();
+      console.log(user);
+      const newVisitor = new Visitor();
       newVisitor.name = req.body.name;
       newVisitor.businessId = user.business;
       newVisitor.email = req.body.email || null;
       newVisitor.phone = req.body.phone || null;
       newVisitor.form = req.body.form || null;
 
-      if (req.body.requireCheckOff === '0')
+      if (req.body.requireCheckOff === '0') {
         newVisitor.checkOff = new Date();
-      newVisitor.save(function(err, updatedVisitor) {
-        if (err)
-          return res.status(400).send(err);
-        return res.status(200).send(updatedVisitor);
+      }
+      newVisitor.save((err1, savedVisitor) => {
+        if (err1) {
+          res.status(400).send(err1);
+        } else {
+          console.log('About to push to -> ' + user.business);
+          pusher.trigger(user.business.toString(), 'newVisitor', savedVisitor);
+          res.status(200).send(savedVisitor);
+        }
+      });
+    } else {
+      res.status(400).send({
+        Error: 'User does not exist!',
       });
     }
   });
 }
 
 export function checkOffVisitor(req, res, next) {
-  User.findById(req.user._id, function(err, user) {
+  User.findById(req.user._id, function (err, user) {
     if (err)
       return res.status(400).send(err);
     if (user) {
-      Visitor.findOne({_id:req.params.visitorId, businessId: user.business}).exec(function(err, visitor) {
+      Visitor.findOne({ _id:req.params.visitorId, businessId: user.business }).exec(function (err, visitor) {
         console.log(visitor);
         if (err)
           return res.status(400).send(err);
         if (visitor) {
           visitor.checkOff = new Date();
           console.log(visitor);
-          visitor.save(function(err, updatedVisitor) {
+          visitor.save(function (err, updatedVisitor) {
             if (err)
               return res.status(400).send(err);
             return res.status(200).send(updatedVisitor);
@@ -86,24 +99,24 @@ export function checkOffVisitor(req, res, next) {
 export function getQueue(req, res, next) {
   var missing = [];
   if (!req.query.page)
-    missing.push("missing page");
+    missing.push('missing page');
   if (req.query.page < 1)
-    missing.push("page is less than 1");
+    missing.push('page is less than 1');
   if (!req.query.per_page)
-    missing.push("missing per_page");
+    missing.push('missing per_page');
   if (req.query.per_page < 1)
-    missing.push("per_page is less than 1");
+    missing.push('per_page is less than 1');
   if (missing.length) {
     return res.status(400).send({
-      "Error": missing.join(', ')
+      'Error': missing.join(', ')
     });
   }
 
-  User.findById(req.user._id, function(err, user) {
+  User.findById(req.user._id, function (err, user) {
     if (err)
       return res.status(400).send(err);
     if (user) {
-      Visitor.find({businessId: user.business, checkOff: null})
+      Visitor.find({ businessId: user.business, checkOff: null })
       .sort('-timeStamp.created')
       .skip((req.query.page - 1) * req.query.per_page)
       .limit(req.query.per_page)
@@ -119,31 +132,31 @@ export function getQueue(req, res, next) {
 export function getVisitors(req, res, next) {
   var missing = [];
   if (!req.query.page)
-    missing.push("missing page");
+    missing.push('missing page');
   if (req.query.page < 1)
-    missing.push("page is less than 1");
+    missing.push('page is less than 1');
   if (!req.query.per_page)
-    missing.push("missing per_page");
+    missing.push('missing per_page');
   if (req.query.per_page < 1)
-    missing.push("per_page is less than 1");
+    missing.push('per_page is less than 1');
   if (!req.query.date)
-    missing.push("missing date");
+    missing.push('missing date');
   if (missing.length) {
     return res.status(400).send({
-      "Error": missing.join(', ')
+      'Error': missing.join(', ')
     });
   }
 
   var startDate = moment(req.query.date, 'MM-DD-YYYY').toDate();
   var endDate = moment(req.query.date, 'MM-DD-YYYY').add(1, 'days').toDate();
 
-  User.findById(req.user._id, function(err, user) {
+  User.findById(req.user._id, function (err, user) {
     if (err)
       return res.status(400).send(err);
     if (user) {
       Visitor.find({
         business: user.businessId,
-        checkOff: {$ne: null},
+        checkOff: { $ne: null },
         checkIn: {
           $gte: startDate,
           $lte: endDate
@@ -165,14 +178,14 @@ export function deleteVisitor(req, res, next) {
   if (!req.params.visitorId)
     res.status(400).send(err);
 
-  User.findById(req.user._id, function(err, user) {
+  User.findById(req.user._id, function (err, user) {
     if (err)
       return res.status(400).send(err);
     if (user) {
-      Visitor.findOneAndRemove({_id:req.params.visitorId, businessId:user.business}).exec(function(err, visitor) {
+      Visitor.findOneAndRemove({ _id:req.params.visitorId, businessId:user.business }).exec(function (err, visitor) {
         if (err)
           return res.status(400).send(err);
-        return res.status(200).send({"Success":"visitor removed"});
+        return res.status(200).send({'Success':"visitor removed" });
       });
     }
   });
