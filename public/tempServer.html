@@ -1,0 +1,47 @@
+<html>
+
+<head>
+  <script src="https://code.jquery.com/jquery-2.2.1.min.js"></script>
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+  <link href='https://fonts.googleapis.com/css?family=Oswald:700,400' rel='stylesheet' type='text/css'>
+</head>
+
+
+<body>
+
+  <div class="container" style="margin-top: 10em;">
+
+    <div class="form-group">
+     <label for="nameField">Visitor Name</label>
+     <input type="text" class="form-control" id="nameField" placeholder="Name">
+   </div>
+
+    <button class="btn btn-primary" id="randomBtn">Submit This New Visitor</button>
+
+    <button class="btn btn-info" id="randomBtn">Submit Random New Visitor</button>
+  </div>
+
+</body>
+
+<script>
+
+$('.btn').click(function(){
+  $.ajax({
+    url: "/visitor/testPusher",
+    type: 'GET',
+    data: {
+      name: $('#nameField').val(),
+    },
+  })
+  .done(function(data) {
+    console.log(data);
+  })
+  .error(function() {
+    alert('Your input is invalid.');
+  })
+})
+
+</script>
+
+</html>

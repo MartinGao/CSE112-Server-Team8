@@ -10,35 +10,54 @@ import mongoose from 'mongoose';
 const Schema = mongoose.Schema;
 
 const BusinessSchema = new Schema({
-    //change to match schema
-    created: {
-        type: Date,
-        default: Date.now
-    },
-    name: {
-        type: String,
-        required: true
-    },
-    
-    //what url
-    url: {
-        type: String,
-        required: true
-    },
-    logo: {
-        type: String,
-        default: null
-    },
-    description: {
-        type: String,
-        default: null
-    },
-    owner: {
-        type: Schema.ObjectId,
-        ref: 'User',
-        required: true
-    }
-
+  userId: {
+    type: Schema.ObjectId,
+    required: true,
+  },
+  businessId: {
+    type: Schema.ObjectId,
+    required: true,
+  },
+  name: {
+    type: String,
+    required: true,
+  },
+  url: {
+    type: String,
+    default: null,
+  },
+  phone: {
+    type: Object,
+    default: null,
+  },
+  iconURL: {
+    type: Object,
+    default: null,
+  },
+  backgroundImageUrl: {
+    type: Object,
+    default: null,
+  },
+  userIds: [{
+    type: Schema.ObjectId,
+    ref: 'User',
+  }],
+  formId: {
+    type: Schema.ObjectId,
+    ref: 'Form',
+  },
+  slackHook: {
+    type: String,
+    default: null,
+  },
+  timeStamp: {
+    created: { type: Date, default: Date.now },
+    updated: { type: Date, default: Date.now },
+  },
 });
 
+BusinessSchema.pre('save', (next) => {
+  this.timeStamp.updated = new Date();
+  next();
+});
 export default mongoose.model('Business', BusinessSchema);

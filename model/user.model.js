@@ -20,17 +20,17 @@ const UserSchema = new Schema({
     type: Boolean,
     default: false,
   },
-  firstName: {
-    type: String,
-    required: true,
-  },
-  lastName: {
+  name: {
     type: String,
     required: true,
   },
   avatar: {
     type: String,
     default: null,
+  },
+  phone: {
+    type: String,
+    required: true,
   },
   email: {
     type: String,
@@ -50,18 +50,15 @@ const UserSchema = new Schema({
     required: true,
     ref: 'Business',
   },
-  token: {
-    type: String,
-    required: true,
-  },
-  tokenExpiredAt: {
-    type: Date,
-    required: true,
-  },
   timeStamp: {
     created: {type: Date, default: Date.now},
     updated: {type: Date, default: Date.now}
   },
+  settings: {
+    receiveSMS: Boolean,
+    receiveEmail: Boolean,
+    theme: String,
+  }
 });
 
 UserSchema.pre('save', function (next) {

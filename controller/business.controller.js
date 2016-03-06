@@ -2,49 +2,95 @@
  * Created by besin on 2/26/2016.
  */
 import mongoose from 'mongoose';
-var Business = mongoose.model('Business');
+const Business = mongoose.model('Business');
 
-export function newBusiness(req, res, next) {
+export function createBusiness(req, callback) {
+    //return res.status(500).send({'Error': 'API unsupported'});
     var missing = [];
 
-    if (!req.body.name)
-        missing.push("missing name");
-    if (!req.body.url)
-        missing.push("missing url");
-    if (!req.body.owner)
-        missing.push("missing owner");
+    if (!req.user)
+        missing.push("userId");
+    if (!req.body.businessName)
+        missing.push("businessName");
     if (missing.length) {
-        return res.status(400).send({
-            "Error": missing.join(', ')
-        });
+        err = true;
+        console.log("missing " + missing.join(', '));
+        callback(true, null);
     }
+    else {
 
-    Business.findOne({name: req.body.name}).exec(function(err, business) {
+        var newBusiness = new Business();
+        newBusiness.userId = req.user.id;
+        newBusiness.businessId = newBusiness.id;
+        newBusiness.name = req.body.businessName;
+        newBusiness.url = req.body.url;
+        newBusiness.phone = req.body.phone;
+        newBusiness.iconURL = req.body.iconURL || null;
+        newBusiness.backgroundImageUrl = req.body.backgroundImageUrl || null;
+        newBusiness.userIds = req.body.userIds || null;
+        newBusiness.formId = req.body.formId || null;
+        newBusiness.save(callback);
+    }
+}
+
+export function getBusiness(req, res) {
+    let user = req.user;
+    console.log("req.user = " + user);
+    if (!user)
+        return res.status(401).send({"Error": "User unauthenticated."});
+
+    var bid = req.query.businessId;
+    if (!bid)
+        return res.status(400).send({"Error": "Please provide businessId"});
+
+    Business.findOne({businessId: bid}).exec(function(err, business) {
         if (err)
             return res.status(400).send(err);
-        if (business) {
-            business.url = req.body.url;
-            business.logo = req.body.logo || null;
-            business.description = req.body.description || null;
-            business.owner = req.body.owner;
-            business.save(function(err, updatedVisitor) {
-                if (err)
-                    return res.status(400).send(err);
-                return res.status(200).send(updatedVisitor);
-            });
-        }
+        else if (business)
+            return res.status(200).send(business);
+        else
+            return res.status(404).send();
     });
+}
 
-    var newBusiness = new Business();
-    newBusiness.name = req.body.name;
-    newBusiness.url = req.body.url;
-    newBusiness.logo = req.body.logo || null;
-    newBusiness.description = req.body.description || null;
-    newBusiness.owner = req.body.owner;
-    newBusiness.save(function(err, updatedBusiness) {
+export function setBusiness(req, res) {
+    var bid = req.body.businessId;
+
+    if (!bid)
+        return res.status(400).send({
+            "Error": "Please provide businessId"
+        });
+
+    Business.findOne({businessId: bid}).exec(function (err, business) {
         if (err)
             return res.status(400).send(err);
-        return res.status(200).send(updatedBusiness);
+
+        if (req.body.userId)
+            business.userId = req.body.userId;
+        if (req.body.name)
+            business.name = req.body.name;
+        if (req.body.url)
+            business.url = req.body.url;
+        if (req.body.phone)
+            business.phone = req.body.phone;
+        if (req.body.iconURL)
+            business.iconURL = req.body.iconURL;
+        if (req.body.backgroundImageUrl)
+            business.backgroundImageUrl = req.body.backgroundImageUrl;
+        if (req.body.userIds)
+            business.userIds = req.body.userIds;
+        if (req.body.formId)
+            business.formId = req.body.formId;
+        if (req.body.slackHook)
+            business.slackHook = req.body.slackHook;
+        business.timeStamp.updated = Date.now();
+
+        business.save(function(err, updatedBusiness) {
+            if (err)
+                return res.status(400).send(err);
+            return res.status(200).send(updatedBusiness);
+        });
+
     });
 }
 

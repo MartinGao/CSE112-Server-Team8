@@ -2,17 +2,35 @@ import mongoose from 'mongoose';
 var Schema = mongoose.Schema;
 
 var VisitorSchema = new Schema({
-
-  businessID: {
+  businessId: {
     type: Schema.ObjectId, 
-    ref: "Business"
+    ref: "Business",
+    required: true
   },
-  name: String,
-  email: String,
-  phone: String,
-  checkIns: [Date],
-  checkOffs: [Date],
-  forms: [Object],
+  name: {
+    type: String,
+    required: true
+  },
+  email: {
+    type: String,
+    default: null
+  },
+  phone: {
+    type: String,
+    default: null
+  },
+  checkIn: {
+    type: Date,
+    default: Date.now
+  },
+  checkOff: {
+    type: Date,
+    default: null
+  },
+  form: {
+    type: Object,
+    default: null
+  },
   timeStamp: {
     created: {type: Date, default: Date.now},
     updated: {type: Date, default: Date.now}

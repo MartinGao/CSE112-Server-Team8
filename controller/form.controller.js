@@ -28,7 +28,7 @@ export function createForm(req, res, next) {
 		missing.push("form is required");
 	if(missing.length){
 		return res.status(400).send({
-			"Error: " missing.join(', ');
+			"Error": missing.join(', '),
 		});
 	}
 
@@ -39,12 +39,22 @@ export function createForm(req, res, next) {
 		if(err){
 			return res.status(400).send(err);
 		}
-		else{
+		if(updatedForm)
 			return res.status(200).send(updatedForm);
-		}
 	});
 }
 
 export function deleteForm(req, res, next) {
-	
+	var formId = req.query.id;
+
+	form.findById(formId, function (err, formToDelete) {
+		if(err)
+			return res.status(400).send(err);
+		if(formToDelete)
+			formToDelete.remove(function (err) {
+				if(err)
+					return res.status(400).send(err);
+				return res.status(200).end();
+			});
+	});
 }

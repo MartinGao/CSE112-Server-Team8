@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<head>
+  <title>Pusher Test</title>
+  <script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/transparency/0.9.14/transparency.min.js"></script>
+  <script src="https://js.pusher.com/3.0/pusher.min.js"></script>
+  <script>
+
+  var visitors = [];
+
+    // Enable pusher logging - don't include this in production
+    Pusher.log = function(message) {
+      if (window.console && window.console.log) {
+        window.console.log(message);
+      }
+    };
+
+    var pusher = new Pusher('7c84af4dd6941414d752', {
+      encrypted: true
+    });
+    var channel = pusher.subscribe('test_channel');
+    channel.bind('newVisitor', function(data) {
+
+
+      visitors.push({
+        visitor: data.visitorName,
+      })
+
+      console.log(visitors);
+
+
+      $('.visitors').render(visitors);
+
+    });
+  </script>
+</head>
+
+<body>
+
+  <div class="container visitors" style="margin-top: 10em;">
+
+    <div class="visitor">
+
+    </div>
+
+  </div>
+
+</body>
