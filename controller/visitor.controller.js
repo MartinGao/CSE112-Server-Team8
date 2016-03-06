@@ -27,7 +27,7 @@ export function testPusher(req, res) {
 }
 
 
-export function newVisitor(req, res, next) {
+export function newVisitor(req, res) {
 
   var missing = [];
   if (!req.body.name)
