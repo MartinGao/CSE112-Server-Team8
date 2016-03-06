@@ -28,47 +28,52 @@ export function testPusher(req, res) {
 
 
 export function newVisitor(req, res) {
-
-  var missing = [];
-  if (!req.body.name)
-    missing.push("missing name");
+  const missing = [];
+  if (!req.body.name) {
+    missing.push('missing name');
+  }
   if (missing.length) {
     return res.status(400).send({
-      "Error": missing.join(', ')
+      Error: missing.join(', '),
     });
   }
 
-  User.findById(req.user, function(err, user) {
-    if (err)
+  User.findById(req.user, (err, user) => {
+    if (err) {
       return res.status(400).send(err);
+    }
     if (user) {
-      var newVisitor = new Visitor();
-      newVisitor.name = req.body.name;
-      newVisitor.businessId = user.business;
-      newVisitor.email = req.body.email || null;
-      newVisitor.phone = req.body.phone || null;
-      newVisitor.form = req.body.form || null;
+      const newVis = new Visitor();
+      newVis.name = req.body.name;
+      newVis.businessId = user.business;
+      newVis.email = req.body.email || null;
+      newVis.phone = req.body.phone || null;
+      newVis.form = req.body.form || null;
 
-      if (req.body.requireCheckOff === '0')
+      if (req.body.requireCheckOff === '0') {
         newVisitor.checkOff = new Date();
-      newVisitor.save(function(err, updatedVisitor) {
-        if (err)
+      }
+      newVisitor.save((err1, updatedVisitor) => {
+        if (err1) {
           return res.status(400).send(err);
+        }
         return res.status(200).send(updatedVisitor);
       });
     }
   });
 }
 
-export function checkOffVisitor(req, res, next) {
-  User.findById(req.user._id, function(err, user) {
-    if (err)
+export function checkOffVisitor(req, res) {
+  User.findById(req.user._id, (err, user) => {
+    if (err) {
       return res.status(400).send(err);
+    }
     if (user) {
-      Visitor.findOne({_id:req.params.visitorId, businessId: user.business}).exec(function(err, visitor) {
-        console.log(visitor);
-        if (err)
+      Visitor.findOne({ _id: req.params.visitorId, businessId: user.business })
+        .exec((err1, visitor) => {
+        if (err1) {
           return res.status(400).send(err);
+        }
         if (visitor) {
           visitor.checkOff = new Date();
           console.log(visitor);
