@@ -28,6 +28,10 @@ const UserSchema = new Schema({
     type: String,
     default: null,
   },
+  phone: {
+    type: String,
+    required: true,
+  },
   email: {
     type: String,
     required: true,
@@ -50,6 +54,11 @@ const UserSchema = new Schema({
     created: {type: Date, default: Date.now},
     updated: {type: Date, default: Date.now}
   },
+  settings: {
+    receiveSMS: Boolean,
+    receiveEmail: Boolean,
+    theme: String,
+  }
 });
 
 UserSchema.pre('save', function (next) {

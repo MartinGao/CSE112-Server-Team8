@@ -12,31 +12,47 @@ const Schema = mongoose.Schema;
 const BusinessSchema = new Schema({
   userId: {
     type: Schema.ObjectId,
-    required: true
+    required: true,
   },
   businessId: {
     type: Schema.ObjectId,
-    required: true
+    required: true,
   },
-  name: String,
-  url: String,
-  phone: String,
-  iconURL: String,
-  backgroundImageUrl: String,
+  name: {
+    type: String,
+    required: true,
+  },
+  url: {
+    type: String,
+    default: null,
+  },
+  phone: {
+    type: Object,
+    default: null,
+  },
+  iconURL: {
+    type: Object,
+    default: null,
+  },
+  backgroundImageUrl: {
+    type: Object,
+    default: null,
+  },
   userIds: [{
     type: Schema.ObjectId,
-    ref: 'User'
+    ref: 'User',
   }],
   formId: {
     type: Schema.ObjectId,
-    ref: 'Form'
+    ref: 'Form',
   },
   timeStamp: {
     created: { type: Date, default: Date.now },
-    updated: { type: Date, default: Date.now }
-  }
+    updated: { type: Date, default: Date.now },
+  },
 });
-BusinessSchema.pre('save', function (next) {
+
+BusinessSchema.pre('save', (next) => {
   this.timeStamp.updated = new Date();
   next();
 });
