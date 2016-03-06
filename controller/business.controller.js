@@ -81,6 +81,8 @@ export function setBusiness(req, res) {
             business.userIds = req.body.userIds;
         if (req.body.formId)
             business.formId = req.body.formId;
+        if (req.body.slackHook)
+            business.slackHook = req.body.slackHook;
         business.timeStamp.updated = Date.now();
 
         business.save(function(err, updatedBusiness) {

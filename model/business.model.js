@@ -46,6 +46,10 @@ const BusinessSchema = new Schema({
     type: Schema.ObjectId,
     ref: 'Form',
   },
+  slackHook: {
+    type: String,
+    default: null,
+  },
   timeStamp: {
     created: { type: Date, default: Date.now },
     updated: { type: Date, default: Date.now },
