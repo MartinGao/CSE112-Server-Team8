@@ -35,7 +35,7 @@ import * as form from '../controller/form.controller';
  *
  * @apiError Error
  */
-module.exports = function(app) {
-	app.route('/form/').post(form.createForm);
-	app.route('/form/formId').delete(form.deleteForm);
+module.exports = (app) => {
+  app.route('/form/').post(form.createForm);
+  app.route('/form/formId').delete(form.deleteForm);
 };
