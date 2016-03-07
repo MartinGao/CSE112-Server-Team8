@@ -14,6 +14,10 @@ const FormSchema = new Schema({
     type: String,
     required: true,
   },
+  businessType: {
+    type: String,
+    default: 'other',
+  },
   form: {
     type: Object,
     required: true,

@@ -7,12 +7,14 @@ import * as form from '../controller/form.controller';
  *
  * @apiParam {ObjectId} businessId The ID of the business to update
  * @apiParam {String} description The description of the business
+ * @apiParam {String} businessType The type of business (health care, fitness, etc.)
  * @apiParam {Object} form The dynamic form associated with the business
  *
  * @apiSuccess {Object} form Returns the new form that was created
  * @apiSuccessExample Example JSON on success:
  * {
      description: 'Cool form',
+		 businessType: 'fitness',
      form: {
        formId: 12345,
   	   businessId: 678,

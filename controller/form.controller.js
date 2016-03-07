@@ -23,6 +23,11 @@ export function createForm(req, res) {
 
   const newForm = new Form();
   newForm.description = req.body.description || null;
+
+  if (req.body.businessType === 'fitness' || 'health_care') {
+    newForm.businessType = req.body.businessType;
+  }
+
   newForm.form = req.body.form;
   newForm.save((err, updatedForm) => {
     if (err) {
