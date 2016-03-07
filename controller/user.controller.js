@@ -76,6 +76,9 @@ function _createManagerUser(req, res) {
   if (!req.body.password) {
     res.status(400).send({ errorMsg: 'Missing "password" field' });
   }
+  if (!req.body.phone) {
+    res.status(400).send({ errorMsg: 'Missing "phone" field' });
+  }
   if (!req.body.email) {
     res.status(400).send({ errorMsg: 'Missing "email" field' });
   }
@@ -95,6 +98,7 @@ function _createManagerUser(req, res) {
       user.email = req.body.email;
       user.password = hash;
       user.salt = saltsalt;
+      user.phone = req.body.phone;
       user.business = newBusiness._id;
       user.token = bcrypt.genSaltSync(32);
       user.tokenExpiredAt = moment().add(1, 'years');

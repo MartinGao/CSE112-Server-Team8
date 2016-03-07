@@ -51,19 +51,19 @@ const UserSchema = new Schema({
     ref: 'Business',
   },
   timeStamp: {
-    created: {type: Date, default: Date.now},
-    updated: {type: Date, default: Date.now}
+    created: { type: Date, default: Date.now },
+    updated: { type: Date, default: Date.now },
   },
   settings: {
     receiveSMS: Boolean,
     receiveEmail: Boolean,
     theme: String,
-  }
+  },
 });
 
-UserSchema.pre('save', function (next) {
-    this.timeStamp.updated = new Date();
-    next();
+UserSchema.pre('update', (next) => {
+  this.timeStamp.updated = new Date();
+  next();
 });
 
 export default mongoose.model('User', UserSchema);
