@@ -86,12 +86,12 @@ module.exports = function(app) {
  *  "email": "abc123@gmail.com"
  * }
  *
- * @apiErrorExample
+ * @apiErrorExample {json} Error-Response:
  * {
  *  "Error": "missing name"
  * }
  *
- * @apiErrorExample
+ * @apiErrorExample {json} Error-Response:
  * {
  * "message": "Cast to ObjectId failed for value \"123\" at path \"_id\"",
  *  "name": "CastError",
@@ -170,7 +170,7 @@ module.exports = function(app) {
  * ]
  *
  * @apiError MissingPage Missing page or page is 0, missing per_page or per_page is 0
- * @apiErrorExample
+ * @apiErrorExample {json} Error-Response:
  * {
  *  "Error": "missing per_page or per_page is 0"
  * }
@@ -246,7 +246,7 @@ module.exports = function(app) {
  * ]
  *
  * @apiError MissingPage Missing page or page is 0, missing per_page or per_page is 0
- * @apiErrorExample
+ * @apiErrorExample {json} Error-Response:
  * {
  *  "Error": "missing per_page or per_page is 0"
  * }
