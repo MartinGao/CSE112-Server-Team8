@@ -4,60 +4,44 @@
 import mongoose from 'mongoose';
 const Business = mongoose.model('Business');
 
-export function newBusiness(req, res, next) {
+export function createBusiness(req, callback) {
+    //return res.status(500).send({'Error': 'API unsupported'});
     var missing = [];
 
-    if (!req.body.ownerId)
-        missing.push("missing ownerId");
-    if (!req.body.email)
-        missing.push("missing email");
-    if (!req.body.phone)
-        missing.push("missing phone");
+    if (!req.user)
+        missing.push("userId");
+    if (!req.body.businessName)
+        missing.push("businessName");
     if (missing.length) {
-        return res.status(400).send({
-            "Error": missing.join(', ')
-        });
+        err = true;
+        console.log("missing " + missing.join(', '));
+        callback(true, null);
     }
+    else {
 
-    if (req.body.businessId)
-    Business.findOne({businessId: req.body.businessId}).exec(function(err, business) {
-        if (err)
-            return res.status(400).send(err);
-        if (business) {
-            business.url = req.body.url;
-            business.logo = req.body.logo || null;
-            business.description = req.body.description || null;
-            business.owner = req.body.owner;
-            business.save(function(err, updatedBusiness) {
-                if (err)
-                    return res.status(400).send(err);
-                return res.status(200).send(updatedBusiness);
-            });
-        }
-    });
-
-    var newBusiness = new Business();
-    newBusiness.businessId = newBusiness.id;
-    newBusiness.ownerId = req.body.ownerId;
-    newBusiness.email = req.body.email;
-    newBusiness.phone = req.body.phone;
-    newBusiness.iconURL = req.body.iconURL || null;
-    newBusiness.backgroundImageUrl = req.body.backgroundImageUrl || null;
-    newBusiness.userIds = req.body.userIds || null;
-    newBusiness.timeStamp = {created: new Date(), updated: new Date()};
-    newBusiness.save(function(err, updatedBusiness) {
-        if (err)
-            return res.status(400).send(err);
-        return res.status(200).send(updatedBusiness);
-    });
+        var newBusiness = new Business();
+        newBusiness.userId = req.user.id;
+        newBusiness.businessId = newBusiness.id;
+        newBusiness.name = req.body.businessName;
+        newBusiness.url = req.body.url;
+        newBusiness.phone = req.body.phone;
+        newBusiness.iconURL = req.body.iconURL || null;
+        newBusiness.backgroundImageUrl = req.body.backgroundImageUrl || null;
+        newBusiness.userIds = req.body.userIds || null;
+        newBusiness.formId = req.body.formId || null;
+        newBusiness.save(callback);
+    }
 }
 
-export function getBusiness(req, res, next) {
+export function getBusiness(req, res) {
+    let user = req.user;
+    console.log("req.user = " + user);
+    if (!user)
+        return res.status(401).send({"Error": "User unauthenticated."});
+
     var bid = req.query.businessId;
     if (!bid)
-        return res.status(400).send({
-            "Error": "Please provide businessId"
-        });
+        return res.status(400).send({"Error": "Please provide businessId"});
 
     Business.findOne({businessId: bid}).exec(function(err, business) {
         if (err)
@@ -65,7 +49,46 @@ export function getBusiness(req, res, next) {
         else if (business)
             return res.status(200).send(business);
         else
-            return res.status(404);
+            return res.status(404).send();
+    });
+}
+
+export function setBusiness(req, res) {
+    var bid = req.body.businessId;
+
+    if (!bid)
+        return res.status(400).send({
+            "Error": "Please provide businessId"
+        });
+
+    Business.findOne({businessId: bid}).exec(function (err, business) {
+        if (err)
+            return res.status(400).send(err);
+
+        if (req.body.userId)
+            business.userId = req.body.userId;
+        if (req.body.name)
+            business.name = req.body.name;
+        if (req.body.url)
+            business.url = req.body.url;
+        if (req.body.phone)
+            business.phone = req.body.phone;
+        if (req.body.iconURL)
+            business.iconURL = req.body.iconURL;
+        if (req.body.backgroundImageUrl)
+            business.backgroundImageUrl = req.body.backgroundImageUrl;
+        if (req.body.userIds)
+            business.userIds = req.body.userIds;
+        if (req.body.formId)
+            business.formId = req.body.formId;
+        business.timeStamp.updated = Date.now();
+
+        business.save(function(err, updatedBusiness) {
+            if (err)
+                return res.status(400).send(err);
+            return res.status(200).send(updatedBusiness);
+        });
+
     });
 }
 

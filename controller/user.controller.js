@@ -42,7 +42,7 @@ export function signIn(req, res) {
   console.log('user signIn!');
   console.log(req.body);
   User.findOne({
-    email: req.body.email,
+    email: req.body.email
   }, (err, existedUser) => {
     if (err) {
       console.log(err);
@@ -53,7 +53,7 @@ export function signIn(req, res) {
         if (bcrypt.compareSync(req.body.password, existedUser.password)) {
           res.status(200).send({
             token: jwt.sign({
-              _id: existedUser._id,
+              _id: existedUser._id
             }, JWT_SECRET),
             user: existedUser
           });
@@ -80,13 +80,25 @@ function _createManagerUser(req, res) {
     res.status(400).send({ errorMsg: 'Missing "email" field' });
   }
 
+  var user = new User();
+  req.user = user;
   BusinessController.createBusiness(req, (err, newBusiness) => {
     if (err) {
       res.status(400).send(newBusiness);
     } else {
       const saltsalt = bcrypt.genSaltSync(10);
       const hash = bcrypt.hashSync(req.body.password, saltsalt);
-      User.create({
+      user.role = 2;
+      user.approved = true;
+      user.name = req.body.name;
+      user.avatar = req.body.avatar;
+      user.email = req.body.email;
+      user.password = hash;
+      user.salt = saltsalt;
+      user.business = newBusiness._id;
+      user.token = bcrypt.genSaltSync(32);
+      user.tokenExpiredAt = moment().add(1, 'years');
+      user.save({
         role: 2,
         approved: true,
         name: req.body.name,
@@ -96,7 +108,7 @@ function _createManagerUser(req, res) {
         salt: saltsalt,
         business: newBusiness._id,
         token: bcrypt.genSaltSync(32),
-        tokenExpiredAt: moment().add(1, 'years'),
+        tokenExpiredAt: moment().add(1, 'years')
       }, (err1, newUser) => {
         if (err1) {
           console.log('_createManagerUser error! -> ' + err1);
@@ -105,7 +117,7 @@ function _createManagerUser(req, res) {
           console.log('Hello New User! ' + newUser );
           res.status(200).send({
             token: jwt.sign({
-              _id: existedUser._id,
+              _id: newUser._id
             }, JWT_SECRET),
             user: newUser
           });

@@ -1,20 +1,20 @@
 import * as visitor from '../controller/visitor.controller';
 
 import expressJwt from 'express-jwt';
-import jwt from 'jsonwebtoken';
 
 const JWT_SECRET = '#rub_a_dubDub_thanks_forthe_grub!';
 
-module.exports = function(app) {
-  app.route('/visitor/new').post(expressJwt({ secret: JWT_SECRET }), visitor.newVisitor);
+module.exports = (app) => {
+  app.route('/visitor/new').post(expressJwt({ secret: JWT_SECRET }), visitor.createVisitor);
   app.route('/visitor/:visitorId')
     .put(expressJwt({ secret: JWT_SECRET }), visitor.checkOffVisitor)
     .delete(expressJwt({ secret: JWT_SECRET }), visitor.deleteVisitor);
   app.route('/visitor/queue').get(expressJwt({ secret: JWT_SECRET }), visitor.getQueue);
   app.route('/visitor/visited').get(expressJwt({ secret: JWT_SECRET }), visitor.getVisitors);
+  app.route('/search').get(expressJwt({ secret: JWT_SECRET }), visitor.search);
+
 
   app.route('/visitor/testPusher').get(visitor.testPusher);
-
 };
 
 /**

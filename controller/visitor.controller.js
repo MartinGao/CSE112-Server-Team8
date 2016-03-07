@@ -26,8 +26,7 @@ export function testPusher(req, res) {
   res.status(200).send({ visitorName: randomName });
 }
 
-
-export function newVisitor(req, res) {
+export function createVisitor(req, res) {
   const missing = [];
   if (!req.body.name) {
     missing.push('missing name');
@@ -51,17 +50,25 @@ export function newVisitor(req, res) {
       newVis.form = req.body.form || null;
 
       if (req.body.requireCheckOff === '0') {
-        newVisitor.checkOff = new Date();
+        newVis.checkOff = new Date();
       }
-      newVisitor.save((err1, updatedVisitor) => {
+
+      newVis.save((err1, savedVisitor) => {
         if (err1) {
-          return res.status(400).send(err);
+          res.status(400).send(err1);
+        } else {
+          pusher.trigger(user.business.toString(), 'newVisitor', savedVisitor);
+          res.status(200).send(savedVisitor);
         }
-        return res.status(200).send(updatedVisitor);
+      });
+    } else {
+      res.status(400).send({
+        Error: 'User does not exist!',
       });
     }
   });
 }
+
 
 export function checkOffVisitor(req, res) {
   User.findById(req.user._id, (err, user) => {
@@ -70,16 +77,16 @@ export function checkOffVisitor(req, res) {
     }
     if (user) {
       Visitor.findOne({ _id: req.params.visitorId, businessId: user.business })
-        .exec((err1, visitor) => {
+      .exec((err1, visitor) => {
         if (err1) {
           return res.status(400).send(err);
         }
         if (visitor) {
           visitor.checkOff = new Date();
-          console.log(visitor);
-          visitor.save(function(err, updatedVisitor) {
-            if (err)
+          visitor.save((err2, updatedVisitor) => {
+            if (err2) {
               return res.status(400).send(err);
+            }
             return res.status(200).send(updatedVisitor);
           });
         }
@@ -88,106 +95,154 @@ export function checkOffVisitor(req, res) {
   });
 }
 
-export function getQueue(req, res, next) {
-  var missing = [];
-  if (!req.query.page)
-    missing.push("missing page");
-  if (req.query.page < 1)
-    missing.push("page is less than 1");
-  if (!req.query.per_page)
-    missing.push("missing per_page");
-  if (req.query.per_page < 1)
-    missing.push("per_page is less than 1");
+export function getQueue(req, res) {
+  const missing = [];
+  if (!req.query.page) {
+    missing.push('missing page');
+  }
+  if (req.query.page < 1) {
+    missing.push('page is less than 1');
+  }
+  if (!req.query.per_page) {
+    missing.push('missing per_page');
+  }
+  if (req.query.per_page < 1) {
+    missing.push('per_page is less than 1');
+  }
   if (missing.length) {
     return res.status(400).send({
-      "Error": missing.join(', ')
+      Error: missing.join(', '),
     });
   }
 
-  User.findById(req.user._id, function(err, user) {
-    if (err)
+  User.findById(req.user._id, (err, user) => {
+    if (err) {
       return res.status(400).send(err);
+    }
     if (user) {
-      Visitor.find({businessId: user.business, checkOff: null})
+      Visitor.find({ businessId: user.business, checkOff: null })
       .sort('-timeStamp.created')
       .skip((req.query.page - 1) * req.query.per_page)
       .limit(req.query.per_page)
-      .exec(function (err, visitors) {
-        if (err)
+      .exec((err1, visitors) => {
+        if (err1) {
           return res.status(400).send(err);
+        }
         return res.status(200).send(visitors);
       });
     }
   });
 }
 
-export function getVisitors(req, res, next) {
-  var missing = [];
-  if (!req.query.page)
-    missing.push("missing page");
-  if (req.query.page < 1)
-    missing.push("page is less than 1");
-  if (!req.query.per_page)
-    missing.push("missing per_page");
-  if (req.query.per_page < 1)
-    missing.push("per_page is less than 1");
-  if (!req.query.date)
-    missing.push("missing date");
+export function getVisitors(req, res) {
+  const missing = [];
+  if (!req.query.page) {
+    missing.push('missing page');
+  }
+  if (req.query.page < 1) {
+    missing.push('page is less than 1');
+  }
+  if (!req.query.per_page) {
+    missing.push('missing per_page');
+  }
+  if (req.query.per_page < 1) {
+    missing.push('per_page is less than 1');
+  }
+  if (!req.query.date) {
+    missing.push('missing date');
+  }
   if (missing.length) {
     return res.status(400).send({
-      "Error": missing.join(', ')
+      Error: missing.join(', '),
     });
   }
 
-  var startDate = moment(req.query.date, 'MM-DD-YYYY').toDate();
-  var endDate = moment(req.query.date, 'MM-DD-YYYY').add(1, 'days').toDate();
+  const startDate = moment(req.query.date, 'MM-DD-YYYY').toDate();
+  const endDate = moment(req.query.date, 'MM-DD-YYYY').add(1, 'days').toDate();
 
-  User.findById(req.user._id, function(err, user) {
-    if (err)
+  User.findById(req.user._id, (err, user) => {
+    if (err) {
       return res.status(400).send(err);
+    }
     if (user) {
       Visitor.find({
         business: user.businessId,
-        checkOff: {$ne: null},
+        checkOff: { $ne: null },
         checkIn: {
           $gte: startDate,
-          $lte: endDate
-        }
+          $lte: endDate,
+        },
       })
       .sort('-timeStamp.created')
       .skip((req.query.page - 1) * req.query.per_page)
       .limit(req.query.per_page)
-      .exec(function (err, visitors) {
-        if (err)
+      .exec((err1, visitors) => {
+        if (err1) {
           return res.status(400).send(err);
+        }
         return res.status(200).send(visitors);
       });
     }
   });
 }
 
-export function deleteVisitor(req, res, next) {
-  if (!req.params.visitorId)
-    res.status(400).send(err);
+export function deleteVisitor(req, res) {
+  if (!req.params.visitorId) {
+    res.status(400).send({ Error: 'no visitorId' });
+  }
 
-  User.findById(req.user._id, function(err, user) {
-    if (err)
+  User.findById(req.user._id, (err, user) => {
+    if (err) {
       return res.status(400).send(err);
+    }
     if (user) {
-      Visitor.findOneAndRemove({_id:req.params.visitorId, businessId:user.business}).exec(function(err, visitor) {
-        if (err)
-          return res.status(400).send(err);
-        return res.status(200).send({"Success":"visitor removed"});
-      });
+      Visitor.findOneAndRemove({ _id: req.params.visitorId,
+        businessId: user.business }).exec((err1) => {
+          if (err1) {
+            return res.status(400).send(err);
+          }
+          return res.status(200).send({ Success: 'visitor removed' });
+        });
     }
   });
 }
 
-export function search(req, res, next) {
-  //next week
+export function search(req, res) {
+
+  console.log(req.query.term);
+  const searchResults = {};
+  const errors = [];
+
+  User.findById(req.user._id, (err, user) => {
+    if (err) return res.status.send(err);
+    if (user) {
+      Visitor
+      .find(
+        {
+          name: new RegExp(req.query.term, 'i'),
+          businessId: user.business,
+        })
+      .limit(50)
+      .exec((err1, results) => {
+        if (err1) return res.status(400).send(err);
+        searchResults.visitors = results;
+      });
+      User
+      .find(
+        {
+          name: new RegExp(req.query.term, 'i'),
+          business: user.business,
+        })
+      .limit(50)
+      .exec((err1, results) => {
+        if (err1) return res.status(400).send(err);
+        searchResults.users = results;
+      });
+
+      res.status(200).send(searchResults);
+    }
+  });
 }
-
-
 
 //here be shit code
 

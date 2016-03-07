@@ -10,44 +10,50 @@ import mongoose from 'mongoose';
 const Schema = mongoose.Schema;
 
 const BusinessSchema = new Schema({
-    userId: {
-        type: Schema.ObjectId,
-        required: true
-    },
-    //change to match schema
-    businessId: {
-        type: Schema.ObjectId,
-        required: true
-    },
-    name: {
-    },
-    phone: {
-        type: String,
-        required: true
-    },
-    iconURL: {
-        type: String,
-        required: true
-    },
-    backgroundImageUrl: {
-        type: String,
-        required: true
-    },
-    userIds: [{
-        type: Schema.ObjectId,
-        ref: 'User'
-    }],
-    formId: {
-        type: Schema.ObjectId,
-        ref: 'Form'
-    },
-    timeStamp: {
-        created: { type: Date, default: Date.now },
-        updated: { type: Date, default: Date.now }
-    }
+  userId: {
+    type: Schema.ObjectId,
+    required: true,
+  },
+  businessId: {
+    type: Schema.ObjectId,
+    required: true,
+  },
+  name: {
+    type: String,
+    required: true,
+  },
+  url: {
+    type: String,
+    default: null,
+  },
+  phone: {
+    type: Object,
+    default: null,
+  },
+  iconURL: {
+    type: Object,
+    default: null,
+  },
+  backgroundImageUrl: {
+    type: Object,
+    default: null,
+  },
+  userIds: [{
+    type: Schema.ObjectId,
+    ref: 'User',
+  }],
+  formId: {
+    type: Schema.ObjectId,
+    ref: 'Form',
+  },
+  timeStamp: {
+    created: { type: Date, default: Date.now },
+    updated: { type: Date, default: Date.now },
+  },
 });
-BusinessSchema.pre('save', function (next) {
-    this.timeStamp.updated = new Date();
-    next();
+
+BusinessSchema.pre('save', (next) => {
+  this.timeStamp.updated = new Date();
+  next();
 });
 export default mongoose.model('Business', BusinessSchema);

@@ -3,22 +3,28 @@
  */
 
 import mongoose from 'mongoose';
-var Schema = mongoose.Schema;
+const Schema = mongoose.Schema;
 
-var FormSchema = new Schema({
+const FormSchema = new Schema({
   businessId: {
     type: Schema.ObjectId,
     ref: 'Business',
   },
-  description: String,
-  form: Object,
+  description: {
+    type: String,
+    required: true,
+  },
+  form: {
+    type: Object,
+    required: true,
+  },
   timestamp: {
     created: { type: Date, default: Date.now },
-    updated: { type: Date, default: Date.now }
+    updated: { type: Date, default: Date.now },
   },
 });
 
-FormSchema.pre('save', function (next) {
+FormSchema.pre('save', (next) => {
   this.timestamp.updated = new Date();
   next();
 });

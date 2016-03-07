@@ -1,46 +1,45 @@
 import mongoose from 'mongoose';
-var Schema = mongoose.Schema;
+const Schema = mongoose.Schema;
 
-var VisitorSchema = new Schema({
+const VisitorSchema = new Schema({
   businessId: {
-    type: Schema.ObjectId, 
-    ref: "Business",
-    required: true
+    type: Schema.ObjectId,
+    ref: 'Business',
+    required: true,
   },
   name: {
     type: String,
-    required: true
+    required: true,
   },
   email: {
     type: String,
-    default: null
+    default: null,
   },
   phone: {
     type: String,
-    default: null
+    default: null,
   },
   checkIn: {
     type: Date,
-    default: Date.now
+    default: Date.now,
   },
   checkOff: {
     type: Date,
-    default: null
+    default: null,
   },
   form: {
     type: Object,
-    default: null
+    default: null,
   },
   timeStamp: {
-    created: {type: Date, default: Date.now},
-    updated: {type: Date, default: Date.now}
-  }
+    created: { type: Date, default: Date.now },
+    updated: { type: Date, default: Date.now },
+  },
 });
 
-VisitorSchema.pre('save', function (next) {
-    this.timeStamp.updated = new Date();
-    next();
+VisitorSchema.pre('save', (next) => {
+  this.timeStamp.updated = new Date();
+  next();
 });
 
 export default mongoose.model('Visitor', VisitorSchema);
-
