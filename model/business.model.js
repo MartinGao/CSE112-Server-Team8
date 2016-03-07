@@ -12,11 +12,7 @@ const Schema = mongoose.Schema;
 const BusinessSchema = new Schema({
   userId: {
     type: Schema.ObjectId,
-    required: true,
-  },
-  businessId: {
-    type: Schema.ObjectId,
-    required: true,
+    default: null,
   },
   name: {
     type: String,
@@ -56,8 +52,9 @@ const BusinessSchema = new Schema({
   },
 });
 
-BusinessSchema.pre('save', (next) => {
+BusinessSchema.pre('update', (next) => {
   this.timeStamp.updated = new Date();
   next();
 });
+
 export default mongoose.model('Business', BusinessSchema);
