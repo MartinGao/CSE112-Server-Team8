@@ -4,6 +4,7 @@ import Chance from 'chance';
 import Pusher from 'pusher';
 import request from 'request';
 
+
 const Visitor = mongoose.model('Visitor');
 const Business = mongoose.model('Business');
 const User = mongoose.model('User');
