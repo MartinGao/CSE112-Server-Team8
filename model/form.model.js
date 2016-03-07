@@ -18,14 +18,14 @@ const FormSchema = new Schema({
     type: Object,
     required: true,
   },
-  timestamp: {
+  timeStamp: {
     created: { type: Date, default: Date.now },
     updated: { type: Date, default: Date.now },
   },
 });
 
-FormSchema.pre('save', (next) => {
-  this.timestamp.updated = new Date();
+FormSchema.pre('update', (next) => {
+  this.timeStamp.updated = new Date();
   next();
 });
 

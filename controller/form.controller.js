@@ -48,19 +48,22 @@ export function createForm(req, res) {
 }
 
 export function deleteForm(req, res) {
-  const formId = req.query.id;
+  if (!req.body.form) {
+    return res.status(400).send({ Error: 'no form' });
+  }
 
-  Form.findById(formId, (err, formToDelete) => {
+  Form.findById(req.body.businessId, (err, formToDelete) => {
     if (err) {
       return res.status(400).send(err);
     }
     if (formToDelete) {
-      formToDelete.remove((err1) => {
-        if (err1) {
-          return res.status(400).send(err1);
-        }
-        return res.status(200).end();
-      });
+      formToDelete.findOneAndRemove({
+        businessId: formToDelete.businessId }).exec((err1) => {
+          if (err1) {
+            return res.status(400).send(err1);
+          }
+          return res.status(200).send({ Success: 'form was deleted' });
+        });
     }
   });
 }
