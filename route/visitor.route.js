@@ -27,7 +27,7 @@ module.exports = (app) => {
  * @apiHeader {String} JWT token required (required)
  * @apiParam {String} name visitors name (required)
  * @apiParam {String} email visitor's email
- * @apiParam {String} phone visitor's phone (required)
+ * @apiParam {String} phone visitor's phone
  * @apiParam {Object} form form data assosiated with visitor
  * @apiParam {String} requiredCheckOff pass in a 0 if you want the Visitor to be immediatly checked off
  *
