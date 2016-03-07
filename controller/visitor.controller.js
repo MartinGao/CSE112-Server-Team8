@@ -2,8 +2,10 @@ import mongoose from 'mongoose';
 import moment from 'moment';
 import Chance from 'chance';
 import Pusher from 'pusher';
+import request from 'request';
 
 const Visitor = mongoose.model('Visitor');
+const Business = mongoose.model('Business');
 const User = mongoose.model('User');
 const chance = new Chance();
 const pusher = new Pusher({
@@ -62,6 +64,26 @@ export function createVisitor(req, res) {
         } else {
           console.log('About to push to -> ' + user.business);
           pusher.trigger(user.business.toString(), 'newVisitor', savedVisitor);
+
+          Business.findOne({ _id: user.business }).exec((err2, businessOfUser) => {
+            if (err2) {
+              console.log('Err2 -> ' + err2);
+            } else {
+              const payload = {
+                text: 'Lets welcome ' + req.body.name,
+              };
+              request({
+                method: 'POST',
+                // url: 'https://hooks.slack.com/services/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',
+                url: businessOfUser.slackHook,
+                form: {
+                  payload: JSON.stringify(payload),
+                },
+              }, (_error, _response1, _body1) => {
+              });
+            }
+          });
+
           res.status(200).send(savedVisitor);
         }
       });
