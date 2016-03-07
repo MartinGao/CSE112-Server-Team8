@@ -34,6 +34,7 @@ export function createBusiness(req, callback) {
 
     Business.create({
       name: req.body.businessName,
+      planLevel: req.body.planLevel,
       logo: req.body.logo,
       url: req.body.url,
       phone: req.body.phone,
@@ -49,70 +50,88 @@ export function createBusiness(req, callback) {
       console.log('about to return this new business');
       callback(false, newBusiness);
     });
-  })
+  });
 }
 
 export function getBusiness(req, res) {
-  let user = req.user;
-  console.log('req.user = ' + user);
-  if (!user)
-  return res.status(401).send({'Error': "User unauthenticated." });
+  const user = req.user;
+  const bid = req.query.businessId;
 
-  var bid = req.query.businessId;
-  if (!bid)
-  return res.status(400).send({'Error': "Please provide businessId" });
+  console.log('req.user = ' + user);
+  if (!user) {
+    return res.status(401).send({ Error: 'User unauthenticated.' });
+  }
+
+  if (!bid) {
+    return res.status(400).send({ Error: 'Please provide businessId' });
+  }
 
   Business.findOne({ businessId: bid }).exec(function (err, business) {
-    if (err)
-    return res.status(400).send(err);
-    else if (business)
-    return res.status(200).send(business);
-    else
+    if (err) {
+      return res.status(400).send(err);
+    }
+    if (business) {
+      return res.status(200).send(business);
+    }
     return res.status(404).send();
   });
 }
 
 export function setBusiness(req, res) {
-  var bid = req.body.businessId;
+  const bid = req.body.businessId;
 
-  if (!bid)
-  return res.status(400).send({
-    'Error': 'Please provide businessId'
-  });
+  if (!bid) {
+    return res.status(400).send({ Error: 'Please provide businessId' });
+  }
 
   Business.findOne({ businessId: bid }).exec(function (err, business) {
-    if (err)
-    return res.status(400).send(err);
-
-    if (req.body.userId)
-    business.userId = req.body.userId;
-    if (req.body.name)
-    business.name = req.body.name;
-    if (req.body.url)
-    business.url = req.body.url;
-    if (req.body.phone)
-    business.phone = req.body.phone;
-    if (req.body.iconURL)
-    business.iconURL = req.body.iconURL;
-    if (req.body.backgroundImageUrl)
-    business.backgroundImageUrl = req.body.backgroundImageUrl;
-    if (req.body.userIds)
-    business.userIds = req.body.userIds;
-    if (req.body.formId)
-    business.formId = req.body.formId;
-    if (req.body.slackHook)
-    business.slackHook = req.body.slackHook;
-    business.timeStamp.updated = Date.now();
-
-    business.save(function (err, updatedBusiness) {
-      if (err)
+    if (err) {
       return res.status(400).send(err);
+    }
+
+    if (req.body.userId) {
+      Business.userId = req.body.userId;
+    }
+    if (req.body.name) {
+      Business.name = req.body.name;
+    }
+    if (req.body.planLevel) {
+      Business.planLevel = req.body.planLevel;
+    }
+    if (req.body.url) {
+      Business.url = req.body.url;
+    }
+    if (req.body.phone) {
+      Business.phone = req.body.phone;
+    }
+    if (req.body.iconURL) {
+      Business.iconURL = req.body.iconURL;
+    }
+    if (req.body.backgroundImageUrl) {
+      Business.backgroundImageUrl = req.body.backgroundImageUrl;
+    }
+    if (req.body.userIds) {
+      Business.userIds = req.body.userIds;
+    }
+    if (req.body.formId) {
+      Business.formId = req.body.formId;
+    }
+    if (req.body.slackHook) {
+      Business.slackHook = req.body.slackHook;
+    }
+
+    Business.timeStamp.updated = Date.now();
+
+    business.save(function (err1, updatedBusiness) {
+      if (err1) {
+        return res.status(400).send(err);
+      }
       return res.status(200).send(updatedBusiness);
     });
-
   });
 }
-
+/*
 export function _search(req, res, next) {
-
+  TODO
 }
+*/
