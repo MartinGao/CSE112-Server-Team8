@@ -31,6 +31,7 @@ import * as business from '../controller/business.controller';
  *   backgroundImageURL:'/bkg/coolHospital.jpg',
  *   userIds: [],
  *   formId: ...
+ *   slackHook: 'http://url'
  * }
  *
  * @apiError Missing businessId, body, userId, email, name
@@ -54,6 +55,7 @@ import * as business from '../controller/business.controller';
  *   backgroundImageURL:'/bkg/coolHospital.jpg',
  *   userIds: [],
  *   formId: ...
+ *   slackHook: 'http://url'
  * }
  *
  * @apiError Missing businessId

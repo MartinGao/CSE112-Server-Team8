@@ -5,21 +5,35 @@ import * as form from '../controller/form.controller';
  * @apiName CreateForm
  * @apiGroup Form
  *
- * @apiParam {Object} req Information stored in body: businessId, form, description
+ * @apiParam {ObjectId} businessId The ID of the business to update
+ * @apiParam {String} description The description of the business
+ * @apiParam {Object} form The dynamic form associated with the business
  *
  * @apiSuccess {Object} form Returns the new form that was created
  * @apiSuccessExample Example JSON on success:
  * {
- *   description: 'Cool form',
- *   form: {
- *     formId: 12345,
- *	   businessId: 678,
- *     field: { String: 'something' },
- *     timestamp: date
- *   }
+     description: 'Cool form',
+     form: {
+       formId: 12345,
+  	   businessId: 678,
+       field: { String: 'something' },
+       timestamp: date
+     }
  * }
  *
  * @apiError MissingBody Missing businessID or form
+ */
+
+ /**
+ * @api {delete} /form Delete form
+ * @apiName DeleteForm
+ * @apiGroup Form
+ *
+ * @apiParam {String} id The form id of the form to delete
+ *
+ * @apiSuccess {Object} end Deletes the form
+ *
+ * @apiError Error
  */
 module.exports = (app) => {
   app.route('/form/').post(form.createForm);

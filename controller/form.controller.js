@@ -6,19 +6,6 @@
 import mongoose from 'mongoose';
 const Form = mongoose.model('Form');
 
-/**
- * @api {post} /form Create form
- * @apiName CreateForm
- * @apiGroup Form
- *
- * @apiSuccess {Object} updatedForm Form with information.
- *
- * @apiSuccessExample
- * {
- *  " body": 'temp'
- * }
- */
-
 export function createForm(req, res) {
   const missing = [];
 

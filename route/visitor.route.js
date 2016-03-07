@@ -27,7 +27,7 @@ module.exports = (app) => {
  * @apiHeader {String} JWT token required (required)
  * @apiParam {String} name visitors name (required)
  * @apiParam {String} email visitor's email
- * @apiParam {String} phone visitor's phone
+ * @apiParam {String} phone visitor's phone (required)
  * @apiParam {Object} form form data assosiated with visitor
  * @apiParam {String} requiredCheckOff pass in a 0 if you want the Visitor to be immediatly checked off
  *
@@ -250,4 +250,76 @@ module.exports = (app) => {
  * {
  *  "Error": "missing per_page or per_page is 0"
  * }
+ */
+
+/**
+ * @api {get} /search Searches for visitors and users associated with that user's business, given a term
+ * @apiName GetQueue
+ * @apiGroup Visitor
+ *
+ * @apiDescription returns the visitors that have been checked off sorted by time, parameters passed in the query string
+ * example query localhost:3000/visitor/visited?page=1&per_page=5&date=02-29-2016
+ *
+ * @apiHeader {String} JWT token required (required)
+ * @apiParam {String} term the RegEx expression to use for search (required)
+ *
+ * @apiSuccess {Array} visitors returns an array of Visitor Objects
+ * @apiSuccess {Array} users Returns an array of User Objects
+ * @apiSuccessExample Example JSON on success:
+ * visitors: [
+ *  {
+ *   "_id": "56d51fc707e032f073613212",
+ *   "businessId": "56d4f62dfabca20273777587",
+ *   "name": "Stasdfasan Khmelnitski",
+ *   "__v": 0,
+ *   "timeStamp": {
+ *     "updated": "2016-03-01T04:51:19.541Z",
+ *     "created": "2016-03-01T04:51:19.530Z"
+ *   },
+ *   "form": {
+ *     "stuff": "things"
+ *   },
+ *   "checkOff": 2016-03-01T03:52:32.273Z,
+ *   "checkIn": "2016-03-01T04:51:19.530Z",
+ *   "phone": null,
+ *   "email": "abc123@gmail.com"
+ * },
+ * {
+ *   "_id": "56d5120003c99bc0730f3721",
+ *   "businessId": "56d4f62dfabca20273777587",
+ *   "name": "Stasdfasan Khmelnitski",
+ *   "__v": 0,
+ *   "timeStamp": {
+ *     "updated": "2016-03-01T03:52:32.281Z",
+ *     "created": "2016-03-01T03:52:32.273Z"
+ *   },
+ *   "form": {
+ *     "stuff": "things"
+ *   },
+ *   "checkOff": 2016-03-01T03:52:32.273Z,
+ *   "checkIn": "2016-03-01T03:52:32.273Z",
+ *   "phone": null,
+ *   "email": "abc123@gmail.com"
+ * },
+ * {
+ *   "_id": "56d505692ffae45273c1dc54",
+ *   "businessId": "56d4f62dfabca20273777587",
+ *   "name": "Stan Khmelnitski",
+ *   "__v": 0,
+ *   "timeStamp": {
+ *     "updated": "2016-03-01T02:58:49.478Z",
+ *     "created": "2016-03-01T02:58:49.470Z"
+ *   },
+ *   "form": {
+ *     "stuff": "things"
+ *   },
+ *   "checkOff": 2016-03-01T03:52:32.273Z,
+ *   "checkIn": "2016-03-01T02:58:49.470Z",
+ *   "phone": null,
+ *   "email": "abc123@gmail.com"
+ *  }
+ * ],
+ * users: []
+ *
+ * @apiError Error User not signed in
  */
