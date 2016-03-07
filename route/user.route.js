@@ -11,6 +11,7 @@ const JWT_SECRET = '#rub_a_dubDub_thanks_forthe_grub!';
 *
 * @apiParam {String} role Please pass 2.
 * @apiParam {String} name Manager's name.
+* @apiParam {String} phone Manager's phone number.
 * @apiParam {String} email  Manager's email. Use this email to sign in.
 * @apiParam {String} password  Manager's password. Use this password to sign in.
 * @apiParam {String} businessName Name of the Business that this manager owns.

@@ -18,6 +18,10 @@ const BusinessSchema = new Schema({
     type: String,
     required: true,
   },
+  planLevel: {
+    type: String,
+    default: 'basic',
+  },
   url: {
     type: String,
     default: null,

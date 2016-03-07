@@ -4,57 +4,58 @@
  */
 
 import mongoose from 'mongoose';
-var form = mongoose.model('Form');
+const Form = mongoose.model('Form');
 
-/**
- * @api {post} /form Create form
- * @apiName CreateForm
- * @apiGroup Form
- *
- * @apiSuccess {Object} updatedForm Form with information.
- *
- * @apiSuccessExample 
- * {
- *  " body": 'temp'
- * } 
- */
+export function createForm(req, res) {
+  const missing = [];
 
-export function createForm(req, res, next) {
-	var missing = [];
+  if (!req.body.businessId) {
+    missing.push('businessID is required.');
+  }
+  if (!req.body.form) {
+    missing.push('form is required.');
+  }
+  if (missing.length) {
+    return res.status(400).send({
+      Error: missing.join(', '),
+    });
+  }
 
-	if(!req.body.businessId)
-		missing.push("businessID is required.");
-	if(!req.body.form)
-		missing.push("form is required");
-	if(missing.length){
-		return res.status(400).send({
-			"Error": missing.join(', '),
-		});
-	}
+  const newForm = new Form();
+  newForm.description = req.body.description || null;
 
-	var newForm = new form();
-	newForm.description = req.body.description || null;
-	newForm.form = req.body.form;
-	newForm.save(function (err, updatedForm) {
-		if(err){
-			return res.status(400).send(err);
-		}
-		if(updatedForm)
-			return res.status(200).send(updatedForm);
-	});
+  if (req.body.businessType === 'fitness' || 'health_care') {
+    newForm.businessType = req.body.businessType;
+  }
+
+  newForm.form = req.body.form;
+  newForm.save((err, updatedForm) => {
+    if (err) {
+      return res.status(400).send(err);
+    }
+    if (updatedForm) {
+      return res.status(200).send(updatedForm);
+    }
+  });
 }
 
-export function deleteForm(req, res, next) {
-	var formId = req.query.id;
+export function deleteForm(req, res) {
+  if (!req.body.form) {
+    return res.status(400).send({ Error: 'no form' });
+  }
 
-	form.findById(formId, function (err, formToDelete) {
-		if(err)
-			return res.status(400).send(err);
-		if(formToDelete)
-			formToDelete.remove(function (err) {
-				if(err)
-					return res.status(400).send(err);
-				return res.status(200).end();
-			});
-	});
+  Form.findById(req.body.businessId, (err, formToDelete) => {
+    if (err) {
+      return res.status(400).send(err);
+    }
+    if (formToDelete) {
+      formToDelete.findOneAndRemove({
+        businessId: formToDelete.businessId }).exec((err1) => {
+          if (err1) {
+            return res.status(400).send(err1);
+          }
+          return res.status(200).send({ Success: 'form was deleted' });
+        });
+    }
+  });
 }
