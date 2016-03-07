@@ -14,9 +14,10 @@ import * as business from '../controller/business.controller';
  * @apiParam {String} url The url of the business
  * @apiParam {String} phone The phone number
  * @apiParam {String} iconURL The URL to the icon
- * @apiParam {String backgroundImageURL The URL to the background image
+ * @apiParam {String} backgroundImageURL The URL to the background image
  * @apiParam {[ObjectId]} userIds The array of IDs
  * @apiParam {ObjectId} formId The ID of the form
+ * @apiParam {String} slackHook The URL of the webhook used to integrate slack notifications
  *
  * @apiSuccess {Object} business Returns the new business that was created
  * @apiSuccessExample Example JSON on success:

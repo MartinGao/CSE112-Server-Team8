@@ -6,6 +6,19 @@
 import mongoose from 'mongoose';
 var form = mongoose.model('Form');
 
+/**
+ * @api {post} /form Create form
+ * @apiName CreateForm
+ * @apiGroup Form
+ *
+ * @apiSuccess {Object} updatedForm Form with information.
+ *
+ * @apiSuccessExample 
+ * {
+ *  " body": 'temp'
+ * } 
+ */
+
 export function createForm(req, res, next) {
 	var missing = [];
 
