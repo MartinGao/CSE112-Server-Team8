@@ -11,7 +11,8 @@ module.exports = (app) => {
     .delete(expressJwt({ secret: JWT_SECRET }), visitor.deleteVisitor);
   app.route('/visitor/queue').get(expressJwt({ secret: JWT_SECRET }), visitor.getQueue);
   app.route('/visitor/visited').get(expressJwt({ secret: JWT_SECRET }), visitor.getVisitors);
-  app.route('/search').get(expressJwt({ secret: JWT_SECRET }), visitor.search);
+  app.route('/searchVisitor').get(expressJwt({ secret: JWT_SECRET }), visitor.searchVisitor);
+  app.route('/searchUser').get(expressJwt({ secret: JWT_SECRET }), visitor.searchUser);
 
 
   app.route('/visitor/testPusher').get(visitor.testPusher);

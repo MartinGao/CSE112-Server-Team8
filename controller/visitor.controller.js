@@ -235,11 +235,10 @@ export function deleteVisitor(req, res) {
   });
 }
 
-export function search(req, res) {
-  const searchResults = {};
-
-  if (!req.user)
+export function searchVisitor(req, res) {
+  if (!req.user) {
     return res.status(401).end();
+  }
 
   User.findById(req.user._id, (err, user) => {
     if (err) return res.status(400).send(err);
@@ -250,24 +249,32 @@ export function search(req, res) {
           name: new RegExp(req.query.term, 'i'),
           businessId: user.business,
         })
-      .limit(50)
       .exec((err1, results) => {
         if (err1) return res.status(400).send(err);
-        searchResults.visitors = results;
+        res.status(200).send(results)
       });
+    }
+  });
+}
+
+export function searchUser(req, res) {
+  if (!req.user) {
+    return res.status(401).end();
+  }
+
+  User.findById(req.user._id, (err, user) => {
+    if (err) return res.status(400).send(err);
+    if (user) {
       User
       .find(
         {
           name: new RegExp(req.query.term, 'i'),
           business: user.business,
         })
-      .limit(50)
       .exec((err1, results) => {
         if (err1) return res.status(400).send(err);
-        searchResults.users = results;
+        res.status(200).send(results);
       });
-
-      res.status(200).send(searchResults);
     }
   });
 }
