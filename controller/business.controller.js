@@ -66,7 +66,7 @@ export function getBusiness(req, res) {
     return res.status(400).send({ Error: 'Please provide businessId' });
   }
 
-  Business.findOne({ businessId: bid }).exec(function (err, business) {
+  Business.findOne({ _id: bid }).exec(function (err, business) {
     if (err) {
       return res.status(400).send(err);
     }

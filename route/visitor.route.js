@@ -28,8 +28,8 @@ module.exports = (app) => {
  * @apiParam {String} name visitors name (required)
  * @apiParam {String} email visitor's email
  * @apiParam {String} phone visitor's phone
- * @apiParam {Object} form form data assosiated with visitor
- * @apiParam {String} requiredCheckOff pass in a 0 if you want the Visitor to be immediatly checked off
+ * @apiParam {Object} form form data associated with visitor
+ * @apiParam {String} requiredCheckOff pass in a 0 if you want the Visitor to be immediately checked off
  *
  * @apiSuccess {Object} visitor Returns the new visitor that was created
  * @apiSuccessExample Example JSON on success:
