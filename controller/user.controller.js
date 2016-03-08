@@ -195,24 +195,41 @@ export function listEmployees(req, res) {
 }
 
 export function updateUser(req, res) {
+  const setObj = {};
+  if (req.body.name) {
+    setObj.name = req.body.name;
+  }
+  if (req.body.avatar) {
+    setObj.avatar = req.body.avatar;
+  }
+  if (req.body.phone) {
+    setObj.phone = req.body.phone;
+  }
+  if (req.body.email) {
+    setObj.email = req.body.email;
+  }
+  if (req.body.receiveSMS || req.body.receiveEmail || req.body.theme) {
+    setObj.settings = {};
+    if (req.body.receiveSMS) {
+      setObj.settings.receiveSMS = req.body.receiveSMS;
+    }
+    if (req.body.receiveEmail) {
+      setObj.settings.receiveEmail = req.body.receiveEmail;
+    }
+    if (req.body.theme) {
+      setObj.settings.theme = req.body.theme;
+    }
+  }
+
   User.findOneAndUpdate({
     _id: req.user._id,
   }, {
-    $set: {
-      name: req.body.name,
-      avatar: req.body.avatar,
-      phone: req.body.phone,
-      email: req.body.email,
-      settings: {
-        receiveSMS: req.body.receiveSMS,
-        receiveEmail: req.body.receiveEmail,
-        theme: req.body.theme,
-      },
-    },
+    $set: setObj,
   }, {
     new: true,
   }, (err, updatedUser) => {
     if (err) {
+      console.log('WTF');
       res.status(400).send(err);
     } else {
       if (updatedUser) {
