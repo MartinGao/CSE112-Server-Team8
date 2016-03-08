@@ -225,7 +225,7 @@ const JWT_SECRET = '#rub_a_dubDub_thanks_forthe_grub!';
 */
 
 /**
-* @api {post} /user/password Change Password
+* @api {put} /user/password Change Password
 * @apiName ChangePassword
 * @apiGroup User
 *
@@ -265,6 +265,41 @@ const JWT_SECRET = '#rub_a_dubDub_thanks_forthe_grub!';
 * @apiParam {String} deleteUserId  Required. Only Manager can delete user.
 *
 *
+* @apiSuccess {Object} user Returns the new employee user that was created
+* @apiSuccessExample Example JSON on success:
+{
+  "__v": 0,
+  "name": "yuangong",
+  "email": "1232",
+  "phone": "123",
+  "password": "$2a$10$48G6VCudpiuTfRBrZlgr2OhyfKlwQeZX.RtgEgdiUO7ZcTtrU6n.G",
+  "salt": "$2a$10$48G6VCudpiuTfRBrZlgr2O",
+  "business": "56de80fe4998461bd4ebb62e",
+  "_id": "56de8241725a0a8ed441d99a",
+  "timeStamp": {
+    "updated": "2016-03-08T07:41:53.434Z",
+    "created": "2016-03-08T07:41:53.434Z"
+  },
+  "approved": true,
+  "role": 3
+}
+*
+* @apiError UserCreateError User create error
+*/
+
+/**
+* @api {put} /user Update user info
+* @apiName UpdateUser
+* @apiGroup User
+*
+* @apiHeader {String} JWT token required (required)
+* @apiParam {String} [name] Don't pass this param if no change
+* @apiParam {String} [avatar]  Don't pass this param if no change
+* @apiParam {String} [phone] Don't pass this param if no change
+* @apiParam {String} [email]  Don't pass this param if no change
+* @apiParam {String} [receiveSMS]  Don't pass this param if no change
+* @apiParam {String} [receiveEmail]  Don't pass this param if no change
+* @apiParam {String} [theme]  Don't pass this param if no change
 * @apiSuccess {Object} user Returns the new employee user that was created
 * @apiSuccessExample Example JSON on success:
 {
