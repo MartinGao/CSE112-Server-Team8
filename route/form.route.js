@@ -27,7 +27,7 @@ import * as form from '../controller/form.controller';
  */
 
  /**
- * @api {delete} /form Delete form
+ * @api {delete} /form/formId Delete form
  * @apiName DeleteForm
  * @apiGroup Form
  *
@@ -35,7 +35,7 @@ import * as form from '../controller/form.controller';
  *
  * @apiSuccess {Object} end Deletes the form
  *
- * @apiError Error
+ * @apiError Error Form not found, or something went wrong
  */
 module.exports = (app) => {
   app.route('/form/').post(form.createForm);
