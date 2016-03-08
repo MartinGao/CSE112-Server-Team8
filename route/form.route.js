@@ -37,7 +37,7 @@ import * as form from '../controller/form.controller';
  */
 
  /**
- * @api {delete} /form/formId Delete form
+ * @api {delete} /form Delete form
  * @apiName DeleteForm
  * @apiGroup Form
  *
@@ -52,6 +52,6 @@ import expressJwt from 'express-jwt';
 const JWT_SECRET = '#rub_a_dubDub_thanks_forthe_grub!';
 
 module.exports = (app) => {
-  app.route('/form/').post(expressJwt({ secret: JWT_SECRET }), form.createForm);
-  app.route('/form/').delete(expressJwt({ secret: JWT_SECRET }), form.deleteForm);
+  app.route('/form').post(expressJwt({ secret: JWT_SECRET }), form.createForm);
+  app.route('/form').delete(expressJwt({ secret: JWT_SECRET }), form.deleteForm);
 };
