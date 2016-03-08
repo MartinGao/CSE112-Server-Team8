@@ -224,15 +224,86 @@ const JWT_SECRET = '#rub_a_dubDub_thanks_forthe_grub!';
 * @apiError UserCreateError User create error
 */
 
+/**
+* @api {post} /user/password Change Password
+* @apiName ChangePassword
+* @apiGroup User
+*
+* @apiHeader {String} JWT token required (required)
+* @apiParam {String} oldPassword  Required.
+* @apiParam {String} newPassword Required.
+*
+*
+* @apiSuccess {Object} user Returns the new employee user that was created
+* @apiSuccessExample Example JSON on success:
+{
+  "__v": 0,
+  "name": "yuangong",
+  "email": "1232",
+  "phone": "123",
+  "password": "$2a$10$48G6VCudpiuTfRBrZlgr2OhyfKlwQeZX.RtgEgdiUO7ZcTtrU6n.G",
+  "salt": "$2a$10$48G6VCudpiuTfRBrZlgr2O",
+  "business": "56de80fe4998461bd4ebb62e",
+  "_id": "56de8241725a0a8ed441d99a",
+  "timeStamp": {
+    "updated": "2016-03-08T07:41:53.434Z",
+    "created": "2016-03-08T07:41:53.434Z"
+  },
+  "approved": true,
+  "role": 3
+}
+*
+* @apiError UserCreateError User create error
+*/
+
+/**
+* @api {delete} /user Delete an user
+* @apiName DeleteUser
+* @apiGroup User
+*
+* @apiHeader {String} JWT token required (required)
+* @apiParam {String} deleteUserId  Required. Only Manager can delete user.
+*
+*
+* @apiSuccess {Object} user Returns the new employee user that was created
+* @apiSuccessExample Example JSON on success:
+{
+  "__v": 0,
+  "name": "yuangong",
+  "email": "1232",
+  "phone": "123",
+  "password": "$2a$10$48G6VCudpiuTfRBrZlgr2OhyfKlwQeZX.RtgEgdiUO7ZcTtrU6n.G",
+  "salt": "$2a$10$48G6VCudpiuTfRBrZlgr2O",
+  "business": "56de80fe4998461bd4ebb62e",
+  "_id": "56de8241725a0a8ed441d99a",
+  "timeStamp": {
+    "updated": "2016-03-08T07:41:53.434Z",
+    "created": "2016-03-08T07:41:53.434Z"
+  },
+  "approved": true,
+  "role": 3
+}
+*
+* @apiError UserCreateError User create error
+*/
+
 module.exports = function (app) {
 	app.route('/user/signUp').post(user.signUp);
 
 	app.route('/user/signIn').post(user.signIn);
 
-	app.route('/user').get(expressJwt({ secret: JWT_SECRET }), user.currentUser);
+	app.route('/user')
+		.get(expressJwt({ secret: JWT_SECRET }), user.currentUser)
+		.put(expressJwt({ secret: JWT_SECRET }), user.updateUser)
+		.delete(expressJwt({ secret: JWT_SECRET }), user.deleteEmployee);
+
+	app.route('/user/password')
+		.put(expressJwt({ secret: JWT_SECRET }), user.changePassword);
 
 	app.route('/employee/signUp').post(expressJwt({ secret: JWT_SECRET }), user.createEmployeeUser);
 
 	app.route('/employee/list').get(expressJwt({ secret: JWT_SECRET }), user.listEmployees);
+
+
 
 };

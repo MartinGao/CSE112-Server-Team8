@@ -193,3 +193,122 @@ export function listEmployees(req, res) {
     }
   });
 }
+
+export function updateUser(req, res) {
+  User.findOneAndUpdate({
+    _id: req.user._id,
+  }, {
+    $set: {
+      name: req.body.name,
+      avatar: req.body.avatar,
+      phone: req.body.phone,
+      email: req.body.email,
+      settings: {
+        receiveSMS: req.body.receiveSMS,
+        receiveEmail: req.body.receiveEmail,
+        theme: req.body.theme,
+      },
+    },
+  }, {
+    new: true,
+  }, (err, updatedUser) => {
+    if (err) {
+      res.status(400).send(err);
+    } else {
+      if (updatedUser) {
+        res.status(200).send(updatedUser);
+      } else {
+        res.status(400).send({ errorMsg: 'Invalid Token (userId)' });
+      }
+    }
+  });
+}
+
+export function changePassword(req, res) {
+  const missing = [];
+
+  if (!req.body.oldPassword) {
+    missing.push('oldPassword');
+  }
+  if (!req.body.newPassword) {
+    missing.push('newPassword');
+  }
+  if (missing.length) {
+    res.status(400).send({ Error: 'missing ' + missing.join(', ') });
+    return;
+  }
+  User.findOne({
+    _id: req.user._id,
+  }).exec((err, existedUser) => {
+    if (err) {
+      res.status(400).send(err);
+    } else {
+      if (existedUser) {
+        if (bcrypt.compareSync(req.body.oldPassword, existedUser.password)) {
+          const saltsalt = bcrypt.genSaltSync(10);
+          const hash = bcrypt.hashSync(req.body.newPassword, saltsalt);
+          User.findOneAndUpdate({
+            _id: req.user._id,
+          }, {
+            password: hash,
+            salt: saltsalt,
+            approved: true,
+          }, {
+            new: true,
+          }, (err1, updatedUser) => {
+            if (updatedUser) {
+              res.status(200).send(updatedUser);
+            } else {
+              res.status(400).send({ errorMsg: 'Something went wrong!' });
+            }
+          });
+        } else {
+          res.status(401).send({ errorMsg: 'Invalid Old Password!' });
+        }
+      } else {
+        res.status(400).send({ errorMsg: 'Invalid Token (userId)' });
+      }
+    }
+  });
+}
+
+export function deleteEmployee(req, res) {
+  const missing = [];
+
+  if (!req.body.deleteUserId) {
+    missing.push('deleteUserId');
+  }
+  if (missing.length) {
+    res.status(400).send({ Error: 'missing ' + missing.join(', ') });
+    return;
+  }
+
+  User.findOne({ _id: req.user._id }).exec((err, existedUser) => {
+    if (err) {
+      res.status(400).send(err);
+    } else {
+      if (existedUser) {
+        if (existedUser.role === 2) {
+          User.findOneAndRemove({
+            _id: req.body.deleteUserId,
+          }, (err1, result) => {
+            if (err1) {
+              res.status(400).send(err1);
+            } else {
+              if (result) {
+                res.status(200).send(result);
+              } else {
+                res.status(400).send({ errorMsg: 'Something went wrong!' });
+              }
+            }
+          });
+        } else {
+          const temp = 'Permission denied! Only manager can delete Employee.';
+          res.status(400).send({ errorMsg: temp });
+        }
+      } else {
+        res.status(400).send({ errorMsg: 'Invalid Token (userId)' });
+      }
+    }
+  });
+}
