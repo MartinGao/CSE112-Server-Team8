@@ -15,19 +15,18 @@ export function createBusiness(req, callback) {
     missing.push('businessName');
   }
   if (missing.length) {
-    console.log('missing ' + missing.join(', '));
-    callback(true, null);
+    callback({Error: 'missing ' + missing.join(', ')}, null);
     return;
   }
 
   Business.findOne({ name: req.body.businessName }).exec((err, business) => {
     if (err) {
-      callback(true, { Error: err });
+      callback({ Error: err }, null);
       return;
     }
     if (business) {
       console.log('Duplicated "businessName" field.');
-      callback(true, { Error: 'Duplicated "businessName" field.' });
+      callback({ Error: 'Duplicated "businessName" field.' }, null);
       return;
     }
     console.log('All good. Let save this new business!');
@@ -44,7 +43,7 @@ export function createBusiness(req, callback) {
     }, (err1, newBusiness) => {
       if (err1) {
         console.log('newBusiness err1 -> ' + err1);
-        callback(true, { Error: err1 });
+        callback({ Error: err1 }, null);
         return;
       }
       console.log('about to return this new business');
@@ -66,7 +65,7 @@ export function getBusiness(req, res) {
     return res.status(400).send({ Error: 'Please provide businessId' });
   }
 
-  Business.findOne({ businessId: bid }).exec(function (err, business) {
+  Business.findOne({ _id: bid }).exec(function (err, business) {
     if (err) {
       return res.status(400).send(err);
     }
@@ -84,43 +83,46 @@ export function setBusiness(req, res) {
     return res.status(400).send({ Error: 'Please provide businessId' });
   }
 
-  Business.findOne({ businessId: bid }).exec(function (err, business) {
+  Business.findOne({ _id: bid }).exec(function (err, business) {
     if (err) {
       return res.status(400).send(err);
     }
 
+    if (business == null)
+      return res.status(404).end();
+
     if (req.body.userId) {
-      Business.userId = req.body.userId;
+      business.userId = req.body.userId;
     }
     if (req.body.name) {
-      Business.name = req.body.name;
+      business.name = req.body.name;
     }
     if (req.body.planLevel) {
-      Business.planLevel = req.body.planLevel;
+      business.planLevel = req.body.planLevel;
     }
     if (req.body.url) {
-      Business.url = req.body.url;
+      business.url = req.body.url;
     }
     if (req.body.phone) {
-      Business.phone = req.body.phone;
+      business.phone = req.body.phone;
     }
     if (req.body.iconURL) {
-      Business.iconURL = req.body.iconURL;
+      business.iconURL = req.body.iconURL;
     }
     if (req.body.backgroundImageUrl) {
-      Business.backgroundImageUrl = req.body.backgroundImageUrl;
+      business.backgroundImageUrl = req.body.backgroundImageUrl;
     }
     if (req.body.userIds) {
-      Business.userIds = req.body.userIds;
+      business.userIds = req.body.userIds;
     }
     if (req.body.formId) {
-      Business.formId = req.body.formId;
+      business.formId = req.body.formId;
     }
     if (req.body.slackHook) {
-      Business.slackHook = req.body.slackHook;
+      business.slackHook = req.body.slackHook;
     }
 
-    Business.timeStamp.updated = Date.now();
+    business.timeStamp.updated = Date.now();
 
     business.save(function (err1, updatedBusiness) {
       if (err1) {

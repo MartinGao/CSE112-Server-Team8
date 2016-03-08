@@ -55,9 +55,18 @@ const UserSchema = new Schema({
     updated: { type: Date, default: Date.now },
   },
   settings: {
-    receiveSMS: Boolean,
-    receiveEmail: Boolean,
-    theme: String,
+    receiveSMS: {
+      type: Boolean,
+      default: null,
+    },
+    receiveEmail: {
+      type: Boolean,
+      default: null,
+    },
+    theme: {
+      type: String,
+      default: null,
+    },
   },
 });
 
