@@ -53,5 +53,5 @@ const JWT_SECRET = '#rub_a_dubDub_thanks_forthe_grub!';
 
 module.exports = (app) => {
   app.route('/form/').post(expressJwt({ secret: JWT_SECRET }), form.createForm);
-  app.route('/form/formId').delete(expressJwt({ secret: JWT_SECRET }), form.deleteForm);
+  app.route('/form/').delete(expressJwt({ secret: JWT_SECRET }), form.deleteForm);
 };
