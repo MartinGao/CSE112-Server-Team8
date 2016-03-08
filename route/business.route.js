@@ -47,7 +47,8 @@ import * as business from '../controller/business.controller';
  */
 /**
  * @api {get} /business Get a business
- * @apiExample /business?businessId=56d4e57ad3877b5615155b6a
+ * @apiExample Example
+ * /business?businessId=56d4e57ad3877b5615155b6a
  * @apiName GetBusiness
  * @apiGroup Business
  *
