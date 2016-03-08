@@ -1,7 +1,6 @@
 import mongoose from 'mongoose';
 import bcrypt from 'bcrypt';
 import moment from 'moment';
-import expressJwt from 'express-jwt';
 import jwt from 'jsonwebtoken';
 import * as BusinessController from './business.controller';
 const User = mongoose.model('User');
@@ -15,10 +14,9 @@ export function currentUser(req, res) {
     if (err) {
       res.status(400).send(err);
     } else {
-      if(existedUser){
+      if (existedUser) {
         res.status(200).send(existedUser);
-      }
-      else{
+      } else {
         res.status(400).send({ errorMsg: 'Invalid Token (userId)' });
       }
     }
@@ -39,13 +37,10 @@ export function signUp(req, res) {
 }
 
 export function signIn(req, res) {
-  console.log('user signIn!');
-  console.log(req.body);
   User.findOne({
-    email: req.body.email
+    email: req.body.email,
   }, (err, existedUser) => {
     if (err) {
-      console.log(err);
       res.status(400).send(err);
     } else {
       // Email Exists
@@ -53,9 +48,9 @@ export function signIn(req, res) {
         if (bcrypt.compareSync(req.body.password, existedUser.password)) {
           res.status(200).send({
             token: jwt.sign({
-              _id: existedUser._id
+              _id: existedUser._id,
             }, JWT_SECRET),
-            user: existedUser
+            user: existedUser,
           });
         } else {
           res.status(401).send({ errorMsg: 'Invalid Password!' });
@@ -132,40 +127,68 @@ function _createManagerUser(req, res) {
 }
 
 function _createEmployeeUser(req, res) {
+  console.log('_createEmployeeUser is running!');
   const saltsalt = bcrypt.genSaltSync(10);
-  const hash = bcrypt.hashSync(req.body.password, saltsalt);
-
-  User.findOne({ token: req.body.token }).exec((err, user) => {
+  const hash = bcrypt.hashSync('HelloWorld', saltsalt);
+  User.findOne({ _id: req.user._id }).exec((err, existedUser) => {
     if (err) {
-      console.log("createEmployee failed");
       res.status(400).send(err);
     } else {
-      if (user) {
+      if (existedUser) {
+        console.log('123')
         User.create({
           role: 3,
-          approved: true,
-          firstName: req.body.firstName,
-          lastName: req.body.lastName,
+          approved: false,
+          name: req.body.name,
           avatar: req.body.avatar,
           email: req.body.email,
+          phone: req.body.phone,
           password: hash,
           salt: saltsalt,
-          business: user.business,
-          department: req.body.department,
-          position: req.body.position,
-          token: bcrypt.genSaltSync(32),
-          tokenExpiredAt: moment().add(1, 'years'),
+          business: existedUser.business,
         }, (err1, newUser) => {
-          if (err) {
+          if (err1) {
             console.log('user create error!');
             console.log(err1);
+            res.status(400).send(err1);
           } else {
             console.log(newUser);
-            res.send(newUser);
+            res.status(200).send(newUser);
           }
         });
       } else {
-        res.status(403).send({ errorMsg: 'Unauthorized User!' });
+        res.status(400).send({ errorMsg: 'Invalid Token (userId)' });
+      }
+    }
+  })
+}
+
+export function createEmployeeUser(req, res) {
+  _createEmployeeUser(req, res);
+}
+
+
+export function listEmployees(req, res) {
+  User.findOne({ _id: req.user._id }).exec((err, existedUser) => {
+    if (err) {
+      res.status(400).send(err);
+    } else {
+      if (existedUser) {
+        if (existedUser.role === 2) {
+          User.find({
+            business: existedUser.business,
+          }).exec((err1, employees) => {
+            if (err) {
+              res.status(400).send(err);
+            } else {
+              res.status(200).send(employees);
+            }
+          });
+        } else {
+          res.status(400).send({ errorMsg: 'Permission denied! Only manager can list employees.' });
+        }
+      } else {
+        res.status(400).send({ errorMsg: 'Invalid Token (userId)' });
       }
     }
   });

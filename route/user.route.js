@@ -124,30 +124,115 @@ const JWT_SECRET = '#rub_a_dubDub_thanks_forthe_grub!';
 **/
 
 /**
-* @api {post} /user [INCOMPLETE]Create new employee user
+* @api {post} /employee/signUp Create new employee user
 * @apiName CreateEmployeeUser
 * @apiGroup User
 *
 * @apiHeader {String} JWT token required (required)
-* @apiParam {Object} req Information stored in body: firstName, lastName, avatar, email, password, department, position
+* @apiParam {String} name  Required.
+* @apiParam {String} phone Required.
+* @apiParam {String} email Required.
+* @apiParam {String} [avatar]
+*
 *
 * @apiSuccess {Object} user Returns the new employee user that was created
 * @apiSuccessExample Example JSON on success:
-* {
-*   role: 3,
-*   firstName: 'Employee',
-*   lastName: 'User',
-*   avatar: 'coolpicurl2.com',
-*   email: 'employed@coolhospital.org',
-*   password: 'nobutiwouldlikesomehash',
-* }
+{
+  "__v": 0,
+  "name": "yuangong",
+  "email": "1232",
+  "phone": "123",
+  "password": "$2a$10$48G6VCudpiuTfRBrZlgr2OhyfKlwQeZX.RtgEgdiUO7ZcTtrU6n.G",
+  "salt": "$2a$10$48G6VCudpiuTfRBrZlgr2O",
+  "business": "56de80fe4998461bd4ebb62e",
+  "_id": "56de8241725a0a8ed441d99a",
+  "timeStamp": {
+    "updated": "2016-03-08T07:41:53.434Z",
+    "created": "2016-03-08T07:41:53.434Z"
+  },
+  "approved": false,
+  "role": 3
+}
 *
 * @apiError UserCreateError User create error
 */
+
+/**
+* @api {get} /employee/list List all employees
+* @apiName ListEmployees
+* @apiGroup User
+*
+* @apiHeader {String} JWT token required (required)
+
+*
+* @apiSuccess {Object} user Returns the new employee user that was created
+* @apiSuccessExample Example JSON on success:
+[
+  {
+    "_id": "56de80fe4998461bd4ebb62d",
+    "business": "56de80fe4998461bd4ebb62e",
+    "phone": "123123",
+    "salt": "$2a$10$8xPcPi5FUvsKnd.XU2A23O",
+    "password": "$2a$10$8xPcPi5FUvsKnd.XU2A23O2WTe5Qf2z7nNzleWcLYSv3IDnc/DbMW",
+    "email": "abc@gaasdfadsssss23fadsassssdfdil.com",
+    "name": "Anasaddfdasdfrei hmelnitski",
+    "__v": 0,
+    "timeStamp": {
+      "updated": "2016-03-08T07:36:30.600Z",
+      "created": "2016-03-08T07:36:30.600Z"
+    },
+    "avatar": "a",
+    "approved": true,
+    "role": 2
+  },
+  {
+    "_id": "56de8235725a0a8ed441d998",
+    "name": "yuangong",
+    "email": "123",
+    "phone": "123",
+    "password": "$2a$10$xYVeit1rG5vsq5kMSa.NWeISLnai1fAvGx02V0wAVmoV6.tvKhaz.",
+    "salt": "$2a$10$xYVeit1rG5vsq5kMSa.NWe",
+    "business": "56de80fe4998461bd4ebb62e",
+    "__v": 0,
+    "timeStamp": {
+      "updated": "2016-03-08T07:41:41.514Z",
+      "created": "2016-03-08T07:41:41.514Z"
+    },
+    "avatar": null,
+    "approved": false,
+    "role": 3
+  },
+  {
+    "_id": "56de8241725a0a8ed441d99a",
+    "name": "yuangong",
+    "email": "1232",
+    "phone": "123",
+    "password": "$2a$10$48G6VCudpiuTfRBrZlgr2OhyfKlwQeZX.RtgEgdiUO7ZcTtrU6n.G",
+    "salt": "$2a$10$48G6VCudpiuTfRBrZlgr2O",
+    "business": "56de80fe4998461bd4ebb62e",
+    "__v": 0,
+    "timeStamp": {
+      "updated": "2016-03-08T07:41:53.434Z",
+      "created": "2016-03-08T07:41:53.434Z"
+    },
+    "avatar": null,
+    "approved": false,
+    "role": 3
+  }
+]
+*
+* @apiError UserCreateError User create error
+*/
+*
 module.exports = function (app) {
 	app.route('/user/signUp').post(user.signUp);
 
 	app.route('/user/signIn').post(user.signIn);
 
 	app.route('/user').get(expressJwt({ secret: JWT_SECRET }), user.currentUser);
+
+	app.route('/employee/signUp').post(expressJwt({ secret: JWT_SECRET }), user.createEmployeeUser);
+
+	app.route('/employee/list').get(expressJwt({ secret: JWT_SECRET }), user.listEmployees);
+
 };
