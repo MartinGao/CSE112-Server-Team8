@@ -38,7 +38,8 @@ const VisitorSchema = new Schema({
 });
 
 VisitorSchema.pre('save', (next) => {
-  this.timeStamp.updated = new Date();
+  console.log('Visitor.timeStamp.updated is not updated!');
+  //this.timeStamp.updated = new Date();
   next();
 });
 

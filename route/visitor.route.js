@@ -31,6 +31,16 @@ module.exports = (app) => {
  * @apiParam {Object} form form data associated with visitor
  * @apiParam {String} requiredCheckOff pass in a 0 if you want the Visitor to be immediately checked off
  *
+ * @apiExample HTTP Post Example
+ * POST /visitor/new HTTP/1.1
+ * Host: localhost:3000
+ * Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJfaWQiOiI1NmQ1MTVhZWUyZGRmOWQ5MGNmNjNlMDgiLCJpYXQiOjE0NTc0MDk1NjF9.oLoxhuGRSn4Wy0miaMpBTMMvo8LFdoHV5TAnyNiIBoo
+ * Cache-Control: no-cache
+ * Postman-Token: 51d4ef25-a4cd-5713-464a-f625cc6e9d60
+ * Content-Type: application/x-www-form-urlencoded
+ *
+ * name=Billy
+ *
  * @apiSuccess {Object} visitor Returns the new visitor that was created
  * @apiSuccessExample Example JSON on success:
  * {
@@ -88,11 +98,6 @@ module.exports = (app) => {
  *
  * @apiErrorExample {json} Error-Response:
  * {
- *  "Error": "missing name"
- * }
- *
- * @apiErrorExample {json} Error-Response:
- * {
  * "message": "Cast to ObjectId failed for value \"123\" at path \"_id\"",
  *  "name": "CastError",
  *  "kind": "ObjectId",
@@ -107,7 +112,8 @@ module.exports = (app) => {
  * @apiGroup Visitor
  *
  * @apiDescription returns the current visitors that have not been checked off sorted by time, parameters passed in the query string
- * example query localhost:3000/visitor/queue?page=2&per_page=1
+ * @apiExample HTTP GET Request Sample
+ * localhost:3000/visitor/queue?page=1&per_page=5
  *
  * @apiHeader {String} JWT token required (required)
  * @apiParam {String} page what page you want (1 is first page) (required)
@@ -174,6 +180,8 @@ module.exports = (app) => {
  * {
  *  "Error": "missing per_page or per_page is 0"
  * }
+ * @apiError {401} Unauthenticated
+ * @apiError {404} UserNotFound
  */
 
  /**
@@ -182,7 +190,8 @@ module.exports = (app) => {
  * @apiGroup Visitor
  *
  * @apiDescription returns the visitors that have been checked off sorted by time, parameters passed in the query string
- * example query localhost:3000/visitor/visited?page=1&per_page=5&date=02-29-2016
+ * @apiExample HTTP Get Example
+ * localhost:3000/visitor/visited?page=1&per_page=5&date=02-29-2016
  *
  * @apiHeader {String} JWT token required (required)
  * @apiParam {String} page what page you want (1 is first page) (required)
@@ -258,7 +267,8 @@ module.exports = (app) => {
  * @apiGroup Visitor
  *
  * @apiDescription returns the visitors that have been checked off sorted by time, parameters passed in the query string
- * example query localhost:3000/visitor/visited?page=1&per_page=5&date=02-29-2016
+ * @apiExample Example Query
+ * localhost:3000/search?term=*
  *
  * @apiHeader {String} JWT token required (required)
  * @apiParam {String} term the RegEx expression to use for search (required)
@@ -321,5 +331,5 @@ module.exports = (app) => {
  * ],
  * users: []
  *
- * @apiError Error User not signed in
+ * @apiError {401} Unauthenticated User not signed in
  */

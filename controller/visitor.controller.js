@@ -119,6 +119,10 @@ export function checkOffVisitor(req, res) {
 
 export function getQueue(req, res) {
   const missing = [];
+
+  if (!req.user)
+    return res.status(401).end();
+
   if (!req.query.page) {
     missing.push('missing page');
   }
@@ -139,6 +143,7 @@ export function getQueue(req, res) {
 
   User.findById(req.user._id, (err, user) => {
     if (err) {
+      console.log('Queue fetching user faced error');
       return res.status(400).send(err);
     }
     if (user) {
@@ -153,6 +158,8 @@ export function getQueue(req, res) {
         return res.status(200).send(visitors);
       });
     }
+    else
+      return res.status(404).end();
   });
 }
 
@@ -235,8 +242,11 @@ export function search(req, res) {
   const searchResults = {};
   const errors = [];
 
+  if (!req.user)
+    return res.status(401).end();
+
   User.findById(req.user._id, (err, user) => {
-    if (err) return res.status.send(err);
+    if (err) return res.status(400).send(err);
     if (user) {
       Visitor
       .find(

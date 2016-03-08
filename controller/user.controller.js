@@ -34,7 +34,7 @@ export function signUp(req, res) {
   } else if (req.body.role === '3') {
     _createEmployeeUser(req, res);
   } else {
-    res.status(400).send({ errorMsg: 'Missing "rold" field' });
+    res.status(400).send({ errorMsg: 'Missing "role" field' });
   }
 }
 
@@ -87,7 +87,7 @@ function _createManagerUser(req, res) {
   req.user = user;
   BusinessController.createBusiness(req, (err, newBusiness) => {
     if (err) {
-      res.status(400).send(newBusiness);
+      res.status(400).send(err);
     } else {
       const saltsalt = bcrypt.genSaltSync(10);
       const hash = bcrypt.hashSync(req.body.password, saltsalt);
@@ -137,6 +137,7 @@ function _createEmployeeUser(req, res) {
 
   User.findOne({ token: req.body.token }).exec((err, user) => {
     if (err) {
+      console.log("createEmployee failed");
       res.status(400).send(err);
     } else {
       if (user) {

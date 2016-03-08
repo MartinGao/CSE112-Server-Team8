@@ -10,6 +10,7 @@ import * as business from '../controller/business.controller';
  *
  * @apiDescription Fields not defined in body will not be updated
  *
+ * @apiHeader {String} JWT token required (required)
  * @apiParam {ObjectId} businessId The ID of the business to update (required)
  * @apiParam {ObjectId} userId The ID of the user who is the owner
  * @apiParam {String} name The name of the business
@@ -54,6 +55,7 @@ import * as business from '../controller/business.controller';
  *
  * @apiDescription Specify businessId in the Query
  *
+ * @apiHeader {String} JWT token required (required)
  * @apiParam {ObjectId} businessId The ID of the business to fetch
  *
  * @apiSuccess {Object} business Returns the business if found
