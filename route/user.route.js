@@ -223,7 +223,7 @@ const JWT_SECRET = '#rub_a_dubDub_thanks_forthe_grub!';
 *
 * @apiError UserCreateError User create error
 */
-*
+
 module.exports = function (app) {
 	app.route('/user/signUp').post(user.signUp);
 
