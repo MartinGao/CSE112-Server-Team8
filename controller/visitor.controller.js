@@ -4,7 +4,6 @@ import Chance from 'chance';
 import Pusher from 'pusher';
 import request from 'request';
 
-
 const Visitor = mongoose.model('Visitor');
 const Business = mongoose.model('Business');
 const User = mongoose.model('User');
@@ -16,7 +15,6 @@ const pusher = new Pusher({
   encrypted: true,
 });
 pusher.port = 443;
-
 
 export function testPusher(req, res) {
   let randomName = chance.name();
@@ -231,10 +229,7 @@ export function deleteVisitor(req, res) {
 }
 
 export function search(req, res) {
-
-  console.log(req.query.term);
   const searchResults = {};
-  const errors = [];
 
   User.findById(req.user._id, (err, user) => {
     if (err) return res.status.send(err);
