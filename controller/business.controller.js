@@ -3,6 +3,7 @@
 */
 import mongoose from 'mongoose';
 const Business = mongoose.model('Business');
+const Form = mongoose.model('Form');
 
 export function createBusiness(req, callback) {
   console.log('createBusiness is running');
@@ -56,7 +57,6 @@ export function getBusiness(req, res) {
   const user = req.user;
   const bid = req.query.businessId;
 
-  console.log('req.user = ' + user);
   if (!user) {
     return res.status(401).send({ Error: 'User unauthenticated.' });
   }
@@ -70,9 +70,16 @@ export function getBusiness(req, res) {
       return res.status(400).send(err);
     }
     if (business) {
-      return res.status(200).send(business);
+      console.log("formId = " + business.formId);
+      if (business.formId)
+        Form.findOne({_id: business.formId}).exec(function (err, form) {
+          return res.status(200).send({business: business, form: form});
+        });
+      else
+        return res.status(200).send({business: business, form: null});
     }
-    return res.status(404).send();
+    else
+      return res.status(404).send();
   });
 }
 

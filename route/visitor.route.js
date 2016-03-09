@@ -264,7 +264,7 @@ module.exports = (app) => {
 
 /**
  * @api {get} /search Searches for visitors and users associated with that user's business, given a term
- * @apiName GetQueue
+ * @apiName Search
  * @apiGroup Visitor
  *
  * @apiDescription returns the visitors that have been checked off sorted by time, parameters passed in the query string

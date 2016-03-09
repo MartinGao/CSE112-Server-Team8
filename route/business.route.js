@@ -47,7 +47,7 @@ import * as business from '../controller/business.controller';
  * @apiError Missing businessId, body, userId, email, name
  */
 /**
- * @api {get} /business Get a business
+ * @api {get} /business Get a business (and form)
  * @apiExample Example
  * /business?businessId=56d4e57ad3877b5615155b6a
  * @apiName GetBusiness
@@ -58,25 +58,38 @@ import * as business from '../controller/business.controller';
  * @apiHeader {String} JWT token required (required)
  * @apiParam {ObjectId} businessId The ID of the business to fetch
  *
- * @apiSuccess {Object} business Returns the business if found
+ * @apiSuccess {Object} BusinessAndForm Returns the business if found, form if found
  * @apiSuccessExample Example JSON on success:
  * {
-  "_id": "56d4e57ad3877b5615155b6a",
-  "name": "Martin's No.1 Company",
-  "owner": null,
-  "__v": 0,
-  "timeStamp": {
-    "updated": "2016-03-01T00:42:34.689Z",
-    "created": "2016-03-01T00:42:34.689Z"
+  "business": {
+    "_id": "56df49e1f5cc731e5d9e1f1c",
+    "name": "Business",
+    "__v": 0,
+    "formId": "56df785f511b0f8519e245c8",
+    "timeStamp": {
+      "updated": "2016-03-09T01:12:28.177Z",
+      "created": "2016-03-08T21:53:37.268Z"
+    },
+    "slackHook": null,
+    "userIds": [],
+    "backgroundImageUrl": null,
+    "iconURL": null,
+    "phone": "1111111111",
+    "url": null,
+    "planLevel": "basic",
+    "userId": null
   },
-  "slackHook": null,
-  "userIds": [],
-  "backgroundImageUrl": null,
-  "iconURL": null,
-  "phone": null,
-  "url": null,
-  "planLevel": "basic",
-  "userId": null
+  "form": {
+    "_id": "56df785f511b0f8519e245c8",
+    "form": "blahblah",
+    "description": "stuff",
+    "__v": 0,
+    "timeStamp": {
+      "updated": "2016-03-09T01:11:59.872Z",
+      "created": "2016-03-09T01:11:59.872Z"
+    },
+    "businessType": "other"
+  }
 }
  *
  * @apiError {400} MissingBusinessId
