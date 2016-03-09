@@ -5,11 +5,12 @@ import * as form from '../controller/form.controller';
  * @apiName CreateForm
  * @apiGroup Form
  *
- * @apiParam {ObjectId} businessId The ID of the business to update
+ * @apiParam {ObjectId} businessId The ID of the business to update. This business will be linked to the form.
  * @apiParam {String} description The description of the business
  * @apiParam {String} businessType The type of business (health care, fitness, etc.)
  * @apiParam {Object} form The dynamic form associated with the business
  *
+ * @apiDescription Will return business and form. If business is null, failed to update business
  * @apiExample HTTP Sample
  * POST /form HTTP/1.1
  Host: localhost:3000
@@ -20,18 +21,38 @@ import * as form from '../controller/form.controller';
 
  businessId=56d4e57ad3877b5615155b6a&description=A+real+nice+form&businessType=Unemployed&form=%7B%7D
  *
- * @apiSuccess {Object} form Returns the new form that was created
+ * @apiSuccess {Object} FormAndBusiness Returns the new form and business that was created
  * @apiSuccessExample Example JSON on success:
  * {
- *    description: 'Cool form',
- *		 businessType: 'fitness',
- *    form: {
- *      formId: 12345,
- * 	   businessId: 678,
- *      field: { String: 'something' },
- *      timestamp: date
- *    }
- * }
+  "form": {
+    "__v": 0,
+    "form": "blahblah",
+    "description": "stuff",
+    "_id": "56df7c564a28dd40e32e27be",
+    "timeStamp": {
+      "updated": "2016-03-09T01:28:54.026Z",
+      "created": "2016-03-09T01:28:54.026Z"
+    }
+  },
+  "business": {
+    "_id": "56df49e1f5cc731e5d9e1f1c",
+    "name": "Business",
+    "__v": 0,
+    "formId": "56df7c564a28dd40e32e27be",
+    "timeStamp": {
+      "updated": "2016-03-09T01:28:31.844Z",
+      "created": "2016-03-08T21:53:37.268Z"
+    },
+    "slackHook": null,
+    "userIds": [],
+    "backgroundImageUrl": null,
+    "iconURL": null,
+    "phone": "1111111111",
+    "url": null,
+    "planLevel": "Enterprise",
+    "userId": null
+  }
+}
  *
  * @apiError MissingBody Missing businessID or form
  */

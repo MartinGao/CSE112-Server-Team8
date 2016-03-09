@@ -5,6 +5,7 @@
 
 import mongoose from 'mongoose';
 const Form = mongoose.model('Form');
+const Business = mongoose.model('Business');
 
 export function createForm(req, res) {
   const missing = [];
@@ -34,8 +35,22 @@ export function createForm(req, res) {
       return res.status(400).send(err);
     }
     if (updatedForm) {
-      return res.status(200).send(updatedForm);
-    }
+        Business.findOne({ _id: req.body.businessId }).exec(function (err, business) {
+          if (err || !business)
+            return res.status(400).send({form: updatedForm, business: null});
+
+          if (business) {
+            business.formId = updatedForm._id;
+            business.save(function (err1, updatedBusiness) {
+              return res.status(200).send({form: updatedForm, business: updatedBusiness});
+            });
+          }
+          else
+            return res.status(200).send({form: updatedForm, business: null});
+        });
+      }
+    else
+      return res.status(400).send({Error: 'Failed to save form.'});
   });
 }
 
