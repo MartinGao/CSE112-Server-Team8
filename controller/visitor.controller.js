@@ -65,7 +65,7 @@ export function createVisitor(req, res) {
               console.log('Err2 -> ' + err2);
             } else {
               const payload = {
-                text: 'Lets welcome ' + req.body.name,
+                text: req.body.name + 'has checked in!',
               };
               request({
                 method: 'POST',
