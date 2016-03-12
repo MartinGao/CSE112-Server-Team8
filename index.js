@@ -17,6 +17,7 @@ import businessRoute from './route/business.route';
 import testRoute from './route/test.route';
 import visitorRoute from './route/visitor.route';
 import formRoute from './route/form.route';
+import notificationRoute from './route/notification.route';
 
 const app = module.exports = express();
 
@@ -42,7 +43,7 @@ businessRoute(app);
 testRoute(app);
 visitorRoute(app);
 formRoute(app);
-
+notificationRoute(app);
 
 
 app.use('/doc', express.static(__dirname + '/doc'));

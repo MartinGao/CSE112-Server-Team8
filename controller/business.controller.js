@@ -3,6 +3,7 @@
 */
 import mongoose from 'mongoose';
 const Business = mongoose.model('Business');
+const User = mongoose.model('User');
 const Form = mongoose.model('Form');
 
 export function createBusiness(req, callback) {
@@ -137,6 +138,38 @@ export function setBusiness(req, res) {
       }
       return res.status(200).send(updatedBusiness);
     });
+  });
+}
+
+
+export function suspendBusiness(req, res) {
+  User.findOne({ _id: req.user._id }).exec((err, existedUser) => {
+    if (err) {
+      res.status(400).send(err);
+    } else {
+      if (existedUser) {
+        if (existedUser.role === -2 || existedUser.role === -1) {
+          Business.findOneAndUpdate({
+            _id: req.body.businessId,
+          }, {
+            suspended: req.body.suspended,
+          }, {
+            new: true,
+          }, (err1, updatedUser) => {
+            if (updatedUser) {
+              res.status(200).send(updatedUser);
+            } else {
+              res.status(400).send(err1);
+            }
+          });
+        } else {
+          const temp = 'Permission denied! Require -2 (Venkman) or -1(Venkman Support)';
+          res.status(400).send({ errorMsg: temp });
+        }
+      } else {
+        res.status(400).send({ errorMsg: 'Invalid Token (userId)' });
+      }
+    }
   });
 }
 /*

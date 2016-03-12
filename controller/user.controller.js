@@ -23,19 +23,6 @@ export function currentUser(req, res) {
   });
 }
 
-
-export function signUp(req, res) {
-  if (req.body.role === '1') {
-    // _createAdminUser(req, res);
-  } else if (req.body.role === '2') {
-    _createManagerUser(req, res);
-  } else if (req.body.role === '3') {
-    _createEmployeeUser(req, res);
-  } else {
-    res.status(400).send({ errorMsg: 'Missing "role" field' });
-  }
-}
-
 export function signIn(req, res) {
   User.findOne({
     email: req.body.email,
@@ -62,7 +49,7 @@ export function signIn(req, res) {
   });
 }
 
-function _createManagerUser(req, res) {
+export function ownerSignUp(req, res) {
   console.log(req.body);
 
   if (!req.body.name) {
@@ -126,55 +113,13 @@ function _createManagerUser(req, res) {
   });
 }
 
-function _createEmployeeUser(req, res) {
-  console.log('_createEmployeeUser is running!');
-  const saltsalt = bcrypt.genSaltSync(10);
-  const hash = bcrypt.hashSync('HelloWorld', saltsalt);
-  User.findOne({ _id: req.user._id }).exec((err, existedUser) => {
-    if (err) {
-      res.status(400).send(err);
-    } else {
-      if (existedUser) {
-        console.log('123')
-        User.create({
-          role: 3,
-          approved: false,
-          name: req.body.name,
-          avatar: req.body.avatar,
-          email: req.body.email,
-          phone: req.body.phone,
-          password: hash,
-          salt: saltsalt,
-          business: existedUser.business,
-        }, (err1, newUser) => {
-          if (err1) {
-            console.log('user create error!');
-            console.log(err1);
-            res.status(400).send(err1);
-          } else {
-            console.log(newUser);
-            res.status(200).send(newUser);
-          }
-        });
-      } else {
-        res.status(400).send({ errorMsg: 'Invalid Token (userId)' });
-      }
-    }
-  })
-}
-
-export function createEmployeeUser(req, res) {
-  _createEmployeeUser(req, res);
-}
-
-
 export function listEmployees(req, res) {
   User.findOne({ _id: req.user._id }).exec((err, existedUser) => {
     if (err) {
       res.status(400).send(err);
     } else {
       if (existedUser) {
-        if (existedUser.role === 2) {
+        if (existedUser.role === 2 || existedUser.role === 1) {
           User.find({
             business: existedUser.business,
           }).exec((err1, employees) => {
@@ -185,7 +130,8 @@ export function listEmployees(req, res) {
             }
           });
         } else {
-          res.status(400).send({ errorMsg: 'Permission denied! Only manager can list employees.' });
+          const temp = 'Permission denied! Require Role 1 (Employee Admin) or 2 (Business Owner)';
+          res.status(400).send({ errorMsg: temp });
         }
       } else {
         res.status(400).send({ errorMsg: 'Invalid Token (userId)' });
@@ -305,7 +251,7 @@ export function deleteEmployee(req, res) {
       res.status(400).send(err);
     } else {
       if (existedUser) {
-        if (existedUser.role === 2) {
+        if (existedUser.role === 2 || existedUser.role === 1) {
           User.findOneAndRemove({
             _id: req.body.deleteUserId,
           }, (err1, result) => {
@@ -320,7 +266,170 @@ export function deleteEmployee(req, res) {
             }
           });
         } else {
-          const temp = 'Permission denied! Only manager can delete Employee.';
+          const temp = 'Permission denied! Require Role 1 (Employee Admin) or 2 (Business Owner)';
+          res.status(400).send({ errorMsg: temp });
+        }
+      } else {
+        res.status(400).send({ errorMsg: 'Invalid Token (userId)' });
+      }
+    }
+  });
+}
+
+
+export function vipSignUp(req, res) {
+  const saltsalt = bcrypt.genSaltSync(10);
+  const hash = bcrypt.hashSync('HelloWorld', saltsalt);
+  User.findOne({ _id: req.user._id }).exec((err, existedUser) => {
+    if (err) {
+      res.status(400).send(err);
+    } else {
+      if (existedUser) {
+        if (existedUser.role === -2) {
+          User.create({
+            role: -1,
+            approved: false,
+            name: req.body.name,
+            avatar: req.body.avatar,
+            email: req.body.email,
+            phone: req.body.phone,
+            password: hash,
+            salt: saltsalt,
+          }, (err1, newUser) => {
+            if (err1) {
+              res.status(400).send(err1);
+            } else {
+              console.log(newUser);
+              res.status(200).send(newUser);
+            }
+          });
+        } else {
+          const temp = 'Permission denied! Require Role -2 (Venkman)';
+          res.status(400).send({ errorMsg: temp });
+        }
+      } else {
+        res.status(400).send({ errorMsg: 'Invalid Token (userId)' });
+      }
+    }
+  });
+}
+
+export function employeeSignUp(req, res) {
+  const saltsalt = bcrypt.genSaltSync(10);
+  const hash = bcrypt.hashSync('HelloWorld', saltsalt);
+  User.findOne({ _id: req.user._id }).exec((err, existedUser) => {
+    if (err) {
+      res.status(400).send(err);
+    } else {
+      if (existedUser) {
+        if (existedUser.role === 1 || existedUser.role === 2) {
+          User.create({
+            role: 0,
+            approved: false,
+            name: req.body.name,
+            avatar: req.body.avatar,
+            email: req.body.email,
+            phone: req.body.phone,
+            password: hash,
+            salt: saltsalt,
+            business: existedUser.business,
+          }, (err1, newUser) => {
+            if (err1) {
+              res.status(400).send(err1);
+            } else {
+              res.status(200).send(newUser);
+            }
+          });
+        } else {
+          const temp = 'Permission denied! Require Role 1 (Employee Admin) or 2 (Business Owner)';
+          res.status(400).send({ errorMsg: temp });
+        }
+      } else {
+        res.status(400).send({ errorMsg: 'Invalid Token (userId)' });
+      }
+    }
+  });
+}
+
+export function changeRole(req, res) {
+  User.findOne({ _id: req.user._id }).exec((err, existedUser) => {
+    if (err) {
+      res.status(400).send(err);
+    } else {
+      if (existedUser) {
+        if (existedUser.role === 2) {
+          User.findOneAndUpdate({
+            _id: req.body.userId,
+          }, {
+            role: parseInt(req.body.role, 10),
+          }, {
+            new: true,
+          }, (err1, updatedUser) => {
+            if (updatedUser) {
+              res.status(200).send(updatedUser);
+            } else {
+              res.status(400).send(err1);
+            }
+          });
+        } else {
+          const temp = 'Permission denied! Require 2 (Business Owner)';
+          res.status(400).send({ errorMsg: temp });
+        }
+      } else {
+        res.status(400).send({ errorMsg: 'Invalid Token (userId)' });
+      }
+    }
+  });
+}
+
+export function editEmployee(req, res) {
+  User.findOne({ _id: req.user._id }).exec((err, existedUser) => {
+    if (err) {
+      res.status(400).send(err);
+    } else {
+      if (existedUser) {
+        if (existedUser.role === 2 || existedUser.role === 1) {
+          const setObj = {};
+          if (req.body.name) {
+            setObj.name = req.body.name;
+          }
+          if (req.body.avatar) {
+            setObj.avatar = req.body.avatar;
+          }
+          if (req.body.phone) {
+            setObj.phone = req.body.phone;
+          }
+          if (req.body.email) {
+            setObj.email = req.body.email;
+          }
+          if (req.body.receiveSMS || req.body.receiveEmail || req.body.theme) {
+            setObj.settings = {};
+            if (req.body.receiveSMS) {
+              setObj.settings.receiveSMS = req.body.receiveSMS;
+            }
+            if (req.body.receiveEmail) {
+              setObj.settings.receiveEmail = req.body.receiveEmail;
+            }
+            if (req.body.theme) {
+              setObj.settings.theme = req.body.theme;
+            }
+          }
+
+          User.findOneAndUpdate({
+            _id: req.body.userId,
+          }, {
+            $set: setObj,
+          }, {
+            new: true,
+          }, (err1, updatedUser) => {
+            if (updatedUser) {
+              res.status(200).send(updatedUser);
+            } else {
+              res.status(400).send(err1);
+            }
+          });
+        } else {
+          const temp = 'Permission denied! Require Role 1 (Employee Admin) or 2 (Business Owner)';
           res.status(400).send({ errorMsg: temp });
         }
       } else {

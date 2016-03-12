@@ -46,6 +46,10 @@ const BusinessSchema = new Schema({
     type: Schema.ObjectId,
     ref: 'Form',
   },
+  suspended: {
+    type: Boolean,
+    default: false,
+  },
   slackHook: {
     type: String,
     default: null,

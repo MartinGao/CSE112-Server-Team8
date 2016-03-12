@@ -47,7 +47,8 @@ const UserSchema = new Schema({
   },
   business: {
     type: Schema.ObjectId,
-    required: true,
+    required: false,
+    default: null,
     ref: 'Business',
   },
   timeStamp: {

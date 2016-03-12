@@ -97,11 +97,27 @@ import * as business from '../controller/business.controller';
  * @apiError {401} UserUnauthenticated
  * @apiError {404} NotFound
  */
+
+ /**
+ * @api {delete} /business (un)Suspend a Business
+ * @apiGroup Business
+ *
+ * @apiHeader {String} JWT token required (required)
+ *
+ * @apiParam {String} businessId  Business's Id.
+ * @apiParam {Boolean} suspended Either true (Suspend) or false (Unsuspend)
+ * @apiParam {String} [role] DO NOT PASS IT. Only accept -2 (Venkman) or -1 (Venkman Support)
+ */
+
 import expressJwt from 'express-jwt';
 const JWT_SECRET = '#rub_a_dubDub_thanks_forthe_grub!';
 
-module.exports = function(app) {
-  app.route('/business').put(expressJwt({ secret: JWT_SECRET }), business.setBusiness);
-  //app.route('/business/new').post(business.newBusiness);
-  app.route('/business').get(expressJwt({ secret: JWT_SECRET }), business.getBusiness);
+module.exports = (app) => {
+
+  app.route('/business')
+    .put(expressJwt({ secret: JWT_SECRET }), business.setBusiness)
+    .delete(expressJwt({ secret: JWT_SECRET }), business.suspendBusiness)
+    .get(expressJwt({ secret: JWT_SECRET }), business.getBusiness);
+
+
 };
