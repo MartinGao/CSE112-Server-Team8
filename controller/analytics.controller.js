@@ -25,8 +25,14 @@
    if (!req.body.totalIncome) {
      missing.push('missing: total monthly income');
    }
-   if (!req.body.numClientsPerLvl) {
-     missing.push('missing: number of clients per plan level');
+   if (!req.body.numClientsBasic) {
+     missing.push('missing: number of clients for basic plan level');
+   }
+   if (!req.body.numClientsPopular) {
+     missing.push('missing: number of clients for popular plan level');
+   }
+   if (!req.body.numClientsPremier) {
+     missing.push('missing: number of clients for premier plan level');
    }
    if (missing.length) {
      return res.status(400).send({
