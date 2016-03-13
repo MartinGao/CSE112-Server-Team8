@@ -36,7 +36,7 @@
    }
    if (missing.length) {
      return res.status(400).send({
-       Error: missing.join(', '),
+       Error: missing.join(',\n'),
      });
    }
 

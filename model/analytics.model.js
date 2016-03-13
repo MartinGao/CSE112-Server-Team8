@@ -50,4 +50,4 @@ AnalyticsSchema.pre('update', (next) => {
   next();
 });
 
-export default mongoose.model('Analytics, AnalyticsSchema');
+export default mongoose.model('Analytics', AnalyticsSchema);

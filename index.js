@@ -10,6 +10,7 @@ import userModel from './model/user.model';
 import businessModel from './model/business.model';
 import visitorModel from './model/visitor.model';
 import formModel from './model/form.model';
+import analyticsModel from './model/analytics.model';
 
 //  Routes
 import userRoute from './route/user.route';
@@ -18,6 +19,7 @@ import testRoute from './route/test.route';
 import visitorRoute from './route/visitor.route';
 import formRoute from './route/form.route';
 import notificationRoute from './route/notification.route';
+import analyticsRoute from './route/analytics.route';
 
 const app = module.exports = express();
 
@@ -37,6 +39,7 @@ userModel(app);
 businessModel(app);
 visitorModel(app);
 formModel(app);
+analyticsModel(app);
 
 userRoute(app);
 businessRoute(app);
@@ -44,6 +47,7 @@ testRoute(app);
 visitorRoute(app);
 formRoute(app);
 notificationRoute(app);
+analyticsRoute(app);
 
 
 app.use('/doc', express.static(__dirname + '/doc'));
