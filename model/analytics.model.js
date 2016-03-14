@@ -8,12 +8,11 @@ const Schema = mongoose.Schema;
 const AnalyticsSchema = new Schema({
   planLevel: {
     type: String,
-    ref: 'Form',
+    ref: 'Business',
     required: true,
   },
   totalClients: {
     type: Number,
-    required: true,
   },
   avgNumEmployees: {
     type: Number,
@@ -25,7 +24,6 @@ const AnalyticsSchema = new Schema({
   },
   totalIncome: {
     type: Number,
-    required: true,
   },
   numClientsBasic: {
     type: Number,

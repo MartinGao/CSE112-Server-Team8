@@ -13,17 +13,14 @@
  export function createAnalytics(req, res) {
    const missing = [];
 
-   if (!req.body.totalClients) {
-     missing.push('missing: total number of clients');
+   if (!req.body.planLevel) {
+     missing.push('missing: payment plan level');
    }
    if (!req.body.avgNumEmployees) {
      missing.push('missing: average number of employees per business');
    }
    if (!req.body.numMonthlySignups) {
      missing.push('missing: number of monthly signups');
-   }
-   if (!req.body.totalIncome) {
-     missing.push('missing: total monthly income');
    }
    if (!req.body.numClientsBasic) {
      missing.push('missing: number of clients for basic plan level');
@@ -41,7 +38,10 @@
    }
 
    const newAnalytics = new Analytics();
-   newAnalytics.totalClients = req.body.totalClients;
+   newAnalytics.planLevel = req.body.planLevel;
+   newAnalytics.totalClients = parseInt(req.body.numClientsBasic) +
+                               parseInt(req.body.numClientsPopular) +
+                               parseInt(req.body.numClientsPremier);
    newAnalytics.avgNumEmployees = req.body.avgNumEmployees;
    newAnalytics.numMonthlySignups = req.body.numMonthlySignups;
    newAnalytics.numClientsBasic = req.body.numClientsBasic;
@@ -49,17 +49,13 @@
    newAnalytics.numClientsPremier = req.body.numClientsPremier;
 
    // calculating monthly income
-   if (req.body.planLevel === 'basic') {
-     newAnalytics.totalIncome = req.body.numClientsBasic * basic;
-   } else if (req.body.planLevel === 'popular') {
-     newAnalytics.totalIncome = req.body.numClientsPopular * popular;
-   } else {
-     newAnalytics.totalIncome = req.body.numClientsPremier * premier;
-   }
+   newAnalytics.totalIncome = (req.body.numClientsBasic * basic) +
+                              (req.body.numClientsPopular * popular) +
+                              (req.body.numClientsPremier * premier);
 
    newAnalytics.save((err, updatedAnalytics) => {
      if (err) {
-       return res.status(400).send({ Error: 'failed to update analytics.' });
+       return res.status(400).send(err);
      }
      if (updatedAnalytics) {
        return res.status(200).send(updatedAnalytics);
