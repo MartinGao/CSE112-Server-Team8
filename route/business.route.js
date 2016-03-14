@@ -109,15 +109,24 @@ import * as business from '../controller/business.controller';
  * @apiParam {String} [role] DO NOT PASS IT. Only accept -2 (Venkman) or -1 (Venkman Support)
  */
 
+ /**
+ * @api {get} /business/list List all business
+ * @apiGroup Business
+ *
+ * @apiHeader {String} JWT token required (required)
+ *
+ * @apiParam {String} [role] DO NOT PASS IT. Only accept -2 (Venkman) or -1 (Venkman Support)
+ */
 import expressJwt from 'express-jwt';
 const JWT_SECRET = '#rub_a_dubDub_thanks_forthe_grub!';
 
 module.exports = (app) => {
-
   app.route('/business')
     .put(expressJwt({ secret: JWT_SECRET }), business.setBusiness)
     .delete(expressJwt({ secret: JWT_SECRET }), business.suspendBusiness)
     .get(expressJwt({ secret: JWT_SECRET }), business.getBusiness);
 
+  app.route('/business/lit')
+    .get(expressJwt({ secret: JWT_SECRET }), business.listBusiness);
 
 };

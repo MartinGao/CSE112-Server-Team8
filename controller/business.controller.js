@@ -172,6 +172,31 @@ export function suspendBusiness(req, res) {
     }
   });
 }
+
+export function listBusiness(req, res) {
+  User.findOne({ _id: req.user._id }).exec((err, existedUser) => {
+    if (err) {
+      res.status(400).send(err);
+    } else {
+      if (existedUser) {
+        if (existedUser.role === -2 || existedUser.role === -1) {
+          Business.find().exec((err1, businesses) => {
+            if (businesses) {
+              res.status(200).send(businesses);
+            } else {
+              res.status(400).send(err1);
+            }
+          });
+        } else {
+          const temp = 'Permission denied! Require -2 (Venkman) or -1(Venkman Support)';
+          res.status(400).send({ errorMsg: temp });
+        }
+      } else {
+        res.status(400).send({ errorMsg: 'Invalid Token (userId)' });
+      }
+    }
+  });
+}
 /*
 export function _search(req, res, next) {
   TODO

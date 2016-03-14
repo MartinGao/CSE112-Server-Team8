@@ -286,7 +286,7 @@ const JWT_SECRET = '#rub_a_dubDub_thanks_forthe_grub!';
 
 module.exports = (app) => {
   app.route('/vip/signUp')
-  .post(user.vipSignUp);
+  .post(expressJwt({ secret: JWT_SECRET }), user.vipSignUp)
 
   app.route('/user/signUp')
   .post(user.ownerSignUp);
