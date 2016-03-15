@@ -126,7 +126,7 @@ module.exports = (app) => {
     .delete(expressJwt({ secret: JWT_SECRET }), business.suspendBusiness)
     .get(expressJwt({ secret: JWT_SECRET }), business.getBusiness);
 
-  app.route('/business/lit')
+  app.route('/business/list')
     .get(expressJwt({ secret: JWT_SECRET }), business.listBusiness);
 
 };
