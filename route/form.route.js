@@ -62,11 +62,15 @@ import * as form from '../controller/form.controller';
  * @apiName DeleteForm
  * @apiGroup Form
  *
- * @apiParam {String} id The form id of the form to delete
+ * @apiParam {String} deleteFormId The id of the form to delete
  *
  * @apiSuccess {Object} end Deletes the form
+ * @apiSuccessExample Example JSON on success:
+ * {
+   "Success: form was deleted!"
+}
  *
- * @apiError Error Form not found, or something went wrong
+ * @apiError Error deleteFormId not provided. if provided, not found
  */
 
 import expressJwt from 'express-jwt';
