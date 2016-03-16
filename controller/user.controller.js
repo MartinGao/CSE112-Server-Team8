@@ -153,7 +153,7 @@ export function updateUser(req, res) {
   if (req.body.email) {
     setObj.email = req.body.email;
   }
-  if (req.body.receiveSMS || req.body.receiveEmail || req.body.theme) {
+  if (req.body.receiveSMS || req.body.receiveEmail || req.body.receiveBrowserNotification || req.body.theme) {
     setObj.settings = {};
     if (req.body.receiveSMS) {
       setObj.settings.receiveSMS = req.body.receiveSMS;
@@ -404,7 +404,7 @@ export function editEmployee(req, res) {
           if (req.body.email) {
             setObj.email = req.body.email;
           }
-          if (req.body.receiveSMS || req.body.receiveEmail || req.body.theme) {
+          if (req.body.receiveSMS || req.body.receiveEmail || req.body.receiveBrowserNotification || req.body.theme) {
             setObj.settings = {};
             if (req.body.receiveSMS) {
               setObj.settings.receiveSMS = req.body.receiveSMS;
