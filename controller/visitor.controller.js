@@ -108,6 +108,7 @@ export function checkOffVisitor(req, res) {
             if (err2) {
               return res.status(400).send(err);
             }
+            pusher.trigger(user.business.toString(), 'checkOffVisitor', updatedVisitor);
             return res.status(200).send(updatedVisitor);
           });
         }
