@@ -11,16 +11,19 @@ const AnalyticsSchema = new Schema({
     ref: 'Business',
     required: true,
   },
+  numEmployees: {
+    type: Number,
+    ref: 'Business',
+    required: true,
+  },
   totalClients: {
     type: Number,
   },
   avgNumEmployees: {
     type: Number,
-    required: true,
   },
   numMonthlySignups: {
     type: Number,
-    required: true,
   },
   totalIncome: {
     type: Number,

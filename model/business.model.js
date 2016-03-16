@@ -22,6 +22,10 @@ const BusinessSchema = new Schema({
     type: String,
     default: 'basic',
   },
+  numEmployees: {
+    type: Number,
+    required: true,
+  },
   url: {
     type: String,
     default: null,

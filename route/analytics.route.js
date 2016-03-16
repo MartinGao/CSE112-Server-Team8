@@ -6,6 +6,7 @@ import * as analytics from '../controller/analytics.controller';
  * @apiGroup Analytics
  *
  * @apiParam {String} planLevel The current plan level (basic, popular, premier)
+ * @apiParam {Number} numEmployees The total number of employees across all businesses
  * @apiParam {Number} totalClients The total number of clients (businesses)
  * @apiParam {Number} avgNumEmployees The average number of employees per business
  * @apiParam {Number} numMonthlySignups The number of monthly signups
@@ -34,14 +35,14 @@ import * as analytics from '../controller/analytics.controller';
     "numClientsPremier": 200,
     "numClientsPopular": 300,
     "numClientsBasic": 500,
-    "numMonthlySignups": 250,
     "avgNumEmployees": 200,
+    "numEmployees": 200000,
     "totalClients": 1000,
     "planLevel": "basic",
-    "_id": "56e60b8460c5486085452456",
+    "_id": "56e8a3c4ee8badd8cdc46bab",
     "timeStamp": {
-      "updated": "2016-03-14T00:53:24.859Z",
-      "created": "2016-03-14T00:53:24.859Z"
+      "updated": "2016-03-16T00:07:32.736Z",
+      "created": "2016-03-16T00:07:32.736Z"
     }
   }
 }

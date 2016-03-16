@@ -16,12 +16,6 @@
    if (!req.body.planLevel) {
      missing.push('missing: payment plan level');
    }
-   if (!req.body.avgNumEmployees) {
-     missing.push('missing: average number of employees per business');
-   }
-   if (!req.body.numMonthlySignups) {
-     missing.push('missing: number of monthly signups');
-   }
    if (!req.body.numClientsBasic) {
      missing.push('missing: number of clients for basic plan level');
    }
@@ -33,20 +27,34 @@
    }
    if (missing.length) {
      return res.status(400).send({
-       Error: missing.join(',\n'),
+       Error: missing.join(', '),
      });
    }
 
    const newAnalytics = new Analytics();
+
    newAnalytics.planLevel = req.body.planLevel;
-   newAnalytics.totalClients = parseInt(req.body.numClientsBasic) +
-                               parseInt(req.body.numClientsPopular) +
-                               parseInt(req.body.numClientsPremier);
-   newAnalytics.avgNumEmployees = req.body.avgNumEmployees;
+
    newAnalytics.numMonthlySignups = req.body.numMonthlySignups;
+   newAnalytics.numEmployees = req.body.numEmployees;
    newAnalytics.numClientsBasic = req.body.numClientsBasic;
    newAnalytics.numClientsPopular = req.body.numClientsPopular;
    newAnalytics.numClientsPremier = req.body.numClientsPremier;
+
+   /*
+    * sum up number of clients (businesses) per plan level to
+    * get total number of clients (businesses)
+    */
+   newAnalytics.totalClients = parseInt(req.body.numClientsBasic) +
+                               parseInt(req.body.numClientsPopular) +
+                               parseInt(req.body.numClientsPremier);
+
+   /*
+    * total number of employees divided by the number of businesses is
+    * the average number of employees per businesses
+    */
+   newAnalytics.avgNumEmployees = parseInt(newAnalytics.numEmployees) /
+                                  parseInt(newAnalytics.totalClients);
 
    // calculating monthly income
    newAnalytics.totalIncome = (req.body.numClientsBasic * basic) +
@@ -64,5 +72,20 @@
  }
 
  export function deleteAnalytics(req, res) {
-   // TODO
+   const missing = [];
+
+   if (!req.body.deleteAnalyticsId) {
+     missing.push('deleteAnalyticsId');
+   }
+   if (missing.length) {
+     return res.status(400).send({ Error: 'missing ' + missing.join(', ') });
+   }
+
+   Analytics.findOneAndRemove({
+     _id: req.body.deleteAnalyticsId }).exec((err1) => {
+       if (err1) {
+         return res.status(400).send(err1);
+       }
+       return res.status(200).send({ Success: 'analytics page was deleted!' });
+     });
  }
