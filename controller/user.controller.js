@@ -50,19 +50,18 @@ export function signIn(req, res) {
 }
 
 export function ownerSignUp(req, res) {
-  console.log(req.body);
 
   if (!req.body.name) {
-    res.status(400).send({ errorMsg: 'Missing "name" field' });
+    return res.status(400).send({ errorMsg: 'Missing "name" field' });
   }
   if (!req.body.password) {
-    res.status(400).send({ errorMsg: 'Missing "password" field' });
+    return res.status(400).send({ errorMsg: 'Missing "password" field' });
   }
   if (!req.body.phone) {
-    res.status(400).send({ errorMsg: 'Missing "phone" field' });
+    return res.status(400).send({ errorMsg: 'Missing "phone" field' });
   }
   if (!req.body.email) {
-    res.status(400).send({ errorMsg: 'Missing "email" field' });
+    return res.status(400).send({ errorMsg: 'Missing "email" field' });
   }
 
   var user = new User();
