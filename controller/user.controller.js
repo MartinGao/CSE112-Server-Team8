@@ -161,6 +161,9 @@ export function updateUser(req, res) {
     if (req.body.receiveEmail) {
       setObj.settings.receiveEmail = req.body.receiveEmail;
     }
+    if (req.body.receiveBrowserNotification) {
+      setObj.settings.receiveBrowserNotification = req.body.receiveBrowserNotification;
+    }
     if (req.body.theme) {
       setObj.settings.theme = req.body.theme;
     }
@@ -408,6 +411,9 @@ export function editEmployee(req, res) {
             }
             if (req.body.receiveEmail) {
               setObj.settings.receiveEmail = req.body.receiveEmail;
+            }
+            if (req.body.receiveBrowserNotification) {
+              setObj.settings.receiveBrowserNotification = req.body.receiveBrowserNotification;
             }
             if (req.body.theme) {
               setObj.settings.theme = req.body.theme;
