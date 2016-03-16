@@ -128,5 +128,4 @@ module.exports = (app) => {
 
   app.route('/business/list')
     .get(expressJwt({ secret: JWT_SECRET }), business.listBusiness);
-
 };

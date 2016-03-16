@@ -17,7 +17,7 @@ export function createBusiness(req, callback) {
     missing.push('businessName');
   }
   if (missing.length) {
-    callback({Error: 'missing ' + missing.join(', ')}, null);
+    callback({ Error: 'missing ' + missing.join(', ') }, null);
     return;
   }
 
@@ -36,6 +36,7 @@ export function createBusiness(req, callback) {
     Business.create({
       name: req.body.businessName,
       planLevel: req.body.planLevel,
+      numEmployees: req.body.numEmployees,
       logo: req.body.logo,
       url: req.body.url,
       phone: req.body.phone,
@@ -55,89 +56,90 @@ export function createBusiness(req, callback) {
 }
 
 export function getBusiness(req, res) {
-  const user = req.user;
-  const bid = req.query.businessId;
-
-  if (!user) {
-    return res.status(401).send({ Error: 'User unauthenticated.' });
-  }
-
-  if (!bid) {
-    return res.status(400).send({ Error: 'Please provide businessId' });
-  }
-
-  Business.findOne({ _id: bid }).exec(function (err, business) {
+  User.findById(req.user._id, (err, user) => {
     if (err) {
       return res.status(400).send(err);
     }
-    if (business) {
-      console.log("formId = " + business.formId);
-      if (business.formId)
-        Form.findOne({_id: business.formId}).exec(function (err, form) {
-          return res.status(200).send({business: business, form: form});
-        });
-      else
-        return res.status(200).send({business: business, form: null});
+    if (user) {
+      Business.findOne({ _id: user.business }).exec((err1, business) => {
+        if (err1) {
+          return res.status(400).send(err1);
+        }
+        if (business) {
+          if (business.formId) {
+            Form.findOne({ _id: business.formId }).exec((err2, form) => {
+              return res.status(200).send({ business, form });
+            });
+          } else {
+            return res.status(200).send({ business, form: null });
+          }
+        } else {
+          return res.status(401).end();
+        }
+      });
     }
-    else
-      return res.status(404).send();
   });
 }
 
 export function setBusiness(req, res) {
-  const bid = req.body.businessId;
+  const updatedFields = {};
 
-  if (!bid) {
-    return res.status(400).send({ Error: 'Please provide businessId' });
+  if (req.body.userId) {
+    updatedFields.userId = req.body.userId;
+  }
+  if (req.body.name) {
+    updatedFields.name = req.body.name;
+  }
+  if (req.body.planLevel) {
+    updatedFields.planLevel = req.body.planLevel;
+  }
+  if (req.body.numEmployees) {
+    updatedFields.numEmployees = req.body.numEmployees;
+  }
+  if (req.body.url) {
+    updatedFields.url = req.body.url;
+  }
+  if (req.body.phone) {
+    updatedFields.phone = req.body.phone;
+  }
+  if (req.body.iconURL) {
+    updatedFields.iconURL = req.body.iconURL;
+  }
+  if (req.body.backgroundImageUrl) {
+    updatedFields.backgroundImageUrl = req.body.backgroundImageUrl;
+  }
+  if (req.body.userIds) {
+    updatedFields.userIds = req.body.userIds;
+  }
+  if (req.body.formId) {
+    updatedFields.formId = req.body.formId;
+  }
+  if (req.body.slackHook) {
+    updatedFields.slackHook = req.body.slackHook;
   }
 
-  Business.findOne({ _id: bid }).exec(function (err, business) {
+  User.findById(req.user._id, (err, user) => {
     if (err) {
       return res.status(400).send(err);
     }
-
-    if (business == null)
-      return res.status(404).end();
-
-    if (req.body.userId) {
-      business.userId = req.body.userId;
+    if (user) {
+      Business.findOneAndUpdate({
+        _id: user.business,
+      }, {
+        $set: updatedFields,
+      }, {
+        new: true,
+      }, (err1, updatedBusiness) => {
+        if (err1) {
+          return res.status(400).send(err1);
+        }
+        if (updatedBusiness) {
+          return res.status(200).send(updatedBusiness);
+        }
+      });
+    } else {
+      return res.status(400).send({ Error: 'Invalid userId' });
     }
-    if (req.body.name) {
-      business.name = req.body.name;
-    }
-    if (req.body.planLevel) {
-      business.planLevel = req.body.planLevel;
-    }
-    if (req.body.url) {
-      business.url = req.body.url;
-    }
-    if (req.body.phone) {
-      business.phone = req.body.phone;
-    }
-    if (req.body.iconURL) {
-      business.iconURL = req.body.iconURL;
-    }
-    if (req.body.backgroundImageUrl) {
-      business.backgroundImageUrl = req.body.backgroundImageUrl;
-    }
-    if (req.body.userIds) {
-      business.userIds = req.body.userIds;
-    }
-    if (req.body.formId) {
-      business.formId = req.body.formId;
-    }
-    if (req.body.slackHook) {
-      business.slackHook = req.body.slackHook;
-    }
-
-    business.timeStamp.updated = Date.now();
-
-    business.save(function (err1, updatedBusiness) {
-      if (err1) {
-        return res.status(400).send(err);
-      }
-      return res.status(200).send(updatedBusiness);
-    });
   });
 }
 
