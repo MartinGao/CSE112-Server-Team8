@@ -36,7 +36,7 @@ export function createBusiness(req, callback) {
     Business.create({
       name: req.body.businessName,
       planLevel: req.body.planLevel,
-      numEmployees: req.body.numEmployees,
+      numEmployees: req.body.numEmployees || 1,
       logo: req.body.logo,
       url: req.body.url,
       phone: req.body.phone,

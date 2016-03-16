@@ -357,9 +357,14 @@ describe('User', function () {
                 done();
             });
         });
+
         it('DELETE with no JWT');
         it('DELETE with wrong role');
         it('DELETE with correct JWT');
     });
+
+    describe('search', function () {
+        it('search');
+    })
 
 });
