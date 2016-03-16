@@ -263,74 +263,78 @@ module.exports = (app) => {
  */
 
 /**
- * @api {get} /search Searches for visitors and users associated with that user's business, given a term
+ * @api {get} /searchVisitor Search for Visitors
  * @apiName Search
  * @apiGroup Visitor
  *
  * @apiDescription returns the visitors that have been checked off sorted by time, parameters passed in the query string
  * @apiExample Example Query
- * localhost:3000/search?term=*
+ * localhost:3000/searchVisitor?term=jo
  *
  * @apiHeader {String} JWT token required (required)
  * @apiParam {String} term the RegEx expression to use for search (required)
  *
  * @apiSuccess {Array} visitors returns an array of Visitor Objects
- * @apiSuccess {Array} users Returns an array of User Objects
  * @apiSuccessExample Example JSON on success:
- * visitors: [
- *  {
- *   "_id": "56d51fc707e032f073613212",
- *   "businessId": "56d4f62dfabca20273777587",
- *   "name": "Stasdfasan Khmelnitski",
- *   "__v": 0,
- *   "timeStamp": {
- *     "updated": "2016-03-01T04:51:19.541Z",
- *     "created": "2016-03-01T04:51:19.530Z"
- *   },
- *   "form": {
- *     "stuff": "things"
- *   },
- *   "checkOff": 2016-03-01T03:52:32.273Z,
- *   "checkIn": "2016-03-01T04:51:19.530Z",
- *   "phone": null,
- *   "email": "abc123@gmail.com"
- * },
- * {
- *   "_id": "56d5120003c99bc0730f3721",
- *   "businessId": "56d4f62dfabca20273777587",
- *   "name": "Stasdfasan Khmelnitski",
- *   "__v": 0,
- *   "timeStamp": {
- *     "updated": "2016-03-01T03:52:32.281Z",
- *     "created": "2016-03-01T03:52:32.273Z"
- *   },
- *   "form": {
- *     "stuff": "things"
- *   },
- *   "checkOff": 2016-03-01T03:52:32.273Z,
- *   "checkIn": "2016-03-01T03:52:32.273Z",
- *   "phone": null,
- *   "email": "abc123@gmail.com"
- * },
- * {
- *   "_id": "56d505692ffae45273c1dc54",
- *   "businessId": "56d4f62dfabca20273777587",
- *   "name": "Stan Khmelnitski",
- *   "__v": 0,
- *   "timeStamp": {
- *     "updated": "2016-03-01T02:58:49.478Z",
- *     "created": "2016-03-01T02:58:49.470Z"
- *   },
- *   "form": {
- *     "stuff": "things"
- *   },
- *   "checkOff": 2016-03-01T03:52:32.273Z,
- *   "checkIn": "2016-03-01T02:58:49.470Z",
- *   "phone": null,
- *   "email": "abc123@gmail.com"
- *  }
- * ],
- * users: []
+ * [
+ {
+   "_id": "56e9e8abe170dd14e7ee4885",
+   "businessId": "56e9e4975b97ba20dc944ed4",
+   "name": "Joe",
+   "__v": 0,
+   "timeStamp": {
+     "updated": "2016-03-16T23:13:47.018Z",
+     "created": "2016-03-16T23:13:47.018Z"
+   },
+   "form": null,
+   "checkOff": null,
+   "checkIn": "2016-03-16T23:13:47.018Z",
+   "phone": null,
+   "email": "joe@joe.com"
+ }
+ ]
+ *
+ * @apiError {401} Unauthenticated User not signed in
+ */
+/**
+ * @api {get} /searchUser Search Users
+ * @apiName Search
+ * @apiGroup User
+ *
+ * @apiDescription returns the visitors that have been checked off sorted by time, parameters passed in the query string
+ * @apiExample Example Query
+ * localhost:3000/searchUser?term=b
+ *
+ * @apiHeader {String} JWT token required (required)
+ * @apiParam {String} term the RegEx expression to use for search (required)
+ *
+ * @apiSuccess {Array} users returns an array of User Objects
+ * @apiSuccessExample Example JSON on success:
+ * [
+ {
+   "_id": "56e9e4975b97ba20dc944ed3",
+   "phone": "1",
+   "salt": "$2a$10$8YiSaBX4BgW5HevOqyazz.",
+   "password": "$2a$10$8YiSaBX4BgW5HevOqyazz.TCaZ5nLPPrgWxAls0ga.0myLs0nhu.G",
+   "email": "b@b.b",
+   "name": "Billy",
+   "__v": 0,
+   "settings": {
+     "theme": null,
+     "receiveBrowserNotification": null,
+     "receiveEmail": null,
+     "receiveSMS": null
+   },
+   "timeStamp": {
+     "updated": "2016-03-16T22:56:23.898Z",
+     "created": "2016-03-16T22:56:23.898Z"
+   },
+   "business": "56e9e4975b97ba20dc944ed4",
+   "avatar": null,
+   "approved": true,
+   "role": 2
+ }
+ ]
  *
  * @apiError {401} Unauthenticated User not signed in
  */
