@@ -199,12 +199,12 @@ describe('Visitor', function () {
     });
 
     describe('Search', function () {
-        const uriSearch = uri + 'search';
+        const uriSearch = uri + 'searchVisitor';
         it('No JWT', function (done) {
             request({
                 url: uriSearch + '?term=*'
             }, function (err, res) {
-                assert.equal(res.statusCode, 404);
+                assert.equal(res.statusCode, 401);
                 done();
             });
         });
@@ -215,8 +215,8 @@ describe('Visitor', function () {
                     'Authorization': 'Bearer ' + token
                 },
                 url: uriSearch
-            }, function (err, res) {
-                assert.equal(res.statusCode, 404);
+            }, function (err, res, body) {
+                assert.equal(res.statusCode, 200);
                 done();
             });
         });
@@ -226,12 +226,13 @@ describe('Visitor', function () {
                     'content-type': 'application/x-www-form-urlencoded',
                     'Authorization': 'Bearer ' + token
                 },
-                url: uriSearch + '?term=*'// + visitor.name
+                url: uriSearch + '?term=' + visitor.name
             }, function (err, res, body) {
                 assert.equal(res.statusCode, 200);
                 var result = JSON.parse(body);
-                assert.notEqual(result.visitors, undefined, "Visitors not defined.");
-                assert.equal(result.visitors[0]._id, visitor._id, "Returned visitor does not match ID.");
+                assert.notEqual(result, undefined, "Visitors not defined.");
+                assert.equal(result.length, 1, "Visitors did not return 1 result.");
+                assert.equal(result[0]._id, visitor._id, "Returned visitor does not match ID.");
 
                 done();
             });
