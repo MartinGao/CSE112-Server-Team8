@@ -46,6 +46,9 @@ if there is error, try to type `chmod 600 CSE112.pem` and try again
 
 ` pm2 restart 0`
 
+### How to run tests
+
+` npm run test `
 
 
 Access Key ID:
