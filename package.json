@@ -7,7 +7,7 @@
     "start": "nodemon index.js --exec babel-node",
     "build": "babel lib -d dist",
     "serve": "node dist/index.js",
-    "test": "mocha --require babel-core/register"
+    "test": "mocha --require babel-core/register -t 10000"
   },
   "author": "Martin Gao",
   "license": "ISC",

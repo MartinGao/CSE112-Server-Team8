@@ -145,9 +145,6 @@ describe('User', function () {
                 done();
             });
         });
-        if (user) {
-            // continue tests with user
-        }
 
     });
 

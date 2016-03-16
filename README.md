@@ -48,8 +48,13 @@ if there is error, try to type `chmod 600 CSE112.pem` and try again
 
 ### How to run tests
 
+` npm install // ensure mocha is installed`
 ` npm run test `
+` // want to run a specific test?`
+` npm run test test/visitor.js`
 
+Note that timeout is set to 10 seconds.
+Really slow or disconnected internet will break the tests.
 
 Access Key ID:
 AKIAI4NUDRT7BVSIRHLA
