@@ -1,6 +1,6 @@
 /**
-* Created by besin on 3/15/2016.
-*/
+ * Created by besin on 3/15/2016.
+ */
 
 
 import chalk from 'chalk';
@@ -11,12 +11,14 @@ import Chance from 'Chance';
 
 let chance = new Chance();
 const uri = 'http://localhost:3000/';
+const uriSignIn = uri + 'user/signIn';
 var user, token;
 
-const email = chance.email();
-const name = chance.name();
+const email = 'test' + chance.email();
+const name = 'test' + chance.name();
 const password = chance.string({length: 8});
-const businessName = name + ' Company'
+const newPassword = chance.string({length: 8});
+const businessName = name + ' Test Company';
 
 describe('User', function () {
     this.slow(10000);
@@ -90,7 +92,7 @@ describe('User', function () {
             request.post({
                 headers: {'content-type': 'application/x-www-form-urlencoded'},
                 url: uriSignUp,
-                body: 'role=1&name=Bob'
+                body: 'role=1&name=' + name
             }, function (err, res, body) {
                 assert.notEqual(res, undefined, 'response is undefined');
                 assert.notEqual(body, undefined, 'body is undefined');
@@ -104,7 +106,7 @@ describe('User', function () {
             request.post({
                 headers: {'content-type': 'application/x-www-form-urlencoded'},
                 url: uriSignUp,
-                body: 'role=1&name=Bob&phone=1112223333'
+                body: 'role=1&name=' + name + '&phone=1112223333'
             }, function (err, res, body) {
                 assert.notEqual(res, undefined, 'response is undefined');
                 assert.notEqual(body, undefined, 'body is undefined');
@@ -114,11 +116,11 @@ describe('User', function () {
                 done();
             });
         });
-        it('POST SignUp with role=1, name=Bob, phone=1112223333, email=' + email, function (done) {
+        it('POST SignUp with role=1, name=' + name + ', phone=1112223333, email=' + email, function (done) {
             request.post({
                 headers: {'content-type': 'application/x-www-form-urlencoded'},
                 url: uriSignUp,
-                body: 'role=1&name=Bob&phone=1112223333&email=' + email
+                body: 'role=1&name=' + name + '&phone=1112223333&email=' + email
             }, function (err, res, body) {
                 assert.notEqual(res, undefined, 'response is undefined');
                 assert.notEqual(body, undefined, 'body is undefined');
@@ -132,7 +134,7 @@ describe('User', function () {
             request.post({
                 headers: {'content-type': 'application/x-www-form-urlencoded'},
                 url: uriSignUp,
-                body: 'role=1&name=Bob&phone=1112223333&email='
+                body: 'role=1&name=' + name + '&phone=1112223333&email='
                 + email + '&password=' + password + '&businessName='
                 + businessName
             }, function (err, res, body) {
@@ -150,7 +152,6 @@ describe('User', function () {
     });
 
     describe('signIn', function () {
-        const uriSignIn = uri + 'user/signIn';
         it('GET', function (done) {
             request(uriSignIn, function (err, res, body) {
                 assert.equal(res.statusCode, 404);
@@ -213,6 +214,67 @@ describe('User', function () {
         });
     });
 
+    describe('user/password', function () {
+        const uriPassword = uri + 'user/password';
+
+        it('PUT no old/new password specified', function (done) {
+            request.put({
+                headers: {
+                    'content-type': 'application/x-www-form-urlencoded',
+                    'Authorization': 'Bearer ' + token
+                },
+                url: uriPassword
+            }, function (err, res, body) {
+                assert.equal(res.statusCode, 400);
+                var result = JSON.parse(res.body);
+                assert.notEqual(result.Error, null);
+                done();
+            });
+        });
+
+        it('PUT no old password specified', function (done) {
+            request.put({
+                headers: {
+                    'content-type': 'application/x-www-form-urlencoded',
+                    'Authorization': 'Bearer ' + token
+                },
+                url: uriPassword,
+                body: 'newPassword=' + newPassword
+            }, function (err, res, body) {
+                assert.equal(res.statusCode, 400);
+                var result = JSON.parse(res.body);
+                assert.notEqual(result.Error, null);
+                done();
+            });
+        });
+
+        it('PUT correct old/new password', function (done) {
+            request.put({
+                headers: {
+                    'content-type': 'application/x-www-form-urlencoded',
+                    'Authorization': 'Bearer ' + token
+                },
+                url: uriPassword,
+                body: 'oldPassword=' + password + '&newPassword=' + newPassword
+            }, function (err, res, body) {
+                assert.equal(res.statusCode, 200);
+                request.post({
+                    headers: {'content-type': 'application/x-www-form-urlencoded'},
+                    url: uriSignIn,
+                    body: 'email=' + email + '&password=' + newPassword
+                }, function (err, res, body) {
+                    assert.equal(err, null);
+                    assert.equal(res.statusCode, 200);
+                    var result = JSON.parse(body);
+                    assert.equal(result.errorMsg, undefined, 'body.errorMsg is undefined');
+                    assert.notEqual(result.token, undefined, 'token is undefined.');
+                    token = result.token;
+                    done();
+                });
+            });
+        });
+    });
+
     describe('user', function () {
         const uriUser = uri + 'user';
         it('GET with no JWT', function (done) {
@@ -244,7 +306,7 @@ describe('User', function () {
                 assert.equal(res.statusCode, 200);
                 var result = JSON.parse(body);
                 assert.notEqual(body, null, "Body is null");
-                assert.equal(result.name, user.name, 'Returned different user name.');
+                assert.equal(result.name, name, 'Returned different user name.');
                 done();
             });
         });
@@ -298,24 +360,9 @@ describe('User', function () {
                 done();
             });
         });
+        it('DELETE with no JWT');
+        it('DELETE with wrong role');
+        it('DELETE with correct JWT');
     });
 
-    describe('user/password', function () {
-        const uriPassword = uri + 'password';
-
-        it('POST no old/new password specified', function (done) {
-            request.put({
-                headers: {
-                    'content-type': 'application/x-www-form-urlencoded',
-                    'Authorization': 'Bearer ' + token
-                },
-                url: uriPassword
-            }, function (err, res, body) {
-                assert.equal(res.statusCode, 400);
-                var result = JSON.parse(res.body);
-                assert.notEqual(result.Error, null);
-                done();
-            });
-        });
-    });
 });
