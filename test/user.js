@@ -13,10 +13,15 @@ let chance = new Chance();
 const uri = 'http://localhost:3000/';
 var user, token;
 
-const email = chance.email();
-const name = chance.name();
-const password = chance.string({length: 8});
-const businessName = name + ' Company'
+
+const email = 'usertest@a.a';
+const password = 'a';
+const businessName = 'userTestBusiness';
+//
+// const email = chance.email();
+// const name = chance.name();
+// const password = chance.string({length: 8});
+// const businessName = name + ' Company'
 
 describe('User', function () {
   this.slow(10000);
@@ -121,8 +126,8 @@ describe('User', function () {
       request.post({
         headers: { 'content-type': 'application/x-www-form-urlencoded' },
         url: uriSignUp,
-        body: 'role=2&name='+ name
-        + '&phone=' + chance.phone({ formatted: false }) + '&email='
+        body: 'role=1&name=Bob&phone=1112223333&email='
+        + email + '&password=' + password + '&businessName='
         + email + '&password=' + password + '&businessName='
         + businessName
       }, function (err, res, body) {
