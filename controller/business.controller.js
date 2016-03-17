@@ -5,17 +5,21 @@ import mongoose from 'mongoose';
 const Business = mongoose.model('Business');
 const User = mongoose.model('User');
 
+const fitnessForm = JSON.stringify([{"id":"name","component":"textInput","editable":false,"index":0,"label":"Name","description":"Your full name, or your nickname.","placeholder":"Jane Doe","options":[],"required":true,"validation":"/.*/","$$hashKey":"object:59"},{"id":"email","component":"textInput","editable":true,"index":1,"label":"Email","description":"Your private email, we won't spam you!","placeholder":"janedoe@gmail.com","options":[],"required":false,"validation":"[email]","$$hashKey":"object:60"},{"id":"phone","component":"textInput","editable":true,"index":2,"label":"Phone","description":"Your phone number.","placeholder":"8581234567","options":[],"required":false,"validation":"/.*/","$$hashKey":"object:158"},{"id":"employee","component":"select","editable":true,"index":3,"label":"Fitness Instructor","description":"Who are you seeing today?","placeholder":"placeholder","options":["Any instructor is fine"],"required":false,"validation":"/.*/","$$hashKey":"object:61"}]);
+const healthForm = JSON.stringify([{"id":"name","component":"textInput","editable":false,"index":0,"label":"Name","description":"Your full name, or your nickname.","placeholder":"Jane Doe","options":[],"required":true,"validation":"/.*/","$$hashKey":"object:59"},{"id":"email","component":"textInput","editable":true,"index":1,"label":"Email","description":"Your private email, we won't spam you!","placeholder":"janedoe@gmail.com","options":[],"required":false,"validation":"[email]","$$hashKey":"object:60"},{"id":"phone","component":"textInput","editable":true,"index":2,"label":"Phone","description":"Your phone number.","placeholder":"8581234567","options":[],"required":false,"validation":"/.*/","$$hashKey":"object:158"},{"id":"employee","component":"select","editable":true,"index":3,"label":"Physician","description":"Who are you seeing today?","placeholder":"placeholder","options":["Anyone is fine"],"required":false,"validation":"/.*/","$$hashKey":"object:61"}]);
+const otherForm = JSON.stringify([{"id":"name","component":"textInput","editable":false,"index":0,"label":"Name","description":"Your full name, or your nickname.","placeholder":"Jane Doe","options":[],"required":true,"validation":"/.*/","$$hashKey":"object:59"},{"id":"email","component":"textInput","editable":true,"index":1,"label":"Email","description":"Your private email, we won't spam you!","placeholder":"janedoe@gmail.com","options":[],"required":false,"validation":"[email]","$$hashKey":"object:60"},{"id":"phone","component":"textInput","editable":true,"index":2,"label":"Phone","description":"Your phone number.","placeholder":"8581234567","options":[],"required":false,"validation":"/.*/","$$hashKey":"object:158"},{"id":"employee","component":"select","editable":true,"index":3,"label":"Employee","description":"Who are you seeing today?","placeholder":"placeholder","options":["Anyone is fine"],"required":false,"validation":"/.*/","$$hashKey":"object:61"}]);
+
 export function createBusiness(req, callback) {
   let formType;
   console.log('createBusiness is running');
   const missing = [];
 
   if (req.body.businessType === 'fitness') {
-    formType = 'fitness';
+    formType = fitnessForm;
   } else if (req.body.businessType === 'health') {
-    formType = 'health';
+    formType = healthForm;
   } else {
-    formType = 'other';
+    formType = otherForm;
   }
 
   if (!req.user) {
@@ -45,13 +49,13 @@ export function createBusiness(req, callback) {
       name: req.body.businessName,
       planLevel: req.body.planLevel,
       numEmployees: req.body.numEmployees || 1,
-      businessType: formType,
+      businessType: req.body.businessType,
       logo: req.body.logo,
       url: req.body.url,
       phone: req.body.phone,
       iconURL: req.body.iconURL,
       backgroundImageUrl: req.body.backgroundImageUrl,
-      form: req.body.form,
+      form: formType,
       description: req.body.description,
     }, (err1, newBusiness) => {
       if (err1) {
@@ -115,7 +119,13 @@ export function setBusiness(req, res) {
   }
   if (req.body.businessType) {
     updatedFields.businessType = req.body.businessType;
-    updatedFields.form = req.body.businessType;
+    if (req.body.businessType === 'fitness') {
+      updatedFields.form = fitnessForm;
+    } else if (req.body.businessType === 'health') {
+      updatedFields.form = healthForm;
+    } else {
+      updatedFields.form = otherForm;
+    }
   }
   if (req.body.slackHook) {
     updatedFields.slackHook = req.body.slackHook;

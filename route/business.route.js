@@ -27,26 +27,26 @@ import * as business from '../controller/business.controller';
  * @apiSuccess {Object} business Returns the updated business
  * @apiSuccessExample Example JSON on success:
  * {
-    "_id": "56ea20512b102a392bb8532f",
-    "name": "Saul Goodman",
-    "__v": 0,
-    "form": "health",
-    "businessType": "health",
-    "timeStamp": {
-      "updated": "2016-03-17T03:11:13.712Z",
-      "created": "2016-03-17T03:11:13.712Z"
-    },
-    "slackHook": null,
-    "suspended": false,
-    "userIds": [],
-    "backgroundImageUrl": null,
-    "iconURL": null,
-    "phone": "551020102",
-    "url": null,
-    "numEmployees": 10000,
-    "planLevel": "basic",
-    "userId": null
-  }
+  "_id": "56ea20512b102a392bb8532f",
+  "name": "Saul Goodman",
+  "__v": 0,
+  "form": "[{\"id\":\"name\",\"component\":\"textInput\",\"editable\":false,\"index\":0,.........",
+  "timeStamp": {
+    "updated": "2016-03-17T03:11:13.712Z",
+    "created": "2016-03-17T03:11:13.712Z"
+  },
+  "slackHook": null,
+  "suspended": false,
+  "userIds": [],
+  "backgroundImageUrl": null,
+  "iconURL": null,
+  "phone": "551020102",
+  "url": null,
+  "businessType": "health",
+  "numEmployees": 10000,
+  "planLevel": "basic",
+  "userId": null
+}
  *
  * @apiError Missing businessId, body, userId, email, name
  */
@@ -65,26 +65,25 @@ import * as business from '../controller/business.controller';
  * @apiSuccess {Object} BusinessAndForm Returns the business if found, form if found
  * @apiSuccessExample Example JSON on success:
  * {
-    "_id": "56ea20512b102a392bb8532f",
-    "name": "Saul Goodman",
-    "__v": 0,
-    "form": "other",
-    "businessType": "other",
-    "timeStamp": {
-      "updated": "2016-03-17T03:11:13.712Z",
-      "created": "2016-03-17T03:11:13.712Z"
-    },
-    "slackHook": null,
-    "suspended": false,
-    "userIds": [],
-    "backgroundImageUrl": null,
-    "iconURL": null,
-    "phone": "551020102",
-    "url": null,
-    "numEmployees": 10000,
-    "planLevel": "basic",
-    "userId": null
-  }
+  "_id": "56ea20512b102a392bb8532f",
+  "name": "Saul Goodman",
+  "__v": 0,
+  "form": "[{\"id\":\"name\",\"component\":\"textInput\",\"editable\":false,..........."
+    "updated": "2016-03-17T03:11:13.712Z",
+    "created": "2016-03-17T03:11:13.712Z"
+  },
+  "slackHook": null,
+  "suspended": false,
+  "userIds": [],
+  "backgroundImageUrl": null,
+  "iconURL": null,
+  "phone": "551020102",
+  "url": null,
+  "businessType": "fitness",
+  "numEmployees": 10000,
+  "planLevel": "basic",
+  "userId": null
+}
  *
  * @apiError {400} MissingBusinessId
  * @apiError {400} Error

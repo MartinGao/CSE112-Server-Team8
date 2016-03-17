@@ -29,7 +29,7 @@ const BusinessSchema = new Schema({
   },
   businessType: {
     type: String,
-    required: true,
+    default: 'other',
   },
   url: {
     type: String,
