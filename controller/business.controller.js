@@ -4,11 +4,23 @@
 import mongoose from 'mongoose';
 const Business = mongoose.model('Business');
 const User = mongoose.model('User');
-const Form = mongoose.model('Form');
+
+const fitnessForm = JSON.stringify([{"id":"name","component":"textInput","editable":false,"index":0,"label":"Name","description":"Your full name, or your nickname.","placeholder":"Jane Doe","options":[],"required":true,"validation":"/.*/","$$hashKey":"object:59"},{"id":"email","component":"textInput","editable":true,"index":1,"label":"Email","description":"Your private email, we won't spam you!","placeholder":"janedoe@gmail.com","options":[],"required":false,"validation":"[email]","$$hashKey":"object:60"},{"id":"phone","component":"textInput","editable":true,"index":2,"label":"Phone","description":"Your phone number.","placeholder":"8581234567","options":[],"required":false,"validation":"/.*/","$$hashKey":"object:158"},{"id":"employee","component":"select","editable":true,"index":3,"label":"Fitness Instructor","description":"Who are you seeing today?","placeholder":"placeholder","options":["Any instructor is fine"],"required":false,"validation":"/.*/","$$hashKey":"object:61"}]);
+const healthForm = JSON.stringify([{"id":"name","component":"textInput","editable":false,"index":0,"label":"Name","description":"Your full name, or your nickname.","placeholder":"Jane Doe","options":[],"required":true,"validation":"/.*/","$$hashKey":"object:59"},{"id":"email","component":"textInput","editable":true,"index":1,"label":"Email","description":"Your private email, we won't spam you!","placeholder":"janedoe@gmail.com","options":[],"required":false,"validation":"[email]","$$hashKey":"object:60"},{"id":"phone","component":"textInput","editable":true,"index":2,"label":"Phone","description":"Your phone number.","placeholder":"8581234567","options":[],"required":false,"validation":"/.*/","$$hashKey":"object:158"},{"id":"employee","component":"select","editable":true,"index":3,"label":"Physician","description":"Who are you seeing today?","placeholder":"placeholder","options":["Anyone is fine"],"required":false,"validation":"/.*/","$$hashKey":"object:61"}]);
+const otherForm = JSON.stringify([{"id":"name","component":"textInput","editable":false,"index":0,"label":"Name","description":"Your full name, or your nickname.","placeholder":"Jane Doe","options":[],"required":true,"validation":"/.*/","$$hashKey":"object:59"},{"id":"email","component":"textInput","editable":true,"index":1,"label":"Email","description":"Your private email, we won't spam you!","placeholder":"janedoe@gmail.com","options":[],"required":false,"validation":"[email]","$$hashKey":"object:60"},{"id":"phone","component":"textInput","editable":true,"index":2,"label":"Phone","description":"Your phone number.","placeholder":"8581234567","options":[],"required":false,"validation":"/.*/","$$hashKey":"object:158"},{"id":"employee","component":"select","editable":true,"index":3,"label":"Employee","description":"Who are you seeing today?","placeholder":"placeholder","options":["Anyone is fine"],"required":false,"validation":"/.*/","$$hashKey":"object:61"}]);
 
 export function createBusiness(req, callback) {
+  let formType;
   console.log('createBusiness is running');
   const missing = [];
+
+  if (req.body.businessType === 'fitness') {
+    formType = fitnessForm;
+  } else if (req.body.businessType === 'health') {
+    formType = healthForm;
+  } else {
+    formType = otherForm;
+  }
 
   if (!req.user) {
     missing.push('userId');
@@ -17,7 +29,7 @@ export function createBusiness(req, callback) {
     missing.push('businessName');
   }
   if (missing.length) {
-    callback({Error: 'missing ' + missing.join(', ')}, null);
+    callback({ Error: 'missing ' + missing.join(', ') }, null);
     return;
   }
 
@@ -36,11 +48,14 @@ export function createBusiness(req, callback) {
     Business.create({
       name: req.body.businessName,
       planLevel: req.body.planLevel,
+      numEmployees: req.body.numEmployees || 1,
+      businessType: req.body.businessType,
       logo: req.body.logo,
       url: req.body.url,
       phone: req.body.phone,
       iconURL: req.body.iconURL,
       backgroundImageUrl: req.body.backgroundImageUrl,
+      form: formType,
       description: req.body.description,
     }, (err1, newBusiness) => {
       if (err1) {
@@ -55,89 +70,89 @@ export function createBusiness(req, callback) {
 }
 
 export function getBusiness(req, res) {
-  const user = req.user;
-  const bid = req.query.businessId;
-
-  if (!user) {
-    return res.status(401).send({ Error: 'User unauthenticated.' });
-  }
-
-  if (!bid) {
-    return res.status(400).send({ Error: 'Please provide businessId' });
-  }
-
-  Business.findOne({ _id: bid }).exec(function (err, business) {
+  User.findById(req.user._id, (err, user) => {
     if (err) {
       return res.status(400).send(err);
     }
-    if (business) {
-      console.log("formId = " + business.formId);
-      if (business.formId)
-        Form.findOne({_id: business.formId}).exec(function (err, form) {
-          return res.status(200).send({business: business, form: form});
-        });
-      else
-        return res.status(200).send({business: business, form: null});
+    if (user) {
+      Business.findOne({ _id: user.business }).exec((err1, business) => {
+        if (err1) {
+          return res.status(400).send(err1);
+        }
+        if (business) {
+          return res.status(200).send(business);
+        }
+      });
     }
-    else
-      return res.status(404).send();
   });
 }
 
 export function setBusiness(req, res) {
-  const bid = req.body.businessId;
+  const updatedFields = {};
 
-  if (!bid) {
-    return res.status(400).send({ Error: 'Please provide businessId' });
+  if (req.body.userId) {
+    updatedFields.userId = req.body.userId;
+  }
+  if (req.body.name) {
+    updatedFields.name = req.body.name;
+  }
+  if (req.body.planLevel) {
+    updatedFields.planLevel = req.body.planLevel;
+  }
+  if (req.body.numEmployees) {
+    updatedFields.numEmployees = req.body.numEmployees;
+  }
+  if (req.body.url) {
+    updatedFields.url = req.body.url;
+  }
+  if (req.body.phone) {
+    updatedFields.phone = req.body.phone;
+  }
+  if (req.body.iconURL) {
+    updatedFields.iconURL = req.body.iconURL;
+  }
+  if (req.body.backgroundImageUrl) {
+    updatedFields.backgroundImageUrl = req.body.backgroundImageUrl;
+  }
+  if (req.body.userIds) {
+    updatedFields.userIds = req.body.userIds;
+  }
+  if (req.body.businessType) {
+    updatedFields.businessType = req.body.businessType;
+    if (req.body.businessType === 'fitness') {
+      updatedFields.form = fitnessForm;
+    } else if (req.body.businessType === 'health') {
+      updatedFields.form = healthForm;
+    } else {
+      updatedFields.form = otherForm;
+    }
+  }
+  if (req.body.slackHook) {
+    updatedFields.slackHook = req.body.slackHook;
   }
 
-  Business.findOne({ _id: bid }).exec(function (err, business) {
+  User.findById(req.user._id, (err, user) => {
     if (err) {
       return res.status(400).send(err);
     }
-
-    if (business == null)
-      return res.status(404).end();
-
-    if (req.body.userId) {
-      business.userId = req.body.userId;
+    if (user) {
+      Business.findOneAndUpdate({
+        _id: user.business,
+      }, {
+        $set: updatedFields,
+      }, {
+        new: true,
+      }, (err1, updatedBusiness) => {
+        if (err1) {
+          return res.status(400).send(err1);
+        }
+        if (updatedBusiness) {
+          return res.status(200).send(updatedBusiness);
+        }
+      });
+    } else {
+      return res.status(400).send({ Error: 'Invalid userId' });
     }
-    if (req.body.name) {
-      business.name = req.body.name;
-    }
-    if (req.body.planLevel) {
-      business.planLevel = req.body.planLevel;
-    }
-    if (req.body.url) {
-      business.url = req.body.url;
-    }
-    if (req.body.phone) {
-      business.phone = req.body.phone;
-    }
-    if (req.body.iconURL) {
-      business.iconURL = req.body.iconURL;
-    }
-    if (req.body.backgroundImageUrl) {
-      business.backgroundImageUrl = req.body.backgroundImageUrl;
-    }
-    if (req.body.userIds) {
-      business.userIds = req.body.userIds;
-    }
-    if (req.body.formId) {
-      business.formId = req.body.formId;
-    }
-    if (req.body.slackHook) {
-      business.slackHook = req.body.slackHook;
-    }
-
-    business.timeStamp.updated = Date.now();
-
-    business.save(function (err1, updatedBusiness) {
-      if (err1) {
-        return res.status(400).send(err);
-      }
-      return res.status(200).send(updatedBusiness);
-    });
   });
 }
 

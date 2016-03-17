@@ -25,6 +25,11 @@ const BusinessSchema = new Schema({
   numEmployees: {
     type: Number,
     required: true,
+    default: 1,
+  },
+  businessType: {
+    type: String,
+    default: 'other',
   },
   url: {
     type: String,
@@ -46,9 +51,8 @@ const BusinessSchema = new Schema({
     type: Schema.ObjectId,
     ref: 'User',
   }],
-  formId: {
-    type: Schema.ObjectId,
-    ref: 'Form',
+  form: {
+    type: String,
   },
   suspended: {
     type: Boolean,

@@ -64,6 +64,10 @@ const UserSchema = new Schema({
       type: Boolean,
       default: null,
     },
+    receiveBrowserNotification: {
+      type: Boolean,
+      default: null,
+    },
     theme: {
       type: String,
       default: null,

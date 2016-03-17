@@ -15,41 +15,45 @@ import * as business from '../controller/business.controller';
  * @apiParam {ObjectId} userId The ID of the user who is the owner
  * @apiParam {String} name The name of the business
  * @apiParam {String} planLevel The plan level of the business
+ * @apiParam {String} businessType The type of business (fitness, health, other)
  * @apiParam {String} url The url of the business
  * @apiParam {String} phone The phone number
  * @apiParam {String} iconURL The URL to the icon
  * @apiParam {String} backgroundImageURL The URL to the background image
  * @apiParam {[ObjectId]} userIds The array of IDs
- * @apiParam {ObjectId} formId The ID of the form
+ * @apiParam {String} form The information contained in the form
  * @apiParam {String} slackHook The URL of the webhook used to integrate slack notifications
  *
  * @apiSuccess {Object} business Returns the updated business
  * @apiSuccessExample Example JSON on success:
  * {
- * "_id": "56d4e57ad3877b5615155b6a",
- * "name": "Martin's No.1 Company",
- * "owner": null,
- * "__v": 0,
- * "timeStamp": {
- *   "updated": "2016-03-01T00:42:34.689Z",
- *   "created": "2016-03-01T00:42:34.689Z"
- * },
- * "slackHook": null,
- * "userIds": [],
- * "backgroundImageUrl": null,
- * "iconURL": null,
- * "phone": null,
- * "url": null,
- * "planLevel": "basic",
- * "userId": null
- *}
+  "_id": "56ea20512b102a392bb8532f",
+  "name": "Saul Goodman",
+  "__v": 0,
+  "form": "[{\"id\":\"name\",\"component\":\"textInput\",\"editable\":false,\"index\":0,.........",
+  "timeStamp": {
+    "updated": "2016-03-17T03:11:13.712Z",
+    "created": "2016-03-17T03:11:13.712Z"
+  },
+  "slackHook": null,
+  "suspended": false,
+  "userIds": [],
+  "backgroundImageUrl": null,
+  "iconURL": null,
+  "phone": "551020102",
+  "url": null,
+  "businessType": "health",
+  "numEmployees": 10000,
+  "planLevel": "basic",
+  "userId": null
+}
  *
  * @apiError Missing businessId, body, userId, email, name
  */
 /**
  * @api {get} /business Get a business (and form)
  * @apiExample Example
- * /business?businessId=56d4e57ad3877b5615155b6a
+ * /business?businessId=56ea20512b102a392bb8532f
  * @apiName GetBusiness
  * @apiGroup Business
  *
@@ -61,35 +65,24 @@ import * as business from '../controller/business.controller';
  * @apiSuccess {Object} BusinessAndForm Returns the business if found, form if found
  * @apiSuccessExample Example JSON on success:
  * {
-  "business": {
-    "_id": "56df49e1f5cc731e5d9e1f1c",
-    "name": "Business",
-    "__v": 0,
-    "formId": "56df785f511b0f8519e245c8",
-    "timeStamp": {
-      "updated": "2016-03-09T01:12:28.177Z",
-      "created": "2016-03-08T21:53:37.268Z"
-    },
-    "slackHook": null,
-    "userIds": [],
-    "backgroundImageUrl": null,
-    "iconURL": null,
-    "phone": "1111111111",
-    "url": null,
-    "planLevel": "basic",
-    "userId": null
+  "_id": "56ea20512b102a392bb8532f",
+  "name": "Saul Goodman",
+  "__v": 0,
+  "form": "[{\"id\":\"name\",\"component\":\"textInput\",\"editable\":false,..........."
+    "updated": "2016-03-17T03:11:13.712Z",
+    "created": "2016-03-17T03:11:13.712Z"
   },
-  "form": {
-    "_id": "56df785f511b0f8519e245c8",
-    "form": "blahblah",
-    "description": "stuff",
-    "__v": 0,
-    "timeStamp": {
-      "updated": "2016-03-09T01:11:59.872Z",
-      "created": "2016-03-09T01:11:59.872Z"
-    },
-    "businessType": "other"
-  }
+  "slackHook": null,
+  "suspended": false,
+  "userIds": [],
+  "backgroundImageUrl": null,
+  "iconURL": null,
+  "phone": "551020102",
+  "url": null,
+  "businessType": "fitness",
+  "numEmployees": 10000,
+  "planLevel": "basic",
+  "userId": null
 }
  *
  * @apiError {400} MissingBusinessId
@@ -128,5 +121,4 @@ module.exports = (app) => {
 
   app.route('/business/list')
     .get(expressJwt({ secret: JWT_SECRET }), business.listBusiness);
-
 };

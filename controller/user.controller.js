@@ -50,19 +50,18 @@ export function signIn(req, res) {
 }
 
 export function ownerSignUp(req, res) {
-  console.log(req.body);
 
   if (!req.body.name) {
-    res.status(400).send({ errorMsg: 'Missing "name" field' });
+    return res.status(400).send({ errorMsg: 'Missing "name" field' });
   }
   if (!req.body.password) {
-    res.status(400).send({ errorMsg: 'Missing "password" field' });
+    return res.status(400).send({ errorMsg: 'Missing "password" field' });
   }
   if (!req.body.phone) {
-    res.status(400).send({ errorMsg: 'Missing "phone" field' });
+    return res.status(400).send({ errorMsg: 'Missing "phone" field' });
   }
   if (!req.body.email) {
-    res.status(400).send({ errorMsg: 'Missing "email" field' });
+    return res.status(400).send({ errorMsg: 'Missing "email" field' });
   }
 
   var user = new User();
@@ -154,13 +153,16 @@ export function updateUser(req, res) {
   if (req.body.email) {
     setObj.email = req.body.email;
   }
-  if (req.body.receiveSMS || req.body.receiveEmail || req.body.theme) {
+  if (req.body.receiveSMS || req.body.receiveEmail || req.body.receiveBrowserNotification || req.body.theme) {
     setObj.settings = {};
     if (req.body.receiveSMS) {
       setObj.settings.receiveSMS = req.body.receiveSMS;
     }
     if (req.body.receiveEmail) {
       setObj.settings.receiveEmail = req.body.receiveEmail;
+    }
+    if (req.body.receiveBrowserNotification) {
+      setObj.settings.receiveBrowserNotification = req.body.receiveBrowserNotification;
     }
     if (req.body.theme) {
       setObj.settings.theme = req.body.theme;
@@ -402,13 +404,16 @@ export function editEmployee(req, res) {
           if (req.body.email) {
             setObj.email = req.body.email;
           }
-          if (req.body.receiveSMS || req.body.receiveEmail || req.body.theme) {
+          if (req.body.receiveSMS || req.body.receiveEmail || req.body.receiveBrowserNotification || req.body.theme) {
             setObj.settings = {};
             if (req.body.receiveSMS) {
               setObj.settings.receiveSMS = req.body.receiveSMS;
             }
             if (req.body.receiveEmail) {
               setObj.settings.receiveEmail = req.body.receiveEmail;
+            }
+            if (req.body.receiveBrowserNotification) {
+              setObj.settings.receiveBrowserNotification = req.body.receiveBrowserNotification;
             }
             if (req.body.theme) {
               setObj.settings.theme = req.body.theme;
