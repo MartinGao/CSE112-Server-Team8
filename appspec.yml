@@ -1,0 +1,17 @@
+version: 0.0
+os: linux
+files:
+   - source: /
+     destination: /home/ubuntu/cse112-server
+permissions:
+   - object: /
+     pattern: "**"
+     owner: ubuntu
+     group: ubuntu
+hooks:
+   BeforeInstall:
+    - location: scripts/installEnv.sh
+      runas: root
+   AfterInstall:
+    - location: scripts/startPM2.sh
+      runas: ubuntu
