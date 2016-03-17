@@ -1,9 +1,25 @@
 import moment from 'moment';
 import mongoose from 'mongoose';
+import winston from 'winston';
+import 'winston-loggly';
 
 const Business = mongoose.model('Business');
 const Visitor = mongoose.model('Visitor');
 const User = mongoose.model('User');
+const logger = new(winston.Logger)({
+  transports: [
+    new(winston.transports.File)({
+      filename: './logs/logs.log',
+      level: 'debug'
+    }), 
+    new(winston.transports.Loggly)({
+      level: 'debug',
+      json: true,
+      inputToken: '8b1c41e3-1818-4595-a284-8f3675678a98',
+      subdomain: 'phoenixsol' 
+    })
+  ]
+});
 
 export function getVisitorAnalytics(req, res) {
   const missing = [];
@@ -17,9 +33,11 @@ export function getVisitorAnalytics(req, res) {
     };
 
   if (!req.query.date_from) {
+    logger.error('getVisitorAnalytics Error: missing date_from');
     missing.push('missing date_from');
   }
   if (!req.query.date_to) {
+    logger.error('getVisitorAnalytics Error: missing date_to');
     missing.push('missing date_to');
   }
   if (missing.length) {
@@ -33,6 +51,7 @@ export function getVisitorAnalytics(req, res) {
 
   User.findById(req.user._id, (err, user) => {
     if (err) {
+      logger.error('getVisitorAnalytics Error: ' + err);
       return res.status(400).send(err);
     }
     if (user) {
@@ -46,6 +65,7 @@ export function getVisitorAnalytics(req, res) {
       .sort('-timeStamp.created')
       .exec((err1, visitors) => {
         if (err1) {
+          logger.error('getVisitorAnalytics Error: ' + err1);
           return res.status(400).send(err1);
         }
         const parseVisitors = (visitor) => {
@@ -63,7 +83,7 @@ export function getVisitorAnalytics(req, res) {
         for (let visit of visitors) {
           parseVisitors(visit);
         }
-
+        logger.info('getVisitorAnalytics successful!');
         return res.status(200).send(retAnalytics);
       });
     }
@@ -89,9 +109,11 @@ export function getUserAnalytics(req, res) {
       },
     };
   if (!req.query.date_from) {
+    logger.error('getUserAnalytics Error: missing date_from');
     missing.push('missing date_from');
   }
   if (!req.query.date_to) {
+    logger.error('getUserAnalytics Error: missing date_to');
     missing.push('missing date_to');
   }
   if (missing.length) {
@@ -112,6 +134,7 @@ export function getUserAnalytics(req, res) {
   .sort('-timeStamp.created')
   .exec((err1, businesses) => {
     if (err1) {
+      logger.error('getUserAnalytics Error: ' + err1);
       return res.status(400).send(err1);
     }
 
@@ -139,7 +162,7 @@ export function getUserAnalytics(req, res) {
         parseAnalytics('free', business);
       }
     }
-
+    logger.info('getUserAnalytics successful!');
     return res.status(200).send(retAnalytics);
   });
 }
