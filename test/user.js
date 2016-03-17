@@ -136,7 +136,7 @@ describe('User', function () {
                 url: uriSignUp,
                 body: 'role=1&name=' + name + '&phone=1112223333&email='
                 + email + '&password=' + password + '&businessName='
-                + businessName
+                + businessName + '&form=test'
             }, function (err, res, body) {
                 assert.equal(err, null);
                 assert.equal(res.statusCode, 200);

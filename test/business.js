@@ -91,7 +91,7 @@ describe('Business', function () {
                 assert.equal(res.statusCode, 200);
                 var bodyJSON = JSON.parse(body);
                 assert.notEqual(bodyJSON, undefined);
-                business = bodyJSON.business;
+                business = bodyJSON;
                 done();
             });
         });
@@ -132,6 +132,7 @@ describe('Business', function () {
     describe("PUT", function () {
 
         it('Correct', function (done) {
+            assert.notEqual(business, undefined, 'Business not acquired from GET test.');
             request.put({
                 headers: {
                     'content-type': 'application/x-www-form-urlencoded',
@@ -164,6 +165,7 @@ describe('Business', function () {
         });
 
         it('Correct', function (done) {
+            assert.notEqual(business, undefined, 'Business not acquired from GET test.');
             request.del({
                 headers: {
                     'content-type': 'application/x-www-form-urlencoded',
