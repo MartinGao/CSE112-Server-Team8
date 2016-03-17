@@ -8,4 +8,6 @@ npm i nodemon -g
 npm i pm2 -g
 npm i babel-register -g
 npm test
+npm i apidoc -g
+apidoc -i /home/ubuntu/cse112-server/route -o /home/ubuntu/cse112-server/
 pm2 start /home/ubuntu/cse112-server/fakeIndex.js -f
