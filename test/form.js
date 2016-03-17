@@ -39,6 +39,8 @@ describe('Form', function () {
                         + email + '&password=' + password + '&businessName='
                         + businessName
                     }, function (err, res, body) {
+                        if (res.statusCode != 200)
+                            console.log('status code: ' + res.statusCode + ', body: ' + body);
                         assert.equal(err, null);
                         assert.equal(res.statusCode, 200);
                         var result = JSON.parse(body);
