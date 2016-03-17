@@ -81,13 +81,13 @@ describe('Visitor', function () {
                 done();
             });
         });
-        it('POST with no parameters', function (done) {
+        it('No parameters', function (done) {
             request.post({url: uriNew}, function (err, res, body) {
                 assert.equal(res.statusCode, 401);
                 done();
             });
         });
-        it('POST with no name', function (done) {
+        it('No name', function (done) {
             request.post({
                 headers: {
                     'content-type': 'application/x-www-form-urlencoded',
@@ -101,7 +101,7 @@ describe('Visitor', function () {
                 done();
             });
         });
-        it('POST correct', function (done) {
+        it('Correct', function (done) {
             request.post({
                 headers: {
                     'content-type': 'application/x-www-form-urlencoded',
