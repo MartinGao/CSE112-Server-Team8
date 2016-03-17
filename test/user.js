@@ -162,7 +162,7 @@ describe('User', function () {
             }, function (err, res, body) {
                 assert.notEqual(res, undefined, 'response is undefined');
                 assert.notEqual(body, undefined, 'body is undefined');
-                assert.equal(res.statusCode, 400);
+                assert.equal(res.statusCode, 401);
                 var result = JSON.parse(body);
                 assert.notEqual(result.errorMsg, undefined, 'body.errorMsg is undefined');
                 done();
@@ -211,7 +211,7 @@ describe('User', function () {
         });
     });
 
-    describe('user/password', function () {
+    describe('ChangePassword', function () {
         const uriPassword = uri + 'user/password';
 
         it('PUT no old/new password specified', function (done) {
@@ -245,7 +245,7 @@ describe('User', function () {
             });
         });
 
-        it('PUT correct old/new password', function (done) {
+        it('Correct', function (done) {
             request.put({
                 headers: {
                     'content-type': 'application/x-www-form-urlencoded',
