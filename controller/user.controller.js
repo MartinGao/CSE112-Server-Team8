@@ -47,7 +47,6 @@ export function signIn(req, res) {
       logger.error('User signIn Error: ' + err);
       res.status(400).send(err);
     } else {
-      // Email Exists
       if (existedUser) {
         if (bcrypt.compareSync(req.body.password, existedUser.password)) {
           res.status(200).send({
@@ -205,7 +204,6 @@ export function updateUser(req, res) {
     new: true,
   }, (err, updatedUser) => {
     if (err) {
-      console.log('WTF');
       res.status(400).send(err);
     } else {
       if (updatedUser) {

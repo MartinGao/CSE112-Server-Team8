@@ -250,8 +250,3 @@ export function listBusiness(req, res) {
     }
   });
 }
-/*
-export function _search(req, res, next) {
-  TODO
-}
-*/
