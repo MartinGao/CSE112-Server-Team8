@@ -52,7 +52,7 @@ import * as business from '../controller/business.controller';
 /**
  * @api {get} /business Get a business (and form)
  * @apiExample Example
- * /business?businessId=56d4e57ad3877b5615155b6a
+ * /business?businessId=56ea20512b102a392bb8532f
  * @apiName GetBusiness
  * @apiGroup Business
  *
