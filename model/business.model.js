@@ -52,9 +52,8 @@ const BusinessSchema = new Schema({
     ref: 'Form',
   },
   form: {
-    type: Schema.Types.Mixed,
+    type: String,
     ref: 'Form',
-    required: true,
   },
   suspended: {
     type: Boolean,
