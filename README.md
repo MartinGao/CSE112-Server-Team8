@@ -52,7 +52,7 @@ if there is error, try to type `chmod 600 CSE112.pem` and try again
 
 ` npm run test `
 
-` // want to run a specific test?`
+Want to run a specific test?
 
 ` npm run test test/visitor.js`
 
