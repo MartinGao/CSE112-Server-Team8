@@ -4,11 +4,19 @@
 import mongoose from 'mongoose';
 const Business = mongoose.model('Business');
 const User = mongoose.model('User');
-// const Form = mongoose.model('Form');
 
 export function createBusiness(req, callback) {
+  let formType;
   console.log('createBusiness is running');
   const missing = [];
+
+  if (req.body.businessType === 'fitness') {
+    formType = 'fitness';
+  } else if (req.body.businessType === 'health') {
+    formType = 'health';
+  } else {
+    formType = 'other';
+  }
 
   if (!req.user) {
     missing.push('userId');
@@ -37,6 +45,7 @@ export function createBusiness(req, callback) {
       name: req.body.businessName,
       planLevel: req.body.planLevel,
       numEmployees: req.body.numEmployees || 1,
+      businessType: formType,
       logo: req.body.logo,
       url: req.body.url,
       phone: req.body.phone,
@@ -104,8 +113,9 @@ export function setBusiness(req, res) {
   if (req.body.userIds) {
     updatedFields.userIds = req.body.userIds;
   }
-  if (req.body.form) {
-    updatedFields.form = req.body.form;
+  if (req.body.businessType) {
+    updatedFields.businessType = req.body.businessType;
+    updatedFields.form = req.body.businessType;
   }
   if (req.body.slackHook) {
     updatedFields.slackHook = req.body.slackHook;

@@ -27,6 +27,10 @@ const BusinessSchema = new Schema({
     required: true,
     default: 1,
   },
+  businessType: {
+    type: String,
+    required: true,
+  },
   url: {
     type: String,
     default: null,
@@ -47,13 +51,8 @@ const BusinessSchema = new Schema({
     type: Schema.ObjectId,
     ref: 'User',
   }],
-  formId: {
-    type: Schema.ObjectId,
-    ref: 'Form',
-  },
   form: {
     type: String,
-    ref: 'Form',
   },
   suspended: {
     type: Boolean,
