@@ -79,7 +79,7 @@ export function createBusiness(req, callback) {
         callback({ Error: err1 }, null);
         return;
       }
-      logger.info('New business ' + req.body.businessName + ' successfully created!');
+      logger.info('New business ' + newBusiness.name + ' successfully created!');
       console.log('about to return this new business');
       callback(false, newBusiness);
     });
@@ -99,7 +99,7 @@ export function getBusiness(req, res) {
           return res.status(400).send(err1);
         }
         if (business) {
-          logger.info('getBusiness successfully completed!');
+          logger.info('getBusiness ' + business.name + ' successfully completed!');
           return res.status(200).send(business);
         }
       });
