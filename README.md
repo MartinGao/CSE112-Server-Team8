@@ -2,6 +2,8 @@
 Node.js server for CSE112 Team 8
 
 
+### CodeDeploy Ready!
+
 ### How to run this server locally
 
 #### if you do not have Node.js installed locally
