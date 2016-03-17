@@ -77,9 +77,7 @@ export function createVisitor(req, res) {
 
           Business.findOne({ _id: user.business }).exec((err2, businessOfUser) => {
             if (err2) {
-
               logger.error('Error 2 occured on visitor checkin ' + err2);
-
             } else {
               const payload = {
                 text: req.body.name + ' has checked in!',
@@ -100,9 +98,7 @@ export function createVisitor(req, res) {
         }
       });
     } else {
-
       logger.error('Error occurred on visitor checkin: User does not exist!');
-
       res.status(400).send({
         Error: 'User does not exist!',
       });
@@ -114,9 +110,7 @@ export function createVisitor(req, res) {
 export function checkOffVisitor(req, res) {
   User.findById(req.user._id, (err, user) => {
     if (err) {
-
       logger.error('Error occurred on visitor checkoff ' + err);
-
       return res.status(400).send(err);
     }
     if (user) {
@@ -129,9 +123,7 @@ export function checkOffVisitor(req, res) {
           visitor.checkOff = new Date();
           visitor.save((err2, updatedVisitor) => {
             if (err2) {
-
               logger.error('Error 2 occurred on visitor checkoff ' + err2);
-
               return res.status(400).send(err);
             }
             logger.info(visitor.name + ' has been checked off');
@@ -244,9 +236,7 @@ export function getVisitors(req, res) {
 
 export function deleteVisitor(req, res) {
   if (!req.params.visitorId) {
-
     logger.error('Error occurred when deleting visitor: no visitorId');
-
     res.status(400).send({ Error: 'no visitorId' });
   }
 

@@ -19,7 +19,7 @@ export function sms(req, res) {
   });
 }
 
-export function email(req, res){
+export function email(req, res) {
   request({
     url: 'https://api:key-70e88d2cc33ae24b3ee564fb99d64276@api.mailgun.net/v3/sandboxc0f7e5f1d6d2484dae37436a331b3167.mailgun.org/messages',
     method: 'POST',

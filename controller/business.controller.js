@@ -16,14 +16,13 @@ const logger = new(winston.Logger)({
       level: 'debug',
       json: true,
       inputToken: '8b1c41e3-1818-4595-a284-8f3675678a98',
-      subdomain: 'phoenixsol' 
-    })
-  ]
+      subdomain: 'phoenixsol',
+    }),
+  ],
 });
 
 export function createBusiness(req, callback) {
   let formType;
-  console.log('createBusiness is running');
   const missing = [];
 
   if (req.body.businessType === 'fitness') {
@@ -54,11 +53,9 @@ export function createBusiness(req, callback) {
     }
     if (business) {
       logger.error('createBusiness Error: Duplicated businessName field');
-      console.log('Duplicated "businessName" field.');
       callback({ Error: 'Duplicated "businessName" field.' }, null);
       return;
     }
-    console.log('All good. Let save this new business!');
 
     Business.create({
       name: req.body.businessName,
@@ -75,12 +72,10 @@ export function createBusiness(req, callback) {
     }, (err1, newBusiness) => {
       if (err1) {
         logger.error('createBusiness Error: ' + err1);
-        console.log('newBusiness err1 -> ' + err1);
         callback({ Error: err1 }, null);
         return;
       }
       logger.info('New business ' + newBusiness.name + ' successfully created!');
-      console.log('about to return this new business');
       callback(false, newBusiness);
     });
   });

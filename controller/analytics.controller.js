@@ -12,9 +12,9 @@ const logger = new(winston.Logger)({
       level: 'debug',
       json: true,
       inputToken: '8b1c41e3-1818-4595-a284-8f3675678a98',
-      subdomain: 'phoenixsol' 
-    })
-  ]
+      subdomain: 'phoenixsol',
+    }),
+  ],
 });
 
 export function getVisitorAnalytics(req, res) {
@@ -52,7 +52,7 @@ export function getVisitorAnalytics(req, res) {
     }
     if (user) {
       Visitor.find({
-        //businessId: user.business,
+        businessId: user.business,
         'timeStamp.created': {
           $gte: dateFrom,
           $lte: dateTo,
@@ -66,12 +66,16 @@ export function getVisitorAnalytics(req, res) {
         }
         const parseVisitors = (visitor) => {
           retAnalytics.count++;
-          if (retAnalytics.visitors.timeStamps[moment(visitor.timeStamp.created).format('MM-DD-YYYY')]) {
-            retAnalytics.visitors.timeStamps[moment(visitor.timeStamp.created).format('MM-DD-YYYY')]
+          if (retAnalytics.visitors.timeStamps[moment(visitor.timeStamp.created)
+            .format('MM-DD-YYYY')]) {
+            retAnalytics.visitors.timeStamps[moment(visitor.timeStamp.created)
+              .format('MM-DD-YYYY')]
               .count++;
           } else {
-            retAnalytics.visitors.timeStamps[moment(visitor.timeStamp.created).format('MM-DD-YYYY')] = {};
-            retAnalytics.visitors.timeStamps[moment(visitor.timeStamp.created).format('MM-DD-YYYY')]
+            retAnalytics.visitors.timeStamps[moment(visitor.timeStamp.created)
+              .format('MM-DD-YYYY')] = {};
+            retAnalytics.visitors.timeStamps[moment(visitor.timeStamp.created)
+              .format('MM-DD-YYYY')]
               .count = 1;
           }
         };
@@ -137,12 +141,16 @@ export function getUserAnalytics(req, res) {
     const parseAnalytics = (type, business) => {
       retAnalytics.count++;
       retAnalytics[type].count++;
-      if (retAnalytics[type].timeStamps[moment(business.timeStamp.created).format('MM-DD-YYYY')]) {
-        retAnalytics[type].timeStamps[moment(business.timeStamp.created).format('MM-DD-YYYY')]
+      if (retAnalytics[type].timeStamps[moment(business.timeStamp.created)
+        .format('MM-DD-YYYY')]) {
+        retAnalytics[type].timeStamps[moment(business.timeStamp.created)
+          .format('MM-DD-YYYY')]
           .count++;
       } else {
-        retAnalytics[type].timeStamps[moment(business.timeStamp.created).format('MM-DD-YYYY')] = {};
-        retAnalytics[type].timeStamps[moment(business.timeStamp.created).format('MM-DD-YYYY')]
+        retAnalytics[type].timeStamps[moment(business.timeStamp.created)
+          .format('MM-DD-YYYY')] = {};
+        retAnalytics[type].timeStamps[moment(business.timeStamp.created)
+          .format('MM-DD-YYYY')]
           .count = 1;
       }
     };

@@ -14,9 +14,9 @@ const logger = new(winston.Logger)({
       level: 'debug',
       json: true,
       inputToken: '8b1c41e3-1818-4595-a284-8f3675678a98',
-      subdomain: 'phoenixsol' 
-    })
-  ]
+      subdomain: 'phoenixsol',
+    }),
+  ],
 });
 
 export function createForm(req, res) {
@@ -49,21 +49,22 @@ export function createForm(req, res) {
       return res.status(400).send(err);
     }
     if (updatedForm) {
-        Business.findOne({ _id: req.body.businessId }).exec(function (err, business) {
-          if (err || !business)
-            return res.status(400).send({form: updatedForm, business: null});
+      Business.findOne({ _id: req.body.businessId }).exec((err2, business) => {
+        if (err2 || !business) {
+          return res.status(400).send({ form: updatedForm, business: null });
+        }
 
-          if (business) {
-            business.formId = updatedForm._id;
-            business.save(function (err1, updatedBusiness) {
-              logger.info('Form successfully updated!');
-              return res.status(200).send({form: updatedForm, business: updatedBusiness});
-            });
-          }
-          else
-            return res.status(200).send({form: updatedForm, business: null});
-        });
-      }
+        if (business) {
+          business.formId = updatedForm._id;
+          business.save(function (err1, updatedBusiness) {
+            logger.info('Form successfully updated!');
+            return res.status(200).send({form: updatedForm, business: updatedBusiness});
+          });
+        }
+        else
+          return res.status(200).send({form: updatedForm, business: null});
+      });
+    }
     else {
       logger.error('createForm Error: Failed to save form.');
       return res.status(400).send({Error: 'Failed to save form.'});

@@ -12,9 +12,9 @@ const logger = new(winston.Logger)({
       level: 'debug',
       json: true,
       inputToken: '8b1c41e3-1818-4595-a284-8f3675678a98',
-      subdomain: 'phoenixsol' 
-    })
-  ]
+      subdomain: 'phoenixsol',
+    }),
+  ],
 });
 
 const JWT_SECRET = '#rub_a_dubDub_thanks_forthe_grub!';
@@ -64,7 +64,6 @@ export function signIn(req, res) {
 }
 
 export function ownerSignUp(req, res) {
-
   if (!req.body.name) {
     logger.error('ownerSignUp Error: Missing name field');
     return res.status(400).send({ errorMsg: 'Missing "name" field' });
@@ -111,20 +110,18 @@ export function ownerSignUp(req, res) {
         salt: saltsalt,
         business: newBusiness._id,
         token: bcrypt.genSaltSync(32),
-        tokenExpiredAt: moment().add(1, 'years')
+        tokenExpiredAt: moment().add(1, 'years'),
       }, (err1, newUser) => {
         if (err1) {
           logger.error('_createManagerUser error! -> ' + err1);
-          console.log('_createManagerUser error! -> ' + err1);
           res.status(400).send(err1);
         } else {
           logger.info(user.name + ' has signed up with their business ' + newBusiness.name + '!');
-          console.log('Hello New User! ' + newUser );
           res.status(200).send({
             token: jwt.sign({
-              _id: newUser._id
+              _id: newUser._id,
             }, JWT_SECRET),
-            user: newUser
+            user: newUser,
           });
         }
       });
@@ -176,7 +173,8 @@ export function updateUser(req, res) {
   if (req.body.email) {
     setObj.email = req.body.email;
   }
-  if (req.body.receiveSMS || req.body.receiveEmail || req.body.receiveBrowserNotification || req.body.theme) {
+  if (req.body.receiveSMS || req.body.receiveEmail
+    || req.body.receiveBrowserNotification || req.body.theme) {
     setObj.settings = {};
     if (req.body.receiveSMS) {
       setObj.settings.receiveSMS = req.body.receiveSMS;
@@ -294,7 +292,7 @@ export function deleteEmployee(req, res) {
               res.status(400).send(err1);
             } else {
               if (result) {
-                logger.info('Employee ' + tempName + ' successfully deleted!')
+                logger.info('Employee ' + tempName + ' successfully deleted!');
                 res.status(200).send(result);
               } else {
                 logger.error('deleteEmployee error: Something went wrong!');
@@ -341,7 +339,6 @@ export function vipSignUp(req, res) {
               res.status(400).send(err1);
             } else {
               logger.info('Vip User ' + newUser.name + ' successfully created!');
-              console.log(newUser);
               res.status(200).send(newUser);
             }
           });
@@ -457,7 +454,8 @@ export function editEmployee(req, res) {
           if (req.body.email) {
             setObj.email = req.body.email;
           }
-          if (req.body.receiveSMS || req.body.receiveEmail || req.body.receiveBrowserNotification || req.body.theme) {
+          if (req.body.receiveSMS || req.body.receiveEmail
+            || req.body.receiveBrowserNotification || req.body.theme) {
             setObj.settings = {};
             if (req.body.receiveSMS) {
               setObj.settings.receiveSMS = req.body.receiveSMS;
