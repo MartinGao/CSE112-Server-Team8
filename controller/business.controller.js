@@ -119,13 +119,9 @@ export function setBusiness(req, res) {
   }
   if (req.body.businessType) {
     updatedFields.businessType = req.body.businessType;
-    if (req.body.businessType === 'fitness') {
-      updatedFields.form = fitnessForm;
-    } else if (req.body.businessType === 'health') {
-      updatedFields.form = healthForm;
-    } else {
-      updatedFields.form = otherForm;
-    }
+  }
+  if (req.body.form) {
+    updatedFields.form = JSON.stringify(req.body.form);
   }
   if (req.body.slackHook) {
     updatedFields.slackHook = req.body.slackHook;
