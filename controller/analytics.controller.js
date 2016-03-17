@@ -8,10 +8,6 @@ const Visitor = mongoose.model('Visitor');
 const User = mongoose.model('User');
 const logger = new(winston.Logger)({
   transports: [
-    new(winston.transports.File)({
-      filename: './logs/logs.log',
-      level: 'debug'
-    }), 
     new(winston.transports.Loggly)({
       level: 'debug',
       json: true,

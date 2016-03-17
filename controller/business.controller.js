@@ -12,10 +12,6 @@ const healthForm = JSON.stringify([{"id":"name","component":"textInput","editabl
 const otherForm = JSON.stringify([{"id":"name","component":"textInput","editable":false,"index":0,"label":"Name","description":"Your full name, or your nickname.","placeholder":"Jane Doe","options":[],"required":true,"validation":"/.*/","$$hashKey":"object:59"},{"id":"email","component":"textInput","editable":true,"index":1,"label":"Email","description":"Your private email, we won't spam you!","placeholder":"janedoe@gmail.com","options":[],"required":false,"validation":"[email]","$$hashKey":"object:60"},{"id":"phone","component":"textInput","editable":true,"index":2,"label":"Phone","description":"Your phone number.","placeholder":"8581234567","options":[],"required":false,"validation":"/.*/","$$hashKey":"object:158"},{"id":"employee","component":"select","editable":true,"index":3,"label":"Employee","description":"Who are you seeing today?","placeholder":"placeholder","options":["Anyone is fine"],"required":false,"validation":"/.*/","$$hashKey":"object:61"}]);
 const logger = new(winston.Logger)({
   transports: [
-    new(winston.transports.File)({
-      filename: './logs/logs.log',
-      level: 'debug'
-    }), 
     new(winston.transports.Loggly)({
       level: 'debug',
       json: true,
@@ -169,7 +165,7 @@ export function setBusiness(req, res) {
           return res.status(400).send(err1);
         }
         if (updatedBusiness) {
-          logger.info('Updated business successfully!');
+          logger.info('Updated business ' + updatedBusiness.name + ' successfully!');
           return res.status(200).send(updatedBusiness);
         }
       });

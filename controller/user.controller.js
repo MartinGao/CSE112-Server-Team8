@@ -8,10 +8,6 @@ import 'winston-loggly';
 const User = mongoose.model('User');
 const logger = new(winston.Logger)({
   transports: [
-    new(winston.transports.File)({
-      filename: './logs/logs.log',
-      level: 'debug'
-    }), 
     new(winston.transports.Loggly)({
       level: 'debug',
       json: true,
@@ -122,7 +118,7 @@ export function ownerSignUp(req, res) {
           console.log('_createManagerUser error! -> ' + err1);
           res.status(400).send(err1);
         } else {
-          logger.info(user.name + ' has signed up with their business ' + user.business + '!');
+          logger.info(user.name + ' has signed up with their business ' + newBusiness.name + '!');
           console.log('Hello New User! ' + newUser );
           res.status(200).send({
             token: jwt.sign({
@@ -252,7 +248,7 @@ export function changePassword(req, res) {
             new: true,
           }, (err1, updatedUser) => {
             if (updatedUser) {
-              logger.info('changePassword successful!');
+              logger.info('changePassword for ' + updatedUser.name + ' successful!');
               res.status(200).send(updatedUser);
             } else {
               logger.error('changePassword error: Something went wrong!');
@@ -285,10 +281,12 @@ export function deleteEmployee(req, res) {
 
   User.findOne({ _id: req.user._id }).exec((err, existedUser) => {
     if (err) {
+      logger.error('deleteEmployee error: ' + err);
       res.status(400).send(err);
     } else {
       if (existedUser) {
         if (existedUser.role === 2 || existedUser.role === 1) {
+          const tempName = User.name;
           User.findOneAndRemove({
             _id: req.body.deleteUserId,
           }, (err1, result) => {
@@ -296,6 +294,7 @@ export function deleteEmployee(req, res) {
               res.status(400).send(err1);
             } else {
               if (result) {
+                logger.info('Employee ' + tempName + ' successfully deleted!')
                 res.status(200).send(result);
               } else {
                 logger.error('deleteEmployee error: Something went wrong!');
@@ -322,6 +321,7 @@ export function vipSignUp(req, res) {
   const hash = bcrypt.hashSync('HelloWorld', saltsalt);
   User.findOne({ _id: req.user._id }).exec((err, existedUser) => {
     if (err) {
+      logger.error('vipSignUp error: ' + err);
       res.status(400).send(err);
     } else {
       if (existedUser) {
@@ -337,17 +337,21 @@ export function vipSignUp(req, res) {
             salt: saltsalt,
           }, (err1, newUser) => {
             if (err1) {
+              logger.error('vipSignUp error: ' + err1);
               res.status(400).send(err1);
             } else {
+              logger.info('Vip User ' + newUser.name + ' successfully created!');
               console.log(newUser);
               res.status(200).send(newUser);
             }
           });
         } else {
           const temp = 'Permission denied! Require Role -2 (Venkman)';
+          logger.error('vipSignUp error: ' + temp);
           res.status(400).send({ errorMsg: temp });
         }
       } else {
+        logger.error('vipSignUp error: Invalid Token (userId)');
         res.status(400).send({ errorMsg: 'Invalid Token (userId)' });
       }
     }
@@ -359,6 +363,7 @@ export function employeeSignUp(req, res) {
   const hash = bcrypt.hashSync('HelloWorld', saltsalt);
   User.findOne({ _id: req.user._id }).exec((err, existedUser) => {
     if (err) {
+      logger.error('employeeSignUp error: ' + err);
       res.status(400).send(err);
     } else {
       if (existedUser) {
@@ -375,16 +380,20 @@ export function employeeSignUp(req, res) {
             business: existedUser.business,
           }, (err1, newUser) => {
             if (err1) {
+              logger.error('employeeSignUp error: ' + err1);
               res.status(400).send(err1);
             } else {
+              logger.info('Employee user ' + newUser.name + ' successfully created!');
               res.status(200).send(newUser);
             }
           });
         } else {
           const temp = 'Permission denied! Require Role 1 (Employee Admin) or 2 (Business Owner)';
+          logger.error('employeeSignUp error: ' + temp);
           res.status(400).send({ errorMsg: temp });
         }
       } else {
+        logger.error('employeeSignUp error: Invalid Token (userId)');
         res.status(400).send({ errorMsg: 'Invalid Token (userId)' });
       }
     }
@@ -394,6 +403,7 @@ export function employeeSignUp(req, res) {
 export function changeRole(req, res) {
   User.findOne({ _id: req.user._id }).exec((err, existedUser) => {
     if (err) {
+      logger.error('changeRole error: ' + err);
       res.status(400).send(err);
     } else {
       if (existedUser) {
@@ -406,16 +416,20 @@ export function changeRole(req, res) {
             new: true,
           }, (err1, updatedUser) => {
             if (updatedUser) {
+              logger.info(updatedUser.name + ' role changed successfully!');
               res.status(200).send(updatedUser);
             } else {
+              logger.error('changeRole error: ' + err1);
               res.status(400).send(err1);
             }
           });
         } else {
           const temp = 'Permission denied! Require 2 (Business Owner)';
+          logger.error('changeRole error: ' + temp);
           res.status(400).send({ errorMsg: temp });
         }
       } else {
+        logger.error('changeRole error: Invalid Token (userId)');
         res.status(400).send({ errorMsg: 'Invalid Token (userId)' });
       }
     }
@@ -425,6 +439,7 @@ export function changeRole(req, res) {
 export function editEmployee(req, res) {
   User.findOne({ _id: req.user._id }).exec((err, existedUser) => {
     if (err) {
+      logger.error('editEmployee error: ' + err);
       res.status(400).send(err);
     } else {
       if (existedUser) {
@@ -466,16 +481,20 @@ export function editEmployee(req, res) {
             new: true,
           }, (err1, updatedUser) => {
             if (updatedUser) {
+              logger.info(updatedUser.name + ' info edited successfully!');
               res.status(200).send(updatedUser);
             } else {
+              logger.error('editEmployee error: ' + err1);
               res.status(400).send(err1);
             }
           });
         } else {
           const temp = 'Permission denied! Require Role 1 (Employee Admin) or 2 (Business Owner)';
+          logger.error('editEmployee error: ' + temp);
           res.status(400).send({ errorMsg: temp });
         }
       } else {
+        logger.error('editEmployee error: Invalid Token (userId)');
         res.status(400).send({ errorMsg: 'Invalid Token (userId)' });
       }
     }

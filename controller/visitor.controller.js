@@ -18,10 +18,6 @@ const pusher = new Pusher({
 pusher.port = 443;
 const logger = new(winston.Logger)({
   transports: [
-    new(winston.transports.File)({
-      filename: './logs/logs.log',
-      level: 'debug',
-    }),
     new(winston.transports.Loggly)({
       level: 'debug',
       json: true,
