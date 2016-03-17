@@ -3,26 +3,46 @@
  */
 
  import mongoose from 'mongoose';
+ import winston from 'winston';
+ import 'winston-loggly';
  const Analytics = mongoose.model('Analytics');
 
 // prices per month for each plan level
  const basic = 30;
  const popular = 60;
  const premier = 90;
+ const logger = new(winston.Logger)({
+  transports: [
+    new(winston.transports.File)({
+      filename: './logs/logs.log',
+      level: 'debug'
+    }), 
+    new(winston.transports.Loggly)({
+      level: 'debug',
+      json: true,
+      inputToken: '8b1c41e3-1818-4595-a284-8f3675678a98',
+      subdomain: 'phoenixsol' 
+    })
+  ]
+});
 
  export function createAnalytics(req, res) {
    const missing = [];
 
    if (!req.body.planLevel) {
+     logger.error('createAnalytics Error: missing payment plan level');
      missing.push('missing: payment plan level');
    }
    if (!req.body.numClientsBasic) {
+     logger.error('createAnalytics Error: missing number of clients for basic plan level');
      missing.push('missing: number of clients for basic plan level');
    }
    if (!req.body.numClientsPopular) {
+     logger.error('createAnalytics Error: missing number of clients for popular plan level');
      missing.push('missing: number of clients for popular plan level');
    }
    if (!req.body.numClientsPremier) {
+     logger.error('createAnalytics Error: missing number of clients for premier plan level');
      missing.push('missing: number of clients for premier plan level');
    }
    if (missing.length) {
@@ -63,9 +83,11 @@
 
    newAnalytics.save((err, updatedAnalytics) => {
      if (err) {
+       logger.error('createAnalytics Error: ' + err);
        return res.status(400).send(err);
      }
      if (updatedAnalytics) {
+       logger.info('Updated analytics successfully!');
        return res.status(200).send(updatedAnalytics);
      }
    });
@@ -75,6 +97,7 @@
    const missing = [];
 
    if (!req.body.deleteAnalyticsId) {
+     logger.error('deleteAnalytics Error: missing deleteAnalyticsId');
      missing.push('deleteAnalyticsId');
    }
    if (missing.length) {
@@ -84,8 +107,10 @@
    Analytics.findOneAndRemove({
      _id: req.body.deleteAnalyticsId }).exec((err1) => {
        if (err1) {
+         logger.error('deleteAnalytics Error: ' + err1);
          return res.status(400).send(err1);
        }
+       logger.info('Deleted analytics page successfully!');
        return res.status(200).send({ Success: 'analytics page was deleted!' });
      });
  }

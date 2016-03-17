@@ -44,6 +44,7 @@ export function signIn(req, res) {
     email: req.body.email,
   }, (err, existedUser) => {
     if (err) {
+      logger.error('User signIn Error: ' + err);
       res.status(400).send(err);
     } else {
       // Email Exists
@@ -139,6 +140,7 @@ export function ownerSignUp(req, res) {
 export function listEmployees(req, res) {
   User.findOne({ _id: req.user._id }).exec((err, existedUser) => {
     if (err) {
+      logger.error('listEmployees Error: ' + err);
       res.status(400).send(err);
     } else {
       if (existedUser) {
@@ -221,9 +223,11 @@ export function changePassword(req, res) {
   const missing = [];
 
   if (!req.body.oldPassword) {
+    logger.error('changePassword error: missing oldPassword');
     missing.push('oldPassword');
   }
   if (!req.body.newPassword) {
+    logger.error('changePassword error: missing newPassword');
     missing.push('newPassword');
   }
   if (missing.length) {
@@ -273,6 +277,7 @@ export function deleteEmployee(req, res) {
   const missing = [];
 
   if (!req.body.deleteUserId) {
+    logger.error('deleteEmployee error: missing deleteUserId');
     missing.push('deleteUserId');
   }
   if (missing.length) {
