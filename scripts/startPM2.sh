@@ -7,4 +7,4 @@ npm i
 npm i nodemon -g
 npm i pm2 -g
 npm i babel-register -g
-pm2 start /home/ubuntu/cse112-server/fakeIndex.js
+pm2 start /home/ubuntu/cse112-server/fakeIndex.js -f
