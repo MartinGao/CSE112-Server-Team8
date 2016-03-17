@@ -121,7 +121,7 @@ export function setBusiness(req, res) {
     updatedFields.businessType = req.body.businessType;
   }
   if (req.body.form) {
-    updatedFields.form = JSON.stringify(req.body.form);
+    updatedFields.form = req.body.form;
   }
   if (req.body.slackHook) {
     updatedFields.slackHook = req.body.slackHook;
