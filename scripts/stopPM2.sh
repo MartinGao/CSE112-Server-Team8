@@ -4,4 +4,5 @@ nvm install 5
 nvm use 5
 npm i nodemon -g
 npm i pm2 -g
+echo HelloWorld
 pm2 delete all
