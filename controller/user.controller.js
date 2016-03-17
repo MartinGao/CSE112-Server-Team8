@@ -3,8 +3,23 @@ import bcrypt from 'bcrypt';
 import moment from 'moment';
 import jwt from 'jsonwebtoken';
 import * as BusinessController from './business.controller';
+import winston from 'winston';
+import 'winston-loggly';
 const User = mongoose.model('User');
-
+const logger = new(winston.Logger)({
+  transports: [
+    new(winston.transports.File)({
+      filename: './logs/logs.log',
+      level: 'debug'
+    }), 
+    new(winston.transports.Loggly)({
+      level: 'debug',
+      json: true,
+      inputToken: '8b1c41e3-1818-4595-a284-8f3675678a98',
+      subdomain: 'phoenixsol' 
+    })
+  ]
+});
 
 const JWT_SECRET = '#rub_a_dubDub_thanks_forthe_grub!';
 
@@ -17,6 +32,7 @@ export function currentUser(req, res) {
       if (existedUser) {
         res.status(200).send(existedUser);
       } else {
+        logger.error('currenUser error: Invalid Token (userId)');
         res.status(400).send({ errorMsg: 'Invalid Token (userId)' });
       }
     }
@@ -30,7 +46,6 @@ export function signIn(req, res) {
     if (err) {
       res.status(400).send(err);
     } else {
-      // Email Exists
       if (existedUser) {
         if (bcrypt.compareSync(req.body.password, existedUser.password)) {
           res.status(200).send({
@@ -40,9 +55,11 @@ export function signIn(req, res) {
             user: existedUser,
           });
         } else {
+          logger.error('User signIn Error: Invalid Password!');
           res.status(401).send({ errorMsg: 'Invalid Password!' });
         }
       } else {
+        logger.error('User signIn Error: Invalid Email!');
         res.status(401).send({ errorMsg: 'Invalid Email!' });
       }
     }
@@ -52,15 +69,19 @@ export function signIn(req, res) {
 export function ownerSignUp(req, res) {
 
   if (!req.body.name) {
+    logger.error('ownerSignUp Error: Missing name field');
     return res.status(400).send({ errorMsg: 'Missing "name" field' });
   }
   if (!req.body.password) {
+    logger.error('ownerSignUp Error: Missing password field');
     return res.status(400).send({ errorMsg: 'Missing "password" field' });
   }
   if (!req.body.phone) {
+    logger.error('ownerSignUp Error: Missing phone field');
     return res.status(400).send({ errorMsg: 'Missing "phone" field' });
   }
   if (!req.body.email) {
+    logger.error('ownerSignUp Error: Missing email field');
     return res.status(400).send({ errorMsg: 'Missing "email" field' });
   }
 
@@ -96,9 +117,11 @@ export function ownerSignUp(req, res) {
         tokenExpiredAt: moment().add(1, 'years')
       }, (err1, newUser) => {
         if (err1) {
+          logger.error('_createManagerUser error! -> ' + err1);
           console.log('_createManagerUser error! -> ' + err1);
           res.status(400).send(err1);
         } else {
+          logger.info(user.name + ' has signed up with their business ' + user.business + '!');
           console.log('Hello New User! ' + newUser );
           res.status(200).send({
             token: jwt.sign({
@@ -130,9 +153,11 @@ export function listEmployees(req, res) {
           });
         } else {
           const temp = 'Permission denied! Require Role 1 (Employee Admin) or 2 (Business Owner)';
+          logger.error('listEmployees error: ' + temp);
           res.status(400).send({ errorMsg: temp });
         }
       } else {
+        logger.error('listEmployees error: Invalid Token (userId)');
         res.status(400).send({ errorMsg: 'Invalid Token (userId)' });
       }
     }
@@ -177,12 +202,13 @@ export function updateUser(req, res) {
     new: true,
   }, (err, updatedUser) => {
     if (err) {
-      console.log('WTF');
       res.status(400).send(err);
     } else {
       if (updatedUser) {
+        logger.info('Successfully updated user ' + req.body.name);
         res.status(200).send(updatedUser);
       } else {
+        logger.error('updateUser Error: Invalid Token (userId)');
         res.status(400).send({ errorMsg: 'Invalid Token (userId)' });
       }
     }
@@ -222,15 +248,19 @@ export function changePassword(req, res) {
             new: true,
           }, (err1, updatedUser) => {
             if (updatedUser) {
+              logger.info('changePassword successful!');
               res.status(200).send(updatedUser);
             } else {
+              logger.error('changePassword error: Something went wrong!');
               res.status(400).send({ errorMsg: 'Something went wrong!' });
             }
           });
         } else {
+          logger.error('changePassword error: Invalid Old Password!');
           res.status(401).send({ errorMsg: 'Invalid Old Password!' });
         }
       } else {
+        logger.error('changePassword error: Invalid Token (userId)');
         res.status(400).send({ errorMsg: 'Invalid Token (userId)' });
       }
     }
@@ -263,15 +293,18 @@ export function deleteEmployee(req, res) {
               if (result) {
                 res.status(200).send(result);
               } else {
+                logger.error('deleteEmployee error: Something went wrong!');
                 res.status(400).send({ errorMsg: 'Something went wrong!' });
               }
             }
           });
         } else {
           const temp = 'Permission denied! Require Role 1 (Employee Admin) or 2 (Business Owner)';
+          logger.error('deleteEmployee error: ' + temp);
           res.status(400).send({ errorMsg: temp });
         }
       } else {
+        logger.error('deleteEmployee error: Invalid Token (userId)');
         res.status(400).send({ errorMsg: 'Invalid Token (userId)' });
       }
     }
