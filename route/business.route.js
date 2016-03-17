@@ -15,37 +15,38 @@ import * as business from '../controller/business.controller';
  * @apiParam {ObjectId} userId The ID of the user who is the owner
  * @apiParam {String} name The name of the business
  * @apiParam {String} planLevel The plan level of the business
+ * @apiParam {String} businessType The type of business (fitness, health, other)
  * @apiParam {String} url The url of the business
  * @apiParam {String} phone The phone number
  * @apiParam {String} iconURL The URL to the icon
  * @apiParam {String} backgroundImageURL The URL to the background image
  * @apiParam {[ObjectId]} userIds The array of IDs
- * @apiParam {ObjectId} formId The ID of the form
- * @apiParam {Mixed} form The information contained in the form
+ * @apiParam {String} form The information contained in the form
  * @apiParam {String} slackHook The URL of the webhook used to integrate slack notifications
  *
  * @apiSuccess {Object} business Returns the updated business
  * @apiSuccessExample Example JSON on success:
  * {
-     "_id": "56ea20512b102a392bb8532f",
-     "name": "Saul Goodman",
-     "__v": 0,
-     "form": "Saul's form is updated",
-     "timeStamp": {
-       "updated": "2016-03-17T03:11:13.712Z",
-       "created": "2016-03-17T03:11:13.712Z"
-     },
-     "slackHook": null,
-     "suspended": false,
-     "userIds": [],
-     "backgroundImageUrl": null,
-     "iconURL": null,
-     "phone": "551020102",
-     "url": null,
-     "numEmployees": 10000,
-     "planLevel": "basic",
-     "userId": null
- }
+    "_id": "56ea20512b102a392bb8532f",
+    "name": "Saul Goodman",
+    "__v": 0,
+    "form": "health",
+    "businessType": "health",
+    "timeStamp": {
+      "updated": "2016-03-17T03:11:13.712Z",
+      "created": "2016-03-17T03:11:13.712Z"
+    },
+    "slackHook": null,
+    "suspended": false,
+    "userIds": [],
+    "backgroundImageUrl": null,
+    "iconURL": null,
+    "phone": "551020102",
+    "url": null,
+    "numEmployees": 10000,
+    "planLevel": "basic",
+    "userId": null
+  }
  *
  * @apiError Missing businessId, body, userId, email, name
  */
@@ -67,7 +68,8 @@ import * as business from '../controller/business.controller';
     "_id": "56ea20512b102a392bb8532f",
     "name": "Saul Goodman",
     "__v": 0,
-    "form": "Saul's form",
+    "form": "other",
+    "businessType": "other",
     "timeStamp": {
       "updated": "2016-03-17T03:11:13.712Z",
       "created": "2016-03-17T03:11:13.712Z"
@@ -82,7 +84,7 @@ import * as business from '../controller/business.controller';
     "numEmployees": 10000,
     "planLevel": "basic",
     "userId": null
-}
+  }
  *
  * @apiError {400} MissingBusinessId
  * @apiError {400} Error
