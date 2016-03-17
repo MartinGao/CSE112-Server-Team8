@@ -206,7 +206,7 @@ export function getVisitors(req, res) {
       .limit(req.query.per_page)
       .exec((err1, visitors) => {
         if (err1) {
-          return res.status(400).send(err);
+          return res.status(400).send(err1);
         }
         return res.status(200).send(visitors);
       });
