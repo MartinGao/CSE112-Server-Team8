@@ -20,18 +20,16 @@ const logger = new(winston.Logger)({
   transports: [
     new(winston.transports.File)({
       filename: './logs/logs.log',
-      level: 'debug'
-    }), 
+      level: 'debug',
+    }),
     new(winston.transports.Loggly)({
       level: 'debug',
       json: true,
       inputToken: '8b1c41e3-1818-4595-a284-8f3675678a98',
-      subdomain: 'phoenixsol' 
-    })
-  ]
+      subdomain: 'phoenixsol',
+    }),
+  ],
 });
-
-
 
 export function testPusher(req, res) {
   let randomName = chance.name();
@@ -58,7 +56,7 @@ export function createVisitor(req, res) {
 
   User.findById(req.user, (err, user) => {
     if (err) {
-      logger.error('Error occurred on visitor checkin: ' + err); 
+      logger.error('Error occurred on visitor checkin: ' + err);
       return res.status(400).send(err);
     }
     if (user) {
@@ -77,13 +75,12 @@ export function createVisitor(req, res) {
         if (err1) {
           res.status(400).send(err1);
         } else {
-          logger.info(newVis.name + ' has checked in'); 
-	  pusher.trigger(user.business.toString(), 'newVisitor', savedVisitor);
+          logger.info(newVis.name + ' has checked in');
+          pusher.trigger(user.business.toString(), 'newVisitor', savedVisitor);
 
           Business.findOne({ _id: user.business }).exec((err2, businessOfUser) => {
             if (err2) {
-              logger.error('Error 2 occured on visitor checkin ' + err2); 
-              console.log('Err2 -> ' + err2);
+              logger.error('Error 2 occured on visitor checkin ' + err2);
             } else {
               const payload = {
                 text: req.body.name + ' has checked in!',
@@ -104,7 +101,7 @@ export function createVisitor(req, res) {
         }
       });
     } else {
-      logger.error('Error occurred on visitor checkin: User does not exist!');  
+      logger.error('Error occurred on visitor checkin: User does not exist!');
       res.status(400).send({
         Error: 'User does not exist!',
       });
@@ -116,7 +113,7 @@ export function createVisitor(req, res) {
 export function checkOffVisitor(req, res) {
   User.findById(req.user._id, (err, user) => {
     if (err) {
-      logger.error('Error occurred on visitor checkoff ' + err); 
+      logger.error('Error occurred on visitor checkoff ' + err);
       return res.status(400).send(err);
     }
     if (user) {
@@ -129,10 +126,10 @@ export function checkOffVisitor(req, res) {
           visitor.checkOff = new Date();
           visitor.save((err2, updatedVisitor) => {
             if (err2) {
-	      logger.error('Error 2 occurred on visitor checkoff ' + err2);
+              logger.error('Error 2 occurred on visitor checkoff ' + err2);
               return res.status(400).send(err);
             }
- 	    logger.info(visitor.name + ' has been checked off');
+            logger.info(visitor.name + ' has been checked off');
             pusher.trigger(user.business.toString(), 'checkOffVisitor', updatedVisitor);
             return res.status(200).send(updatedVisitor);
           });
@@ -145,9 +142,9 @@ export function checkOffVisitor(req, res) {
 export function getQueue(req, res) {
   const missing = [];
 
-  if (!req.user)
+  if (!req.user) {
     return res.status(401).end();
-
+  }
   if (!req.query.page) {
     missing.push('missing page');
   }
@@ -168,8 +165,7 @@ export function getQueue(req, res) {
 
   User.findById(req.user._id, (err, user) => {
     if (err) {
-      logger.error('Queue fetching user faced error'); 
-      console.log('Queue fetching user faced error');
+      logger.error('Queue fetching user faced error');
       return res.status(400).send(err);
     }
     if (user) {
@@ -183,9 +179,9 @@ export function getQueue(req, res) {
         }
         return res.status(200).send(visitors);
       });
-    }
-    else
+    } else {
       return res.status(404).end();
+    }
   });
 }
 
@@ -220,7 +216,6 @@ export function getVisitors(req, res) {
       return res.status(400).send(err);
     }
     if (user) {
-      console.log(user);
       Visitor.find({
         businessId: user.business,
         checkOff: { $ne: null },
@@ -244,7 +239,7 @@ export function getVisitors(req, res) {
 
 export function deleteVisitor(req, res) {
   if (!req.params.visitorId) {
-    logger.error('Error occurred when deleting visitor: no visitorId'); 
+    logger.error('Error occurred when deleting visitor: no visitorId');
     res.status(400).send({ Error: 'no visitorId' });
   }
 
@@ -280,7 +275,7 @@ export function searchVisitor(req, res) {
         })
       .exec((err1, results) => {
         if (err1) return res.status(400).send(err);
-        res.status(200).send(results)
+        res.status(200).send(results);
       });
     }
   });
@@ -307,32 +302,3 @@ export function searchUser(req, res) {
     }
   });
 }
-
-//here be shit code
-
-  // Visitor.find({name: req.body.name})
-  // .and(
-  //   [
-  //     {$or:
-  //       [
-  //         {phone: req.body.phone},
-  //         {email: req.body.email}
-  //       ]
-  //     }
-  //   ]).exec(function(err, visitor) {
-  //   if (err)
-  //     return res.status(400).send(err);
-  //   if (visitor) {
-  //     //will be replaced with either pushing ot not pushing to queue
-  //     visitor.checkIns.push(new Date());
-  //     if (!req.body.requireCheckOff)
-  //       visitor.checkOffs.push(new Date());
-  //     if (req.body.form)
-  //       visitor.push(req.body.form);
-  //     visitor.save(function(err, updatedVisitor) {
-  //       if (err)
-  //         return res.status(400).send(err);
-  //       return res.status(200).send(updatedVisitor);
-  //     });
-  //   }
-  // });
