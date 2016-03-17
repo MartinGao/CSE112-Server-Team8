@@ -4,7 +4,7 @@
 import mongoose from 'mongoose';
 const Business = mongoose.model('Business');
 const User = mongoose.model('User');
-const Form = mongoose.model('Form');
+// const Form = mongoose.model('Form');
 
 export function createBusiness(req, callback) {
   console.log('createBusiness is running');
@@ -42,6 +42,7 @@ export function createBusiness(req, callback) {
       phone: req.body.phone,
       iconURL: req.body.iconURL,
       backgroundImageUrl: req.body.backgroundImageUrl,
+      form: req.body.form,
       description: req.body.description,
     }, (err1, newBusiness) => {
       if (err1) {
@@ -66,15 +67,7 @@ export function getBusiness(req, res) {
           return res.status(400).send(err1);
         }
         if (business) {
-          if (business.formId) {
-            Form.findOne({ _id: business.formId }).exec((err2, form) => {
-              return res.status(200).send({ business, form });
-            });
-          } else {
-            return res.status(200).send({ business, form: null });
-          }
-        } else {
-          return res.status(401).end();
+          return res.status(200).send(business);
         }
       });
     }
@@ -111,8 +104,8 @@ export function setBusiness(req, res) {
   if (req.body.userIds) {
     updatedFields.userIds = req.body.userIds;
   }
-  if (req.body.formId) {
-    updatedFields.formId = req.body.formId;
+  if (req.body.form) {
+    updatedFields.form = req.body.form;
   }
   if (req.body.slackHook) {
     updatedFields.slackHook = req.body.slackHook;
