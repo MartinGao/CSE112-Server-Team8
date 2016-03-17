@@ -47,7 +47,7 @@ export function testPusher(req, res) {
 export function createVisitor(req, res) {
   const missing = [];
   if (!req.body.name) {
-    logger.info('Attempt to create visitor failed: missing name');
+    logger.error('createVisitor attempt failed: missing name');
     missing.push('missing name');
   }
   if (missing.length) {
@@ -58,7 +58,7 @@ export function createVisitor(req, res) {
 
   User.findById(req.user, (err, user) => {
     if (err) {
-      logger.error('Error occurred on visitor checkin: ' + err); 
+      logger.error('createVisitor error: ' + err); 
       return res.status(400).send(err);
     }
     if (user) {
@@ -82,7 +82,7 @@ export function createVisitor(req, res) {
 
           Business.findOne({ _id: user.business }).exec((err2, businessOfUser) => {
             if (err2) {
-              logger.error('Error 2 occured on visitor checkin ' + err2); 
+              logger.error('createVisitor error ' + err2); 
               console.log('Err2 -> ' + err2);
             } else {
               const payload = {
@@ -104,7 +104,7 @@ export function createVisitor(req, res) {
         }
       });
     } else {
-      logger.error('Error occurred on visitor checkin: User does not exist!');  
+      logger.error('createVisitor error: User does not exist!');  
       res.status(400).send({
         Error: 'User does not exist!',
       });
@@ -116,7 +116,7 @@ export function createVisitor(req, res) {
 export function checkOffVisitor(req, res) {
   User.findById(req.user._id, (err, user) => {
     if (err) {
-      logger.error('Error occurred on visitor checkoff ' + err); 
+      logger.error('checkOffVisitor error: ' + err); 
       return res.status(400).send(err);
     }
     if (user) {
@@ -129,7 +129,7 @@ export function checkOffVisitor(req, res) {
           visitor.checkOff = new Date();
           visitor.save((err2, updatedVisitor) => {
             if (err2) {
-	      logger.error('Error 2 occurred on visitor checkoff ' + err2);
+	      logger.error('checkOffVisitor error: ' + err2);
               return res.status(400).send(err);
             }
  	    logger.info(visitor.name + ' has been checked off');
@@ -243,7 +243,7 @@ export function getVisitors(req, res) {
 
 export function deleteVisitor(req, res) {
   if (!req.params.visitorId) {
-    logger.error('Error occurred when deleting visitor: no visitorId'); 
+    logger.error('deleteVisitor error: no visitorId'); 
     res.status(400).send({ Error: 'no visitorId' });
   }
 
@@ -287,6 +287,7 @@ export function searchVisitor(req, res) {
 
 export function searchUser(req, res) {
   if (!req.user) {
+    logger.error('searchUser error');
     return res.status(401).end();
   }
 
