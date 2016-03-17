@@ -1,53 +1,86 @@
 import * as analytics from '../controller/analytics.controller';
 
 /**
- * @api {post} /analytics Create new analytics page
- * @apiName CreateAnalytics
+ * @api {get} /analytics/user Get analytics for user
+ * @apiName GetUserAnalytics
  * @apiGroup Analytics
  *
- * @apiParam {String} planLevel The current plan level (basic, popular, premier)
- * @apiParam {Number} numEmployees The total number of employees across all businesses
- * @apiParam {Number} totalClients The total number of clients (businesses)
- * @apiParam {Number} avgNumEmployees The average number of employees per business
- * @apiParam {Number} numMonthlySignups The number of monthly signups
- * @apiParam {Number} totalIncome The total monthly income per plan level
- * @apiParam {Number} numCLientsBasic The number of clients on the basic plan level
- * @apiParam {Number} numClientsPopular The number of clients on the popular plan level
- * @apiParam {Number} numClientsPremier The number of clients on the premier plan level
+ * @apiParam {Date} date_from The date to get data from. Format: MM-DD-YYYY
+ * @apiParam {Date} date_to The date to get data to. Format: MM-DD-YYYY
  *
- * @apiDescription Will return analytics. If any fields are missing, will return an error
+ * @apiDescription Will return user analytics during the period date_from to date_to. 
  * @apiExample HTTP Sample
- * POST /form HTTP/1.1
- Host: localhost:3000
- Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJfaWQiOiI1NmQ1MTVhZWUyZGRmOWQ5MGNmNjNlMDgiLCJpYXQiOjE0NTc0MDk1NjF9.oLoxhuGRSn4Wy0miaMpBTMMvo8LFdoHV5TAnyNiIBoo
- Cache-Control: no-cache
- Postman-Token: a1311038-9468-8df8-13cd-dff24041f385
- Content-Type: application/x-www-form-urlencoded
-
-
+ * GET /analytics/user?date_from=03-10-2016&amp;date_to=03-17-2016 HTTP/1.1
+ * Host: 52.86.89.63:3000
+ * Cache-Control: no-cache
+ * Postman-Token: a3270a93-b74b-ee65-1776-aec83545408b
  *
- * @apiSuccess {Object} updatedAnalytics Returns the new analytics page that was created
+ * @apiSuccess {Object} retAnalytics Returns the user analytics data within the date range specified.
  * @apiSuccessExample Example JSON on success:
- * {
-  "analytics": {
-    "__v": 0,
-    "totalIncome": 51000,
-    "numClientsPremier": 200,
-    "numClientsPopular": 300,
-    "numClientsBasic": 500,
-    "avgNumEmployees": 200,
-    "numEmployees": 200000,
-    "totalClients": 1000,
-    "planLevel": "basic",
-    "_id": "56e8a3c4ee8badd8cdc46bab",
-    "timeStamp": {
-      "updated": "2016-03-16T00:07:32.736Z",
-      "created": "2016-03-16T00:07:32.736Z"
+ *{
+    "count": 105,
+    "basic": {
+      "count": 104,
+      "timeStamps": {
+        "03-17-2016": {
+          "count": 94
+        },
+        "03-16-2016": {
+          "count": 10
+        }
+      }
+    },
+    "premier": {
+      "count": 1,
+      "timeStamps": {
+        "03-16-2016": {
+          "count": 1
+        }
+      }
+    },
+    "free": {
+      "count": 0,
+      "timeStamps": {}
     }
-  }
-}
+ *}
  *
- * @apiError MissingBody Missing analytics
+ * @apiError MissingDateFrom Missing date_from
+ * @apiError MissingDateTo Missing date_to
+ */
+
+/**
+ * @api {get} /analytics/visitor Get analytics for visitor
+ * @apiName GetVisitorAnalytics
+ * @apiGroup Analytics
+ *
+ * @apiHeader {String} JWT token required (required)
+ * @apiParam {Date} date_from The date to get data from. Format: MM-DD-YYYY
+ * @apiParam {Date} date_to The date to get data to. Format: MM-DD-YYYY
+ *
+ * @apiDescription Will return visitor analytics during the period date_from to date_to. 
+ * @apiExample HTTP Sample
+ * GET /analytics/visitor?date_from=03-10-2016&date_to=03-17-2016 HTTP/1.1
+ * Host: 52.86.89.63:3000
+ * Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJfaWQiOiI1NmU5ZDYwZTUwMjQ1ZDkxMzYxMzAyYTYiLCJpYXQiOjE0NTgyNDUzMzh9.0ElnH7wlJbbaojwd1F9OIUWp00HsOSkLz9X896c8muE
+ * Cache-Control: no-cache
+ * Postman-Token: 3c9dbfae-75a4-d73c-d488-09e2e1d09879
+ *
+ * @apiSuccess {Object} retAnalytics Returns the visitor analytics data within the date range specified.
+ * @apiSuccessExample Example JSON on success:
+ *{
+    "count": 2,
+    "visitors": {
+      "count": 0,
+      "timeStamps": {
+        "03-17-2016": {
+          "count": 2
+        }
+      }
+    }
+ *}
+ *
+ * @apiError MissingDateFrom Missing date_from
+ * @apiError MissingDateTo Missing date_to
  */
 
 import expressJwt from 'express-jwt';
