@@ -3,7 +3,8 @@ import moment from 'moment';
 import Chance from 'chance';
 import Pusher from 'pusher';
 import request from 'request';
-
+import winston from 'winston';
+import 'winston-loggly';
 const Visitor = mongoose.model('Visitor');
 const Business = mongoose.model('Business');
 const User = mongoose.model('User');
@@ -15,6 +16,22 @@ const pusher = new Pusher({
   encrypted: true,
 });
 pusher.port = 443;
+const logger = new(winston.Logger)({
+  transports: [
+    new(winston.transports.File)({
+      filename: './logs/logs.log',
+      level: 'debug'
+    }), 
+    new(winston.transports.Loggly)({
+      level: 'debug',
+      json: true,
+      inputToken: '8b1c41e3-1818-4595-a284-8f3675678a98',
+      subdomain: 'phoenixsol' 
+    })
+  ]
+});
+
+
 
 export function testPusher(req, res) {
   let randomName = chance.name();
@@ -30,6 +47,7 @@ export function testPusher(req, res) {
 export function createVisitor(req, res) {
   const missing = [];
   if (!req.body.name) {
+    logger.info('Attempt to create visitor failed: missing name');
     missing.push('missing name');
   }
   if (missing.length) {
@@ -40,6 +58,7 @@ export function createVisitor(req, res) {
 
   User.findById(req.user, (err, user) => {
     if (err) {
+      logger.error('Error occurred on visitor checkin: ' + err); 
       return res.status(400).send(err);
     }
     if (user) {
@@ -58,10 +77,12 @@ export function createVisitor(req, res) {
         if (err1) {
           res.status(400).send(err1);
         } else {
-          pusher.trigger(user.business.toString(), 'newVisitor', savedVisitor);
+          logger.info(newVis.name + ' has checked in'); 
+	  pusher.trigger(user.business.toString(), 'newVisitor', savedVisitor);
 
           Business.findOne({ _id: user.business }).exec((err2, businessOfUser) => {
             if (err2) {
+              logger.error('Error 2 occured on visitor checkin ' + err2); 
               console.log('Err2 -> ' + err2);
             } else {
               const payload = {
@@ -83,6 +104,7 @@ export function createVisitor(req, res) {
         }
       });
     } else {
+      logger.error('Error occurred on visitor checkin: User does not exist!');  
       res.status(400).send({
         Error: 'User does not exist!',
       });
@@ -94,6 +116,7 @@ export function createVisitor(req, res) {
 export function checkOffVisitor(req, res) {
   User.findById(req.user._id, (err, user) => {
     if (err) {
+      logger.error('Error occurred on visitor checkoff ' + err); 
       return res.status(400).send(err);
     }
     if (user) {
@@ -106,8 +129,10 @@ export function checkOffVisitor(req, res) {
           visitor.checkOff = new Date();
           visitor.save((err2, updatedVisitor) => {
             if (err2) {
+	      logger.error('Error 2 occurred on visitor checkoff ' + err2);
               return res.status(400).send(err);
             }
+ 	    logger.info(visitor.name + ' has been checked off');
             pusher.trigger(user.business.toString(), 'checkOffVisitor', updatedVisitor);
             return res.status(200).send(updatedVisitor);
           });
@@ -143,6 +168,7 @@ export function getQueue(req, res) {
 
   User.findById(req.user._id, (err, user) => {
     if (err) {
+      logger.error('Queue fetching user faced error'); 
       console.log('Queue fetching user faced error');
       return res.status(400).send(err);
     }
@@ -217,6 +243,7 @@ export function getVisitors(req, res) {
 
 export function deleteVisitor(req, res) {
   if (!req.params.visitorId) {
+    logger.error('Error occurred when deleting visitor: no visitorId'); 
     res.status(400).send({ Error: 'no visitorId' });
   }
 
