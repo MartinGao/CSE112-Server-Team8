@@ -136,7 +136,8 @@ export function listEmployees(req, res) {
       res.status(400).send(err);
     } else {
       if (existedUser) {
-        if (existedUser.role === 2 || existedUser.role === 1) {
+        if (existedUser.role === 2 || existedUser.role === 1
+          || existedUser.role === -2) {
           User.find({
             business: existedUser.business,
           }).exec((err1, employees) => {
