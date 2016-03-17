@@ -14,7 +14,7 @@ hooks:
       runas: ubuntu
    BeforeInstall:
     - location: scripts/installEnv.sh
-      runas: root
+      runas: ubuntu
    AfterInstall:
     - location: scripts/startPM2.sh
       runas: ubuntu

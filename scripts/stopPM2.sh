@@ -5,3 +5,4 @@ nvm use 5
 npm i nodemon -g
 npm i pm2 -g
 pm2 delete all
+sudo rm -rf /home/ubuntu/cse112-server/
