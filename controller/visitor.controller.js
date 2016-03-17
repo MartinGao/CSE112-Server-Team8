@@ -193,8 +193,9 @@ export function getVisitors(req, res) {
       return res.status(400).send(err);
     }
     if (user) {
+      console.log(user);
       Visitor.find({
-        business: user.businessId,
+        businessId: user.business,
         checkOff: { $ne: null },
         checkIn: {
           $gte: startDate,

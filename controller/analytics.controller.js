@@ -2,7 +2,73 @@ import moment from 'moment';
 import mongoose from 'mongoose';
 
 const Business = mongoose.model('Business');
+const Visitor = mongoose.model('Visitor');
 const User = mongoose.model('User');
+
+export function getVisitorAnalytics(req, res) {
+  const missing = [];
+  const retAnalytics =
+    {
+      count: 0,
+      visitors: {
+        count: 0,
+        timeStamps: {},
+      },
+    };
+
+  if (!req.query.date_from) {
+    missing.push('missing date_from');
+  }
+  if (!req.query.date_to) {
+    missing.push('missing date_to');
+  }
+  if (missing.length) {
+    return res.status(400).send({
+      Error: missing.join(', '),
+    });
+  }
+
+  const dateFrom = moment(req.query.date_from, 'MM-DD-YYYY').toDate();
+  const dateTo = moment(req.query.date_to, 'MM-DD-YYYY').add(1, 'day').toDate();
+
+  User.findById(req.user._id, (err, user) => {
+    if (err) {
+      return res.status(400).send(err);
+    }
+    if (user) {
+      Visitor.find({
+        //businessId: user.business,
+        'timeStamp.created': {
+          $gte: dateFrom,
+          $lte: dateTo,
+        },
+      })
+      .sort('-timeStamp.created')
+      .exec((err1, visitors) => {
+        if (err1) {
+          return res.status(400).send(err1);
+        }
+        const parseVisitors = (visitor) => {
+          retAnalytics.count++;
+          if (retAnalytics.visitors.timeStamps[moment(visitor.timeStamp.created).format('MM-DD-YYYY')]) {
+            retAnalytics.visitors.timeStamps[moment(visitor.timeStamp.created).format('MM-DD-YYYY')]
+              .count++;
+          } else {
+            retAnalytics.visitors.timeStamps[moment(visitor.timeStamp.created).format('MM-DD-YYYY')] = {};
+            retAnalytics.visitors.timeStamps[moment(visitor.timeStamp.created).format('MM-DD-YYYY')]
+              .count = 1;
+          }
+        };
+
+        for (let visit of visitors) {
+          parseVisitors(visit);
+        }
+
+        return res.status(200).send(retAnalytics);
+      });
+    }
+  });
+}
 
 export function getUserAnalytics(req, res) {
   const missing = [];
@@ -35,7 +101,7 @@ export function getUserAnalytics(req, res) {
   }
 
   const dateFrom = moment(req.query.date_from, 'MM-DD-YYYY').toDate();
-  const dateTo = moment(req.query.date_to, 'MM-DD-YYYY').toDate();
+  const dateTo = moment(req.query.date_to, 'MM-DD-YYYY').add(1, 'day').toDate();
 
   Business.find({
     'timeStamp.created': {
@@ -49,42 +115,31 @@ export function getUserAnalytics(req, res) {
       return res.status(400).send(err1);
     }
 
+    const parseAnalytics = (type, business) => {
+      retAnalytics.count++;
+      retAnalytics[type].count++;
+      if (retAnalytics[type].timeStamps[moment(business.timeStamp.created).format('MM-DD-YYYY')]) {
+        retAnalytics[type].timeStamps[moment(business.timeStamp.created).format('MM-DD-YYYY')]
+          .count++;
+      } else {
+        retAnalytics[type].timeStamps[moment(business.timeStamp.created).format('MM-DD-YYYY')] = {};
+        retAnalytics[type].timeStamps[moment(business.timeStamp.created).format('MM-DD-YYYY')]
+          .count = 1;
+      }
+    };
+
     for (let business of businesses) {
       if (business.planLevel === 'basic') {
-        retAnalytics.count++;
-        retAnalytics.basic.count++;
-        if (retAnalytics.basic.timeStamps[moment(business.timeStamp.created)]) {
-          retAnalytics.basic.timeStamps[moment(business.timeStamp.created)]
-            .count++;
-        } else {
-          retAnalytics.basic.timeStamps[moment(business.timeStamp.created)]
-            .count = 1;
-        }
+        parseAnalytics('basic', business);
       }
       if (business.planLevel === 'premier') {
-        retAnalytics.count++;
-        retAnalytics.premier.count++;
-        if (retAnalytics.premier.timeStamps[moment(business.timeStamp.created)]) {
-          retAnalytics.premier.timeStamps[moment(business.timeStamp.created)]
-            .count++;
-        } else {
-          retAnalytics.premier.timeStamps[moment(business.timeStamp.created)]
-            .count = 1;
-        }
+        parseAnalytics('premier', business);
       }
       if (business.planLevel === 'free') {
-        retAnalytics.count++;
-        retAnalytics.free.count++;
-        if (retAnalytics.free.timeStamps[moment(business.timeStamp.created)]) {
-          retAnalytics.free.timeStamps[moment(business.timeStamp.created)]
-            .count++;
-        } else {
-          retAnalytics.free.timeStamps[moment(business.timeStamp.created)]
-            .count = 1;
-        }
+        parseAnalytics('free', business);
       }
     }
 
-    res.status(200).send(retAnalytics);
+    return res.status(200).send(retAnalytics);
   });
 }
