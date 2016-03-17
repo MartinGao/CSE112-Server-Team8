@@ -16,6 +16,10 @@ const name = 'test' + chance.name();
 const password = chance.string({length: 8});
 const businessName = name + ' Test Company';
 
+/**
+ * Unclear how to test notifications via mocha.
+ * Make sure to remove '.skip' below when implemented.
+ */
 describe.skip('Notification', function () {
     const uriBus = uri + 'business/';
     var server;
@@ -46,7 +50,6 @@ describe.skip('Notification', function () {
                         assert.notEqual(result, null, 'User is null.');
                         done();
                     });
-
                 });
             });
         });
