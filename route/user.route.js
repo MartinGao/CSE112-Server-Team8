@@ -15,6 +15,7 @@ const JWT_SECRET = '#rub_a_dubDub_thanks_forthe_grub!';
 * @apiParam {String} email  Manager's email. Use this email to sign in.
 * @apiParam {String} password  Manager's password. Use this password to sign in.
 * @apiParam {String} businessName Name of the Business that this manager owns.
+* @apiParam {String} businessType The type of business (fitness, health, other)
 * @apiParam {String} [avatar]  Whatever Id that points to manager's avatar.
 * @apiParam {String} [logo]  Whatever Id that points to business logo.
 * @apiParam {String} [description] Description for manager's business.
